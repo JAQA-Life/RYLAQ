@@ -155,6 +155,12 @@ The header legal comment is in `core.js` and in the built script.
   - The preview server and smoke test run under the production CSP.
 - **2026-09-30 — Command-center density.** In the situation-room theme on desktop (≥ 1100px), the header, search and Situation Room head are compacted so the evidence globe and live panels fill the first screen. Only spacing and type change; every notice, warning and control stays visible.
 
+- **2026-09-30 — JAQA Ultimate (branch `jaqa-ultimate`).** The product owner asked for one site combining JAQA, God's Eye View and WorldMonitor, and decided:
+  1. **WorldMonitor** is AGPL-3.0, so JAQA stays proprietary and its features are rebuilt clean-room as the **Global Monitor**. The monitor serves allowlisted official feeds with headlines and links only, and only feeds verified by `scripts/verify-monitor.mjs` (18 of 21 on 2026-09-30).
+  2. **Add a server.** `server/jaqa-server.mjs` (Node ≥ 24.14) serves the workspace, God's Eye View at `/globe/` and its data providers, and writes no access logs. This supersedes "no backend / no proxy" for the full site. The static-only package (`release/jaqa-web.zip`) keeps the original no-backend model, without the monitor and globe.
+  3. **God's Eye View** (MIT code) is integrated with **all** layers, including CCTV, ALPR locations, live tracking and the voice agent. This overrides the earlier personal-data OSINT exclusion. Non-commercial data carve-outs are documented in `THIRD_PARTY_NOTICES.md`.
+  4. **SEO/GEO/AEO:** crawlable static pages, JSON-LD, sitemap, robots and `llms.txt`, all generated from implemented facts only.
+
 ## Open decisions
 
 1. **ReliefWeb appname.** Request an approved appname, then re-verify.

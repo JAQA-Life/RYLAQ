@@ -6,6 +6,29 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 
 > Educational and enterprise information-discovery use only. Not legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice. © JAQA™. All rights reserved.
 
+## JAQA Ultimate: workspace + 3D globe + Global Monitor
+
+This branch (`jaqa-ultimate`) combines three things in one site served by one Node.js process (`server/jaqa-server.mjs`):
+
+| Path | What | Code |
+|---|---|---|
+| `/` | **JAQA workspace:** Situation Room, search, 30+ modules, exports | JAQA (proprietary) |
+| `/global-monitor/` | **Global Monitor:** headlines from 18 verified official feeds, event map, countries in the headlines, ECB FX board | JAQA, clean-room and WorldMonitor-inspired (no WorldMonitor code: it is AGPL) |
+| `/globe/` | **3D globe:** God's Eye View (live aircraft, ships, satellites, hazards, cameras, CRT/NVG/FLIR styles, voice) | God's Eye View, MIT, © Bilawal Sidhu (`apps/globe/`) |
+| `/about/`, `/faq/`, `/sources/`, `/privacy/`, `/3d-globe/` | Crawlable static pages, plus `sitemap.xml`, `robots.txt`, `llms.txt` and JSON-LD structured data | JAQA |
+
+```bash
+# Node >= 24.14 (God's Eye View's requirement)
+npm run install:globe      # God's Eye View's dependencies (apps/globe)
+npm run build:all          # JAQA dist/ + SEO pages, then the globe for /globe/
+npm start                  # http://localhost:3000/  (PORT, HOST env vars)
+node scripts/package-hostinger.mjs   # → release/jaqa-hostinger.zip (deploy bundle)
+```
+
+- **Deploy:** see [`docs/DEPLOY-NODE.md`](docs/DEPLOY-NODE.md). It covers a Hostinger VPS or a Node.js hosting plan with Node 24. Shared hosting with `public_html` only can't run the server; use the static-only `release/jaqa-web.zip` there (workspace and SEO pages, without the monitor and globe).
+- **Before commercial use:** God's Eye View bundles non-commercial datasets (TeleGeography cables, the Bhote Koshi pack) and uses OpenSky, whose licence is non-commercial. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+- **Monitor feeds** are re-verified with the *Verify monitor feeds* workflow; results go into `config/monitor-verification.json`.
+
 ## What's in the box
 
 | Path | Purpose |

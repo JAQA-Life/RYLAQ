@@ -3420,6 +3420,12 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     async feed(feed, opts) {
       const endpoint = '/api/jaqa/monitor/feed?id=' + enc(feed.id);
       const r = await call('jaqaMonitor', endpoint, Object.assign({ validate: (j) => !!j && j.ok === true && isArr(j.items) }, opts || {}));
+      // Only verified feed ids are requested, so a 404 means there is no JAQA
+      // server here (static-only hosting): switch the source to link-out.
+      if (r.error === 'not_found') {
+        R.runtime.markUnavailable('jaqaMonitor', 'The JAQA server is not available on this deployment (static hosting).');
+        return { error: 'linkout' };
+      }
       if (r.error) return r;
       return {
         records: r.data.items.map((it) =>

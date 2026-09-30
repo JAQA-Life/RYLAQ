@@ -2,10 +2,10 @@
   "name": "jaqa-workspace",
   "version": "1.0.0",
   "private": true,
-  "description": "JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace \u2014 static, privacy-first public-source triage. All tooling is dev-only; production is static files in dist/.",
+  "description": "JAQA \u2014 global risk, finance, insurance & procurement intelligence workspace with the integrated God's Eye View 3D globe (MIT) and Global Monitor. Static workspace in dist/; full site served by server/jaqa-server.mjs.",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": ">=24.14"
   },
   "scripts": {
     "build": "node scripts/build.mjs",
@@ -15,7 +15,13 @@
     "validate:links": "node scripts/validate-links.mjs",
     "validate:links:online": "node scripts/validate-links.mjs --online",
     "preview": "node scripts/preview.mjs",
-    "test:smoke": "node scripts/smoke-test.mjs"
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "install:globe": "npm ci --prefix apps/globe",
+    "build:globe": "node scripts/build-globe.mjs",
+    "build:all": "node scripts/build.mjs && node scripts/build-globe.mjs",
+    "start": "node server/jaqa-server.mjs",
+    "test:monitor": "node scripts/test-monitor.mjs",
+    "verify:monitor": "node scripts/verify-monitor.mjs"
   },
   "devDependencies": {},
   "license": "UNLICENSED"

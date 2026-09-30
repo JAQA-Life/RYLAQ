@@ -10,7 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#0B2545">
+<meta name="theme-color" content="#05080F">
 <title>RYLAQ Global Risk Universe | Public-Source Enterprise Risk Intelligence</title>
 <meta name="description" content="Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first RYLAQ workspace powered by selected public APIs and official link-outs.">
 <link rel="canonical" href="https://rylaq.com/global-risk">
@@ -72,7 +72,8 @@
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-.rylaq-workspace[data-theme='dark'] {
+.rylaq-workspace[data-theme='dark'],
+.rylaq-workspace[data-theme='ops'] {
   --rq-navy: #0b2545;
   --rq-navy-ink: #93b4e6;
   --rq-teal: #2dd4bf;
@@ -107,7 +108,7 @@
 .rylaq-workspace h1, .rylaq-workspace h2, .rylaq-workspace h3, .rylaq-workspace h4, .rylaq-workspace p, .rylaq-workspace ul, .rylaq-workspace ol, .rylaq-workspace dl, .rylaq-workspace figure { margin: 0; }
 .rylaq-workspace ul, .rylaq-workspace ol { padding-left: 1.2em; }
 .rylaq-workspace a { color: var(--rq-teal-ink); text-underline-offset: 2px; }
-.rylaq-workspace[data-theme='dark'] a { color: var(--rq-teal-ink); }
+.rylaq-workspace[data-theme='dark'] a, .rylaq-workspace[data-theme='ops'] a { color: var(--rq-teal-ink); }
 .rylaq-workspace button, .rylaq-workspace input, .rylaq-workspace select { font: inherit; color: inherit; }
 .rylaq-workspace :focus-visible { outline: 3px solid var(--rq-focus); outline-offset: 2px; border-radius: 6px; }
 .rylaq-workspace .rq-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
@@ -200,6 +201,7 @@
 .rylaq-workspace .rq-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .rylaq-workspace .rq-btn-primary { background: var(--rq-teal-ink); border-color: var(--rq-teal-ink); color: #fff; }
 .rylaq-workspace[data-theme='dark'] .rq-btn-primary { background: #0f766e; border-color: #14b8a6; }
+.rylaq-workspace[data-theme='ops'] .rq-btn-primary { background: #0e7490; border-color: #22d3ee; }
 .rylaq-workspace .rq-btn-primary:hover { background: #115e59; }
 .rylaq-workspace .rq-btn-danger { color: var(--t-serious); border-color: var(--t-serious); }
 .rylaq-workspace .rq-btn-ghost { background: transparent; }
@@ -388,6 +390,221 @@
 .rylaq-workspace .rq-palette-list { list-style: none; padding: 0; margin-top: 8px; display: grid; gap: 2px; max-height: 50vh; overflow-y: auto; }
 .rylaq-workspace .rq-palette-item { padding: 9px 12px; border-radius: 8px; cursor: pointer; }
 .rylaq-workspace .rq-palette-item.is-sel, .rylaq-workspace .rq-palette-item:hover { background: var(--t-ok-bg); color: var(--t-ok); }
+
+
+/* ==================================================================== *
+ * Situation-room (ops) theme + HUD components.
+ * Design language inspired by public situational-awareness dashboards and
+ * HUD-style globe viewers; clean-room CSS, no third-party code or assets.
+ * ==================================================================== */
+.rylaq-workspace {
+  --rq-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --rq-cyan: #0e7490;
+  --globe-sea: #eaf2fb; --globe-sea-edge: #ffffff; --globe-grid: rgba(11, 37, 69, 0.12); --globe-land: rgba(15, 118, 110, 0.9);
+  --globe-rim: rgba(15, 118, 110, 0.45); --globe-quake: #e11d48; --globe-place: #0369a1; --globe-signal: #b45309; --globe-entity: #6d28d9; --globe-text: #0f172a;
+  --hud-line: rgba(14, 116, 144, 0.55); --hud-text: #0f172a; --hud-bg: #dfe9f5;
+}
+.rylaq-workspace[data-theme='dark'] {
+  --globe-sea: #07152a; --globe-sea-edge: #0e2a4d; --globe-grid: rgba(147, 197, 253, 0.12); --globe-land: rgba(94, 234, 212, 0.85);
+  --globe-rim: rgba(45, 212, 191, 0.5); --globe-quake: #fb7185; --globe-place: #38bdf8; --globe-signal: #fbbf24; --globe-entity: #c4b5fd; --globe-text: #e6edf7;
+  --hud-line: rgba(45, 212, 191, 0.55); --hud-text: #d8f3ff; --hud-bg: #060d1a;
+}
+.rylaq-workspace[data-theme='ops'] {
+  --rq-bg: #05080f;
+  --rq-surface: #0a111e;
+  --rq-surface-2: #0e1829;
+  --rq-border: #16263f;
+  --rq-border-strong: #23395d;
+  --rq-text: #dbe7f5;
+  --rq-muted: #9db0cc;
+  --rq-faint: #8497b5;
+  --rq-focus: #67e8f9;
+  --rq-teal: #22d3ee;
+  --rq-teal-ink: #5eead4;
+  --rq-navy-ink: #7dd3fc;
+  --rq-radius: 6px;
+  --rq-shadow: 0 0 0 1px rgba(34, 211, 238, 0.03), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --globe-sea: #040b17; --globe-sea-edge: #0b2240; --globe-grid: rgba(34, 211, 238, 0.13); --globe-land: rgba(94, 234, 212, 0.9);
+  --globe-rim: rgba(34, 211, 238, 0.6); --globe-quake: #fb7185; --globe-place: #22d3ee; --globe-signal: #fbbf24; --globe-entity: #c4b5fd; --globe-text: #e6f6ff;
+  --hud-line: rgba(34, 211, 238, 0.6); --hud-text: #cffafe; --hud-bg: #03070f;
+  background-color: var(--rq-bg);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(34, 211, 238, 0.08), transparent 60%),
+    linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+}
+.rylaq-workspace .rq-mono { font-family: var(--rq-mono); letter-spacing: 0.02em; }
+.rylaq-workspace[data-theme='ops'] .rq-eyebrow, .rylaq-workspace[data-theme='ops'] .rq-rail-heading, .rylaq-workspace[data-theme='ops'] .rq-stat-label, .rylaq-workspace[data-theme='ops'] .rq-table thead th { font-family: var(--rq-mono); color: #67e8f9; letter-spacing: 0.12em; }
+.rylaq-workspace[data-theme='ops'] .rq-stat-value { font-family: var(--rq-mono); color: #e6f6ff; }
+
+/* ops header = compact command bar */
+.rylaq-workspace[data-theme='ops'] .rq-header { background: linear-gradient(180deg, #03060c, #071224); border-bottom: 1px solid rgba(34, 211, 238, 0.35); padding: 12px 20px 10px; }
+.rylaq-workspace[data-theme='ops'] .rq-title { font-size: clamp(16px, 1.6vw, 20px); letter-spacing: 0.01em; }
+.rylaq-workspace[data-theme='ops'] .rq-wordmark { color: #67e8f9; font-family: var(--rq-mono); }
+.rylaq-workspace[data-theme='ops'] .rq-tagline { color: #9db0cc; font-size: 13px; }
+.rylaq-workspace[data-theme='ops'] .rq-header .rq-btn, .rylaq-workspace[data-theme='ops'] .rq-header .rq-icon-btn { border-color: rgba(34, 211, 238, 0.3); background: rgba(34, 211, 238, 0.05); }
+.rylaq-workspace[data-theme='ops'] .rq-header .rq-btn:hover { background: rgba(34, 211, 238, 0.14); }
+.rylaq-workspace[data-theme='ops'] .rq-privacy-badge { border-color: rgba(34, 211, 238, 0.45); background: rgba(34, 211, 238, 0.08); color: #cffafe; font-size: 12.5px; }
+.rylaq-workspace .rq-cmd-status { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.rylaq-workspace .rq-cmd-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; padding: 3px 9px; border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 3px; color: #d6f5ff; background: rgba(255, 255, 255, 0.04); text-transform: uppercase; }
+.rylaq-workspace[data-theme='ops'] .rq-cmd-chip { border-color: rgba(34, 211, 238, 0.35); }
+.rylaq-workspace[data-theme='ops'] .rq-search-wrap { background: rgba(6, 12, 22, 0.92); border-bottom-color: var(--rq-border); }
+.rylaq-workspace[data-theme='ops'] .rq-search-input { background: #030811; border-color: #23395d; font-family: var(--rq-mono); font-size: 15px; }
+.rylaq-workspace[data-theme='ops'] .rq-search-input:focus { border-color: #22d3ee; box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.18), 0 0 24px rgba(34, 211, 238, 0.12); }
+.rylaq-workspace[data-theme='ops'] .rq-pill { background: transparent; border-color: #23395d; font-family: var(--rq-mono); font-size: 12px; border-radius: 3px; }
+.rylaq-workspace[data-theme='ops'] .rq-pill:hover { border-color: #22d3ee; color: #67e8f9; }
+.rylaq-workspace[data-theme='ops'] .rq-confidential { background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.3); color: #fcd34d; }
+.rylaq-workspace[data-theme='ops'] .rq-detect-card { background: #070e1b; border-color: #23395d; }
+
+/* ops rail */
+.rylaq-workspace[data-theme='ops'] .rq-rail { background: rgba(4, 9, 17, 0.9); }
+.rylaq-workspace[data-theme='ops'] .rq-rail-item { border-radius: 3px; border-left: 2px solid transparent; }
+.rylaq-workspace[data-theme='ops'] .rq-rail-item:hover { background: rgba(34, 211, 238, 0.06); }
+.rylaq-workspace[data-theme='ops'] .rq-rail-item.is-active { background: rgba(34, 211, 238, 0.1); color: #a5f3fc; border-left-color: #22d3ee; }
+.rylaq-workspace[data-theme='ops'] .rq-rail-dot { background: #22d3ee; box-shadow: 0 0 8px #22d3ee; }
+
+/* ops surfaces: bracketed frames */
+.rylaq-workspace[data-theme='ops'] .rq-section, .rylaq-workspace[data-theme='ops'] .rq-stat, .rylaq-workspace[data-theme='ops'] .rq-panel, .rylaq-workspace[data-theme='ops'] .rq-subject, .rylaq-workspace[data-theme='ops'] .rq-band { position: relative; border-radius: 4px; background: linear-gradient(180deg, rgba(14, 24, 41, 0.92), rgba(9, 16, 29, 0.92)); }
+.rylaq-workspace[data-theme='ops'] .rq-section::before, .rylaq-workspace[data-theme='ops'] .rq-panel::before, .rylaq-workspace[data-theme='ops'] .rq-stat::before { content: ''; position: absolute; top: -1px; left: -1px; width: 14px; height: 14px; border-top: 2px solid #22d3ee; border-left: 2px solid #22d3ee; pointer-events: none; }
+.rylaq-workspace[data-theme='ops'] .rq-section::after, .rylaq-workspace[data-theme='ops'] .rq-panel::after, .rylaq-workspace[data-theme='ops'] .rq-stat::after { content: ''; position: absolute; bottom: -1px; right: -1px; width: 14px; height: 14px; border-bottom: 2px solid #22d3ee; border-right: 2px solid #22d3ee; pointer-events: none; opacity: 0.6; }
+.rylaq-workspace[data-theme='ops'] .rq-section .rq-section { background: rgba(3, 8, 17, 0.6); }
+.rylaq-workspace[data-theme='ops'] .rq-section .rq-section::before, .rylaq-workspace[data-theme='ops'] .rq-section .rq-section::after { display: none; }
+.rylaq-workspace[data-theme='ops'] .rq-card, .rylaq-workspace[data-theme='ops'] .rq-task { background: rgba(3, 8, 17, 0.55); border-radius: 4px; }
+.rylaq-workspace[data-theme='ops'] .rq-card:hover { border-color: #23395d; box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.15); }
+.rylaq-workspace[data-theme='ops'] .rq-btn { border-radius: 4px; background: rgba(34, 211, 238, 0.03); }
+.rylaq-workspace[data-theme='ops'] .rq-btn:hover { border-color: #22d3ee; box-shadow: 0 0 12px rgba(34, 211, 238, 0.15); }
+.rylaq-workspace[data-theme='ops'] .rq-btn.rq-btn-primary { background: #0e7490; border-color: #22d3ee; color: #fff; }
+.rylaq-workspace[data-theme='ops'] .rq-btn.rq-btn-primary:hover { background: #0c5f75; }
+.rylaq-workspace[data-theme='ops'] .rq-btn.rq-btn-danger { color: #fda4af; border-color: rgba(251, 113, 133, 0.6); }
+.rylaq-workspace[data-theme='ops'] .rq-helper { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.rylaq-workspace[data-theme='ops'] .rq-badge { border-radius: 3px; }
+.rylaq-workspace[data-theme='ops'] .rq-table { background: transparent; }
+.rylaq-workspace[data-theme='ops'] .rq-table thead th { background: #0b1526; font-size: 11px; }
+.rylaq-workspace[data-theme='ops'] .rq-hero { background: linear-gradient(135deg, #061426, #0a2540 60%, #07303b); border: 1px solid rgba(34, 211, 238, 0.3); border-radius: 6px; }
+.rylaq-workspace[data-theme='ops'] .rq-statusbar { background: rgba(3, 7, 14, 0.96); border-top-color: rgba(34, 211, 238, 0.35); font-family: var(--rq-mono); font-size: 11.5px; }
+.rylaq-workspace[data-theme='ops'] .rq-footer { background: #03060c; }
+.rylaq-workspace[data-theme='ops'] .rq-dialog { background: #0a111e; border: 1px solid rgba(34, 211, 238, 0.35); border-radius: 6px; }
+.rylaq-workspace[data-theme='ops'] .rq-input { background: #030811; border-color: #23395d; }
+
+/* live indicator */
+.rylaq-workspace .rq-live-dot { width: 7px; height: 7px; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); animation: rq-pulse 2s infinite; flex: none; display: inline-block; }
+@keyframes rq-pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55); } 70% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+.rylaq-workspace .rq-ok { color: #34d399; }
+.rylaq-workspace .rq-warn-t { color: #fbbf24; }
+.rylaq-workspace:not([data-theme='ops']):not([data-theme='dark']) .rq-ok { color: #047857; }
+.rylaq-workspace:not([data-theme='ops']):not([data-theme='dark']) .rq-warn-t { color: #92400e; }
+
+/* situation room */
+.rylaq-workspace .rq-situation { display: grid; gap: 12px; }
+.rylaq-workspace .rq-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; padding: 8px 12px; border: 1px solid var(--rq-border-strong); border-radius: 4px; background: var(--rq-surface); }
+.rylaq-workspace .rq-strip-item { font-size: 12.5px; display: inline-flex; gap: 8px; align-items: baseline; text-transform: uppercase; }
+.rylaq-workspace .rq-strip-k { color: var(--rq-faint); font-size: 11px; letter-spacing: 0.12em; }
+.rylaq-workspace .rq-strip-spacer { flex: 1; }
+.rylaq-workspace .rq-standby { font-size: 12px; color: var(--rq-muted); border: 1px dashed var(--rq-border-strong); padding: 10px; border-radius: 4px; }
+.rylaq-workspace .rq-ticker { border: 1px solid var(--rq-border-strong); border-radius: 4px; background: var(--rq-surface); overflow: hidden; position: relative; height: 36px; display: flex; align-items: center; }
+.rylaq-workspace .rq-ticker-track { overflow: hidden; width: 100%; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.rylaq-workspace .rq-ticker-run { display: inline-flex; white-space: nowrap; animation: rq-marquee 90s linear infinite; }
+.rylaq-workspace .rq-ticker:hover .rq-ticker-run { animation-play-state: paused; }
+.rylaq-workspace .rq-ticker-item { display: inline-flex; align-items: center; gap: 8px; padding: 0 22px; font-size: 13px; border-right: 1px solid var(--rq-border); }
+.rylaq-workspace .rq-ticker-tag { font-family: var(--rq-mono); font-size: 10.5px; padding: 1px 6px; border: 1px solid var(--rq-teal); color: var(--rq-teal-ink); border-radius: 2px; letter-spacing: 0.1em; margin-right: 8px; }
+.rylaq-workspace .rq-ticker-static { padding: 0 12px; font-size: 12px; color: var(--rq-muted); }
+@keyframes rq-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.rylaq-workspace .rq-sr-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.rylaq-workspace .rq-sr-grid > .rq-panel { grid-column: span 4; }
+.rylaq-workspace .rq-sr-grid > .rq-panel-globe { grid-column: span 8; grid-row: span 2; }
+.rylaq-workspace .rq-sr-grid > .rq-panel-tall { grid-column: span 4; grid-row: span 2; }
+.rylaq-workspace .rq-sr-grid > .rq-panel-wide { grid-column: span 8; }
+.rylaq-workspace .rq-panel { background: var(--rq-surface); border: 1px solid var(--rq-border); border-radius: var(--rq-radius); min-width: 0; display: flex; flex-direction: column; }
+.rylaq-workspace .rq-panel-head { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--rq-border); flex-wrap: wrap; }
+.rylaq-workspace .rq-panel-title { font-family: var(--rq-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; color: var(--rq-text); }
+.rylaq-workspace .rq-panel-meta { font-family: var(--rq-mono); font-size: 10.5px; color: var(--rq-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-left: auto; }
+.rylaq-workspace .rq-panel-head .rq-field-inline { min-width: 150px; flex: 0 1 180px; }
+.rylaq-workspace .rq-panel-head .rq-field-inline > span { display: none; }
+.rylaq-workspace .rq-panel-head .rq-input { height: 30px; font-size: 12.5px; }
+.rylaq-workspace .rq-panel-body { padding: 10px 12px 12px; min-width: 0; }
+.rylaq-workspace .rq-panel-tall .rq-panel-body { max-height: 640px; overflow-y: auto; }
+.rylaq-workspace .rq-panel .rq-task { border: 0; padding: 0; background: transparent !important; margin: 0; }
+.rylaq-workspace .rq-panel .rq-task-head { font-size: 12px; margin-bottom: 6px; }
+.rylaq-workspace .rq-panel .rq-task-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.rylaq-workspace .rq-wire { list-style: none; padding: 0; margin: 0; display: grid; }
+.rylaq-workspace .rq-wire-row { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--rq-border); font-size: 13px; }
+.rylaq-workspace .rq-wire-tag { font-size: 11px; color: var(--rq-teal-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rylaq-workspace .rq-wire-row.is-hot .rq-wire-tag { color: var(--t-serious); font-weight: 700; }
+.rylaq-workspace .rq-wire-title { border: 0; background: none; padding: 0; color: var(--rq-text); text-align: left; cursor: pointer; font: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.rylaq-workspace .rq-wire-title:hover { color: var(--rq-teal-ink); text-decoration: underline; }
+.rylaq-workspace .rq-wire-time { font-size: 10.5px; color: var(--rq-faint); white-space: nowrap; }
+.rylaq-workspace .rq-wire-locate { border: 1px solid var(--rq-border-strong); background: transparent; color: var(--rq-teal-ink); border-radius: 3px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.rylaq-workspace .rq-fx-val { font-size: 30px; font-weight: 700; color: var(--rq-teal-ink); }
+.rylaq-workspace .rq-subject-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; overflow-wrap: anywhere; }
+.rylaq-workspace .rq-compact-list { margin: 8px 0; font-size: 12.5px; }
+.rylaq-workspace .rq-table-dense th, .rylaq-workspace .rq-table-dense td { padding: 5px 8px; font-size: 12.5px; }
+.rylaq-workspace .rq-marker-list { max-height: 320px; overflow: auto; }
+.rylaq-workspace .rq-layer-chip { font-family: var(--rq-mono); font-size: 10.5px; letter-spacing: 0.08em; padding: 1px 6px; border-radius: 2px; border: 1px solid currentColor; white-space: nowrap; }
+.rylaq-workspace .rq-layer-quake { color: var(--globe-quake); }
+.rylaq-workspace .rq-layer-place { color: var(--globe-place); }
+.rylaq-workspace .rq-layer-entity { color: var(--globe-entity); }
+.rylaq-workspace .rq-layer-signal { color: var(--globe-signal); }
+.rylaq-workspace .rq-chip-toggle { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; min-height: 30px; }
+.rylaq-workspace .rq-chip-toggle input { accent-color: var(--rq-teal); width: 15px; height: 15px; }
+
+/* HUD globe */
+.rylaq-workspace .rq-hud { position: relative; width: 100%; aspect-ratio: 16 / 10; min-height: 340px; background: radial-gradient(circle at 50% 45%, var(--hud-bg), #000 140%); border: 1px solid var(--rq-border-strong); border-radius: 4px; overflow: hidden; }
+.rylaq-workspace:not([data-theme='ops']):not([data-theme='dark']) .rq-hud { background: radial-gradient(circle at 50% 45%, #f5f9ff, #dfe9f5 120%); }
+.rylaq-workspace .rq-globe-host { position: absolute; inset: 0; }
+.rylaq-workspace .rq-globe-canvas { display: block; cursor: grab; touch-action: none; outline: none; }
+.rylaq-workspace .rq-globe-canvas:focus-visible { outline: 2px solid var(--rq-focus); outline-offset: -4px; }
+.rylaq-workspace .rq-globe-tip { position: absolute; z-index: 3; pointer-events: none; max-width: 240px; font-family: var(--rq-mono); font-size: 11.5px; background: rgba(3, 8, 17, 0.92); color: #e6f6ff; border: 1px solid rgba(34, 211, 238, 0.5); padding: 5px 8px; border-radius: 3px; opacity: 0; transition: opacity 0.12s; }
+.rylaq-workspace .rq-globe-tip.is-on { opacity: 1; }
+.rylaq-workspace .rq-hud-reticle { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; pointer-events: none; border: 1px solid var(--hud-line); border-radius: 50%; opacity: 0.75; }
+.rylaq-workspace .rq-hud-reticle::before, .rylaq-workspace .rq-hud-reticle::after { content: ''; position: absolute; background: var(--hud-line); }
+.rylaq-workspace .rq-hud-reticle::before { left: -18px; right: -18px; top: 50%; height: 1px; }
+.rylaq-workspace .rq-hud-reticle::after { top: -18px; bottom: -18px; left: 50%; width: 1px; }
+.rylaq-workspace .rq-hud-corner { position: absolute; width: 22px; height: 22px; border-color: var(--hud-line); border-style: solid; pointer-events: none; }
+.rylaq-workspace .rq-hud-corner.tl { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
+.rylaq-workspace .rq-hud-corner.tr { top: 10px; right: 10px; border-width: 2px 2px 0 0; }
+.rylaq-workspace .rq-hud-corner.bl { bottom: 10px; left: 10px; border-width: 0 0 2px 2px; }
+.rylaq-workspace .rq-hud-corner.br { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+.rylaq-workspace .rq-hud-top, .rylaq-workspace .rq-hud-bottom { position: absolute; left: 40px; right: 40px; display: flex; justify-content: space-between; gap: 10px; font-size: 11px; letter-spacing: 0.12em; color: var(--hud-text); pointer-events: none; text-transform: uppercase; text-shadow: 0 0 6px rgba(0, 0, 0, 0.7); }
+.rylaq-workspace .rq-hud-top { top: 14px; }
+.rylaq-workspace .rq-hud-bottom { bottom: 14px; }
+.rylaq-workspace .rq-hud-readout { font-size: 11px; }
+.rylaq-workspace .rq-hud-scan { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.28) 0, rgba(0, 0, 0, 0.28) 1px, transparent 1px, transparent 3px); }
+.rylaq-workspace .rq-optic-nvg .rq-globe-canvas { filter: grayscale(1) sepia(1) hue-rotate(58deg) saturate(3.2) brightness(1.15) contrast(1.15); }
+.rylaq-workspace .rq-optic-nvg .rq-hud-scan { opacity: 0.55; }
+.rylaq-workspace .rq-optic-nvg { --hud-line: rgba(134, 239, 172, 0.7); --hud-text: #bbf7d0; }
+.rylaq-workspace .rq-optic-flir .rq-globe-canvas { filter: grayscale(1) contrast(1.6) brightness(1.2); }
+.rylaq-workspace .rq-optic-flir { --hud-line: rgba(255, 255, 255, 0.7); --hud-text: #ffffff; }
+.rylaq-workspace .rq-optic-crt .rq-globe-canvas { filter: saturate(1.4) contrast(1.15) blur(0.3px); }
+.rylaq-workspace .rq-optic-crt .rq-hud-scan { opacity: 0.8; animation: rq-flicker 3.5s infinite steps(1); }
+@keyframes rq-flicker { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.65; } 51% { opacity: 0.85; } }
+.rylaq-workspace .rq-globe-controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 10px; align-items: center; }
+.rylaq-workspace .rq-seg { display: inline-flex; border: 1px solid var(--rq-border-strong); border-radius: 4px; overflow: hidden; }
+.rylaq-workspace .rq-seg-btn { font-family: var(--rq-mono); font-size: 11.5px; letter-spacing: 0.1em; border: 0; background: transparent; color: var(--rq-muted); padding: 6px 12px; cursor: pointer; min-height: 32px; }
+.rylaq-workspace .rq-seg-btn + .rq-seg-btn { border-left: 1px solid var(--rq-border-strong); }
+.rylaq-workspace .rq-seg-btn.is-on { background: rgba(34, 211, 238, 0.16); color: var(--rq-teal-ink); }
+.rylaq-workspace .rq-local-globe { position: relative; height: 320px; border: 1px solid var(--rq-border-strong); border-radius: 4px; overflow: hidden; background: radial-gradient(circle at 50% 45%, var(--hud-bg), #000 150%); }
+.rylaq-workspace:not([data-theme='ops']):not([data-theme='dark']) .rq-local-globe { background: #eef4fb; }
+@media (max-width: 1100px) {
+  .rylaq-workspace .rq-sr-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .rylaq-workspace .rq-sr-grid > .rq-panel, .rylaq-workspace .rq-sr-grid > .rq-panel-tall { grid-column: span 3; grid-row: auto; }
+  .rylaq-workspace .rq-sr-grid > .rq-panel-globe, .rylaq-workspace .rq-sr-grid > .rq-panel-wide { grid-column: span 6; grid-row: auto; }
+}
+@media (max-width: 700px) {
+  .rylaq-workspace .rq-sr-grid { grid-template-columns: 1fr; }
+  .rylaq-workspace .rq-sr-grid > .rq-panel, .rylaq-workspace .rq-sr-grid > .rq-panel-tall, .rylaq-workspace .rq-sr-grid > .rq-panel-globe, .rylaq-workspace .rq-sr-grid > .rq-panel-wide { grid-column: auto; }
+  .rylaq-workspace .rq-hud { aspect-ratio: 1 / 1; min-height: 280px; }
+  .rylaq-workspace .rq-cmd-status { justify-content: flex-start; }
+  .rylaq-workspace[data-theme='ops'] .rq-tagline { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rylaq-workspace .rq-ticker-run { animation: none; white-space: normal; flex-wrap: wrap; }
+  .rylaq-workspace .rq-live-dot { animation: none; }
+}
+@media print {
+  .rylaq-workspace[data-theme='ops'], .rylaq-workspace[data-theme='dark'] { background: #fff; color: #000; }
+  .rylaq-workspace .rq-ticker, .rylaq-workspace .rq-cmd-status, .rylaq-workspace .rq-globe-controls { display: none !important; }
+}
 
 /* responsive */
 @media (max-width: 1100px) {
@@ -603,7 +820,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
    * ------------------------------------------------------------------ */
   function freshPrefs() {
     return {
-      theme: 'system', // 'system' | 'light' | 'dark'
+      theme: 'ops', // 'ops' (situation-room HUD) | 'dark' | 'light' | 'system'
       density: 'comfortable', // 'comfortable' | 'compact'
       hiddenGroups: new Set(),
       hiddenSources: new Set(),
@@ -622,8 +839,16 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     keys: {}, // optional user-entered API keys, memory only, never logged/exported
     currentModule: 'overview',
     helpDismissed: false,
+    // Situation Room feeds: fixed, non-personal queries that survive new
+    // searches but are wiped by Clear Session / refresh like everything else.
+    feedTasks: new Map(),
+    feedGen: 0,
+    globeView: null,
     reset() {
       this.generation += 1;
+      this.feedGen += 1;
+      this.feedTasks = new Map();
+      this.globeView = null;
       if (this.session && this.session.controller) this.session.controller.abort();
       this.session = null;
       this.prefs = freshPrefs();
@@ -2249,12 +2474,13 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     if (!o.probe && cache.has(key)) return Promise.resolve(cache.get(key));
     if (!o.probe && inflight.has(key)) return inflight.get(key);
 
-    const generation = R.state.generation;
+    const genNow = () => (o.persistent ? R.state.feedGen : R.state.generation);
+    const generation = genNow();
     const p = new Promise((resolve) => {
       queue.push({
         sourceId,
         start: () => run(src, url, method, bodyStr, o, generation).then((res) => {
-          if (res.ok && !o.probe && generation === R.state.generation) cache.set(key, res);
+          if (res.ok && !o.probe && generation === genNow()) cache.set(key, res);
           resolve(res);
         })
       });
@@ -2275,7 +2501,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       timedOut = true;
       ctrl.abort();
     }, src.timeoutMs || 12000);
-    const outer = o.probe ? null : sessionSignal();
+    // Persistent feed requests are not cancelled by a new search (they carry no search term).
+    const outer = o.probe || o.persistent ? null : sessionSignal();
     const onOuter = () => ctrl.abort();
     if (outer) {
       if (outer.aborted) ctrl.abort();
@@ -2286,7 +2513,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     const finish = (res) => {
       clearTimeout(timer);
       if (outer) outer.removeEventListener('abort', onOuter);
-      if (generation !== R.state.generation && !o.probe) return { ok: false, errorKind: 'aborted' };
+      if (!o.probe && generation !== (o.persistent ? R.state.feedGen : R.state.generation)) return { ok: false, errorKind: 'aborted' };
       rs.lastFetch = new Date();
       if (res.ok) rs.ok++;
       else if (res.errorKind !== 'aborted') rs.fail++;
@@ -2381,38 +2608,46 @@ No sanctions clearance. No AML determination. No procurement bid advice.
    * producing normalized records. Tasks are keyed and de-duplicated per
    * session so modules can share results; nothing survives Clear Session.
    * ------------------------------------------------------------------ */
+  const isFeed = (key) => String(key).startsWith('feed:');
+  function store(key) {
+    if (isFeed(key)) return R.state.feedTasks;
+    return R.state.session ? R.state.session.tasks : null;
+  }
+  const genOf = (key) => (isFeed(key) ? R.state.feedGen : R.state.generation);
+
   R.tasks = {
+    isFeed,
     /** def: { key, sourceId, label, run: async () => records[] } */
     ensure(def) {
-      const s = R.state.session;
-      if (!s) return null;
-      let t = s.tasks.get(def.key);
+      const st = store(def.key);
+      if (!st) return null;
+      let t = st.get(def.key);
       if (t && t.status !== 'error') return t;
       t = { key: def.key, sourceId: def.sourceId, label: def.label, status: 'idle', records: [], errorKind: null, def };
-      s.tasks.set(def.key, t);
+      st.set(def.key, t);
       return t;
     },
     get(key) {
-      const s = R.state.session;
-      return s ? s.tasks.get(key) : null;
+      const st = store(key);
+      return st ? st.get(key) : null;
     },
     async start(key) {
-      const s = R.state.session;
-      if (!s) return null;
-      const t = s.tasks.get(key);
+      const st = store(key);
+      if (!st) return null;
+      const t = st.get(key);
       if (!t || t.status === 'loading' || t.status === 'done' || t.status === 'empty') return t;
       if (!R.runtime.isLive(t.sourceId)) {
         t.status = 'linkout';
         R.events.emit('task:update', t);
         return t;
       }
-      const gen = R.state.generation;
+      const gen = genOf(key);
       t.status = 'loading';
       t.errorKind = null;
       R.events.emit('task:update', t);
       try {
         const out = await t.def.run();
-        if (gen !== R.state.generation) return t;
+        if (gen !== genOf(key)) return t;
         if (out && out.error) {
           t.status = out.error === 'linkout' ? 'linkout' : 'error';
           t.errorKind = out.error;
@@ -2424,7 +2659,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
           t.retrievedAt = new Date();
         }
       } catch (e) {
-        if (gen !== R.state.generation) return t;
+        if (gen !== genOf(key)) return t;
         t.status = 'error';
         t.errorKind = 'bad_shape';
         console.error('[RYLAQ] task failed:', t.sourceId); // no query / payload in logs
@@ -2449,9 +2684,13 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       }
       return this.runAll(keys);
     },
+    /** Session tasks only (feeds are listed separately via feeds()). */
     all() {
       const s = R.state.session;
       return s ? [...s.tasks.values()] : [];
+    },
+    feeds() {
+      return [...R.state.feedTasks.values()];
     },
     records() {
       return this.all().flatMap((t) => t.records || []);
@@ -2725,39 +2964,48 @@ No sanctions clearance. No AML determination. No procurement bid advice.
   };
 
   /* ------------------------------- USGS ------------------------------- */
+  function quakeRecord(f, ref) {
+    const p = f.properties || {};
+    const [lo, la, depth] = (f.geometry && f.geometry.coordinates) || [];
+    const dist = ref && isFinite(la) ? haversineKm(ref.lat, ref.lon, la, lo) : null;
+    const badges = [{ text: 'Seismic event', tone: 'warn' }];
+    if (p.alert) badges.push({ text: 'USGS PAGER alert: ' + p.alert, tone: p.alert === 'green' ? 'neutral' : 'serious' });
+    if (p.tsunami) badges.push({ text: 'Tsunami flag (source-reported)', tone: 'serious' });
+    return rec('usgs', 'earthquake', {
+      title: `M${fmt.num(p.mag, 1)} — ${p.place || 'location not reported'}`,
+      subtitle: new Date(p.time).toISOString().replace('T', ' ').slice(0, 16) + ' UTC',
+      recordId: f.id,
+      url: p.url,
+      endpoint: 'fdsnws/event/1/query',
+      category: 'public-event',
+      badges,
+      fields: [
+        ['Magnitude', fmt.num(p.mag, 1) + (p.magType ? ' ' + p.magType : '')],
+        ['Time (UTC)', new Date(p.time).toISOString()],
+        ['Depth (km)', fmt.num(depth, 1)],
+        ['Coordinates', isFinite(la) ? `${Number(la).toFixed(3)}, ${Number(lo).toFixed(3)}` : null],
+        ref ? ['Distance from reference point (km, derived by RYLAQ)', dist !== null ? fmt.num(dist, 0) : null] : null,
+        ['Review status', p.status],
+        ['Significance (USGS sig)', p.sig]
+      ].filter(Boolean),
+      data: { mag: p.mag, dist, alert: p.alert, time: p.time, lat: la, lon: lo }
+    });
+  }
   C.usgs = {
     async near(lat, lon, radiusKm, days, minMag) {
       const start = new Date(Date.now() - (days || 30) * 86400000).toISOString().slice(0, 10);
       const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${lat}&longitude=${lon}&maxradiuskm=${radiusKm || 500}&minmagnitude=${minMag || 4.5}&starttime=${start}&orderby=magnitude&limit=20`;
       const r = await call('usgs', url, { validate: (j) => isArr(j.features) });
       if (r.error) return r;
-      const records = r.data.features.map((f) => {
-        const p = f.properties || {};
-        const [lo, la, depth] = (f.geometry && f.geometry.coordinates) || [];
-        const dist = isFinite(la) ? haversineKm(lat, lon, la, lo) : null;
-        const badges = [{ text: 'Seismic event', tone: 'warn' }];
-        if (p.alert) badges.push({ text: 'USGS PAGER alert: ' + p.alert, tone: p.alert === 'green' ? 'neutral' : 'serious' });
-        if (p.tsunami) badges.push({ text: 'Tsunami flag (source-reported)', tone: 'serious' });
-        return rec('usgs', 'earthquake', {
-          title: `M${fmt.num(p.mag, 1)} — ${p.place || 'location not reported'}`,
-          subtitle: new Date(p.time).toISOString().replace('T', ' ').slice(0, 16) + ' UTC',
-          recordId: f.id,
-          url: p.url,
-          endpoint: 'fdsnws/event/1/query',
-          category: 'public-event',
-          badges,
-          fields: [
-            ['Magnitude', fmt.num(p.mag, 1) + (p.magType ? ' ' + p.magType : '')],
-            ['Time (UTC)', new Date(p.time).toISOString()],
-            ['Depth (km)', fmt.num(depth, 1)],
-            ['Distance from reference point (km, derived by RYLAQ)', dist !== null ? fmt.num(dist, 0) : null],
-            ['Review status', p.status],
-            ['Significance (USGS sig)', p.sig]
-          ],
-          data: { mag: p.mag, dist, alert: p.alert, time: p.time }
-        });
-      });
-      return { records, meta: { query: { radiusKm, days, minMag } } };
+      return { records: r.data.features.map((f) => quakeRecord(f, { lat, lon })), meta: { query: { radiusKm, days, minMag } } };
+    },
+    /** Global feed (fixed query, no user data): M≥minMag worldwide over the last N days. */
+    async global(days, minMag, opts) {
+      const start = new Date(Date.now() - (days || 7) * 86400000).toISOString().slice(0, 10);
+      const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=${minMag || 4.5}&starttime=${start}&orderby=time&limit=150`;
+      const r = await call('usgs', url, Object.assign({ validate: (j) => isArr(j.features) }, opts || {}));
+      if (r.error) return r;
+      return { records: r.data.features.map((f) => quakeRecord(f, null)), meta: { total: r.data.features.length } };
     }
   };
 
@@ -2868,9 +3116,9 @@ No sanctions clearance. No AML determination. No procurement bid advice.
   R.events.on('session:cleared', () => {
     kevCatalog = null;
   });
-  async function loadKev() {
+  async function loadKev(opts) {
     if (kevCatalog) return { data: kevCatalog };
-    const r = await call('cisaKev', 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json', { validate: (j) => isArr(j.vulnerabilities) });
+    const r = await call('cisaKev', 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json', Object.assign({ validate: (j) => isArr(j.vulnerabilities) }, opts || {}));
     if (r.error) return r;
     kevCatalog = r.data;
     return r;
@@ -2908,8 +3156,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       const v = r.data.vulnerabilities.find((x) => String(x.cveID).toUpperCase() === cve.toUpperCase());
       return { records: v ? [kevRecord(v, r.data.catalogVersion)] : [], meta: { catalogVersion: r.data.catalogVersion, count: r.data.count } };
     },
-    async recent(n) {
-      const r = await loadKev();
+    async recent(n, opts) {
+      const r = await loadKev(opts);
       if (r.error) return r;
       const rows = r.data.vulnerabilities.slice().sort((a, b) => String(b.dateAdded).localeCompare(String(a.dateAdded)));
       return { records: rows.slice(0, n || 15).map((v) => kevRecord(v, r.data.catalogVersion)), meta: { total: r.data.count, catalogVersion: r.data.catalogVersion } };
@@ -3172,7 +3420,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       if (o.agency) url += '&conditions%5Bagencies%5D%5B%5D=' + enc(o.agency);
       if (o.from) url += '&conditions%5Bpublication_date%5D%5Bgte%5D=' + enc(o.from);
       if (o.to) url += '&conditions%5Bpublication_date%5D%5Blte%5D=' + enc(o.to);
-      const r = await call('federalRegister', url, { validate: (j) => obj(j) });
+      const r = await call('federalRegister', url, { validate: (j) => obj(j), persistent: !!o.persistent });
       if (r.error) return r;
       return { records: (r.data.results || []).map(frRecord), meta: { total: r.data.count || 0 } };
     },
@@ -3434,8 +3682,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
 
   /* -------------------------------- ECB -------------------------------- */
   C.ecb = {
-    async exr(ccy, n) {
-      const r = await call('ecb', `https://data-api.ecb.europa.eu/service/data/EXR/D.${enc(ccy)}.EUR.SP00.A?format=jsondata&lastNObservations=${n || 30}`, { allow404: true, validate: (j) => j === null || isArr(j.dataSets) });
+    async exr(ccy, n, opts) {
+      const r = await call('ecb', `https://data-api.ecb.europa.eu/service/data/EXR/D.${enc(ccy)}.EUR.SP00.A?format=jsondata&lastNObservations=${n || 30}`, Object.assign({ allow404: true, validate: (j) => j === null || isArr(j.dataSets) }, opts || {}));
       if (r.error) return r;
       if (!r.data) return { records: [] };
       const ds = r.data.dataSets[0] || {};
@@ -3798,6 +4046,461 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       });
     }
   };
+})(window.RYLAQWorkspace);
+
+/* ---- modules/worldLand.js ---- */
+/*
+ * worldLand.js — GENERATED by scripts/gen-land.mjs. Do not edit by hand.
+ * Coastline polylines (5120 points) for the Situation Room globe.
+ * Source: Natural Earth 1:110m land (public domain), redistributed as TopoJSON
+ * by the world-atlas package, whose licence notice follows:
+ *
+ * Copyright 2013-2019 Michael Bostock
+ * 
+ * Permission to use, copy, modify, and/or distribute this software for any purpose
+ * with or without fee is hereby granted, provided that the above copyright notice
+ * and this permission notice appear in all copies.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+ * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+ * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+ * OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+ * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+ * THIS SOFTWARE.
+ */
+(function (R) {
+  'use strict';
+  const RAW = '-596,-800,-3,-5,-3,-5,-21,1,-22,0,-12,3,0,1,-6,2,23,0,21,-1,8,4,5,4,10,-4;-1592,-795,-19,-1,-13,3,-6,4,-1,0,-6,3,6,4,19,-2,10,-3,7,-3,3,-5;-452,-780,13,-5,4,-6,1,-4,1,-5,-16,-3,-16,-3,-19,-2,-21,-2,-24,0,-13,4,2,4,21,3,9,3,6,4,5,4,6,3,6,5,5,0,15,2,15,-2;-1212,-735,13,-2,12,2,-6,-3,-9,-3,-14,1,-10,3,2,4,12,-2;-1256,-735,16,-4,-6,1,-13,1,-14,2,7,3,10,-3;-990,-719,11,-2,11,1,6,-5,-8,1,-12,-1,-12,1,-14,-1,-10,2,-5,4,6,2,13,-2,14,0;-685,-710,2,-4,-2,-4,-3,-4,-12,-1,-11,-2,-13,0,5,4,-12,-1,-11,-2,-8,3,0,4,11,4,7,1,11,0,3,5,1,4,0,8,5,5,9,1,6,-4,2,-3,4,-5,4,-4,2,-5;-1800,-847,1,0,8,6,18,-4,2,1,2,1,4,1,3,1,1,0,2,0,1,0,14,-4,13,4,2,0,29,2,10,-2,5,-1,15,-4,28,-2,23,-3,38,-3,29,3,43,-2,24,-3,26,3,28,3,2,4,-39,1,-33,2,-8,4,-27,2,2,5,4,4,3,3,-2,5,-16,2,-8,4,-15,3,24,-1,23,2,15,-3,17,3,17,3,8,4,-4,4,-13,2,-14,3,-21,1,-18,1,-19,1,-7,4,-13,3,-8,4,-3,11,5,-1,9,-3,17,1,16,1,8,-4,16,1,13,2,13,3,11,3,15,1,0,4,-4,4,3,3,13,2,6,-3,15,2,12,2,14,0,13,1,14,3,11,2,12,2,8,-1,7,0,14,1,14,-2,13,0,14,2,13,-1,15,-1,14,0,14,0,15,0,14,0,10,3,12,2,13,-2,12,1,11,4,6,-3,4,-4,6,-3,10,3,12,-4,14,-1,11,-3,15,1,12,2,15,-1,14,-1,14,-2,5,4,-7,4,-5,3,-12,1,-6,4,-2,3,-4,8,8,-2,13,0,13,0,12,-1,10,-3,4,-4,14,0,13,1,13,2,13,1,10,-2,13,1,9,7,8,-4,11,-2,13,1,8,-4,13,0,12,-1,12,-3,8,4,4,4,10,-4,14,1,10,-2,7,-4,13,1,10,2,11,3,12,1,14,2,13,1,9,2,6,3,3,5,-2,4,-3,4,-3,3,-3,4,-3,4,0,4,1,4,4,3,4,5,2,3,-2,5,-1,4,4,4,6,3,6,4,7,3,8,3,4,4,6,3,6,3,10,0,6,3,7,2,8,1,7,3,6,3,8,1,6,-2,-4,-4,-10,-3,-4,-2,-8,2,-8,-1,-7,-2,-7,-3,-5,-3,-1,-4,0,-4,5,-3,-7,-2,-9,-1,-6,-3,-6,-3,-6,-5,-2,-4,4,-4,5,-3,8,-2,8,-3,4,-4,2,-4,3,-4,5,-3,3,-4,1,-9,3,-4,1,-4,3,-4,-1,-5,-6,-4,-6,-3,-13,-2,-4,-3,-7,-4,-15,-3,-13,-2,-12,-2,-14,-2,-8,-4,-16,-1,-18,1,-16,-1,-16,0,3,-4,15,-2,11,-3,6,-3,-11,-3,-17,1,-14,-3,-1,-4,0,-4,12,-3,2,-4,12,-4,22,-1,18,-3,14,-3,18,-3,25,-2,24,-2,17,-3,19,-4,10,-4,5,-4,12,3,16,3,18,3,21,3,17,3,25,0,25,-1,20,-3,6,4,14,3,26,1,19,2,19,2,21,1,22,2,15,3,-7,3,-4,4,0,3,-19,0,-21,-2,-19,0,-3,4,1,8,5,2,14,2,17,2,12,3,12,3,9,4,14,2,13,1,7,1,16,1,14,1,13,2,12,2,11,3,14,3,9,3,9,3,3,4,-11,2,4,4,7,4,10,1,11,3,10,3,8,4,5,5,7,2,12,0,5,-4,12,0,0,4,5,4,11,-1,3,-4,12,-1,13,2,12,1,11,0,5,-4,11,3,10,2,11,1,11,1,11,3,11,1,8,3,6,3,8,-2,10,1,8,-5,5,-3,12,2,4,4,10,2,13,0,4,-4,8,4,11,1,12,0,11,0,11,-1,11,-1,4,-3,7,-3,11,2,11,0,12,0,11,0,10,2,11,1,8,3,10,1,10,1,8,3,5,6,6,3,10,-2,4,-3,9,-2,10,0,7,-3,7,-3,11,3,3,4,9,2,11,3,9,1,12,2,8,2,8,3,8,2,9,-1,9,3,7,3,9,0,9,2,1,4,9,3,8,1,10,2,9,1,9,-1,10,-1,8,-2,1,-5,8,-3,6,-3,12,-1,7,-3,8,-3,10,0,8,2,9,4,9,-2,10,-1,9,-2,10,0,10,0,8,-11,0,-2,-1,-5,-10,-2,-8,-4,1,-4,12,0,-2,-4,-5,-3,-5,-5,8,-3,12,-1,11,2,6,4,3,4,6,3,6,3,2,3,6,5,6,1,11,1,10,1,10,1,5,4,3,4,7,4,10,2,8,2,6,4,6,1,7,2,10,-1,9,1,10,1,11,0,7,2,5,7,4,-3,4,-5,9,-1,9,-1,10,1,10,-1,9,0,7,1,8,-1,8,-2,9,2,11,0,9,1,10,-1,7,3,5,3,7,3,12,7,7,-1,7,-3,7,-3,13,-6,10,-1,9,0,11,2,10,1,9,3,6,3,12,0,7,2,8,-2,5,-3,7,-3,11,0,7,-2,12,-3,12,-1,11,1,8,3,6,3,9,1,9,-1,11,-1,9,1,9,0,9,-1,9,-1,9,2,11,2,10,0,11,0,10,1,9,1,2,5,1,4,6,-3,2,-4,3,-4,4,-4,9,-2,11,1,13,0,9,1,13,0,10,0,13,0,11,-1,7,-3,-2,-4,6,-3,11,-2,11,-3,13,-2,14,-1,10,-2,11,0,7,3,9,-2,7,-3,9,-3,12,-1,12,-1,5,-4,11,-2,8,-4,11,-1,11,0,11,-1,12,0,12,0,11,-2,11,-2,10,-2,7,-3,-1,-4,-5,-3,-5,-5,-3,-3,-5,-5,-13,-1,-6,-4,-13,-2,-5,-4,-6,-3,-8,-4,-4,-4,-2,-3,-1,-5,0,-4,6,-4,2,-3,4,-4,19,-1,4,-5,-18,-1,-15,-2,-19,-1,-9,-5,-2,-5,-4,-4,-5,-3,13,-4,5,-4,9,-4,12,-3,14,-3,15,-3,23,-3,5,-5,29,-2,2,-1,7,-3,28,2,23,-3,-3583,-2;-678,-538,13,-7,14,-2,-4,-5,-10,0,-5,3,-3,-4,-8,-3,-11,1,-8,3,-10,1,-13,6,-10,5,-14,12,9,-2,14,-7,13,-4,5,5,3,7,10,4,7,-1,3,-5,5,-7;-585,-511,8,-4,-3,-4,-14,-3,-4,4,-9,-5,-5,5,12,5,8,-2,7,4;703,-497,-16,-1,0,6,2,4,0,2,7,-3,9,-2,1,-2,-3,-4;1454,-408,10,-3,5,1,8,2,6,-1,1,-12,-4,-3,-1,-8,-3,3,-7,-7,-2,0,-7,1,-6,8,-1,7,-6,8,0,5,7,-1;1730,-409,2,-4,8,4,2,-4,0,-5,-3,-4,-7,-8,-5,-4,4,-5,-8,0,-8,-3,-3,-7,-6,-10,-8,-5,-5,-2,-9,0,-6,3,-11,1,-2,3,5,8,13,10,6,2,8,3,8,6,6,5,5,7,4,3,1,5,7,5,2,-4;1746,-362,7,-10,1,7,4,-3,2,-8,8,-3,6,-1,6,4,5,-1,-2,-9,-3,-6,-8,1,-3,-3,1,-5,-1,-2,-4,-5,-5,-7,-8,-4,-1,3,-4,1,5,8,-3,6,-11,4,1,4,7,3,1,8,0,6,-4,7,0,2,-5,4,-7,9,-5,7,4,0,6,-5,7,-3,3,-9;1671,-222,-4,-2,-5,3,-7,4,-7,6,-6,7,-2,3,5,0,5,-4,5,-3,3,-3,8,-6,5,-5;1784,-173,3,-3,-1,-6,-7,-1,-5,1,-1,5,4,3,4,-1,3,2;-1800,-166,3594,-2,-7,-2,-1,4,5,2,3,0,-3594,3;-1800,-161,0,-5;-1800,-161,2,1,-1,-5,-1,-1;1678,-165,-3,-1,-3,4,0,3,6,-6;1671,-149,2,-8,-3,1,-2,-1,-1,3,-1,8,5,-3;501,-136,1,-12,3,-4,-1,-5,-2,-3,-3,6,-2,-3,2,-8,-1,-4,-3,-2,-1,-9,-4,-11,-5,-14,-6,-19,-4,-14,-4,-11,-8,-3,-9,-4,-6,3,-8,3,-2,5,-1,9,-4,8,0,7,1,8,5,1,0,4,5,7,1,7,-3,4,-2,7,0,9,3,5,1,7,5,0,6,2,4,2,4,0,6,6,8,6,3,5,-1,4,4,-1,5,7,1,6,3,5,3,-5,3,-4,3,-7;1436,-138,3,-7,7,3,3,-4,5,-4,-1,-4,2,-9,1,-5,3,-1,3,-9,-1,-5,3,-7,11,-5,7,-5,6,-4,-1,-2,6,-7,4,-10,4,2,4,-5,2,2,2,-11,7,-6,5,-4,8,-8,2,-8,1,-5,-1,-7,5,-8,-1,-9,-2,-5,-2,-9,0,-5,-2,-7,-5,-10,-7,-4,-4,-8,-3,-5,-3,-9,-4,-5,-2,-7,-2,-7,1,-3,-6,-4,-11,0,-9,-4,-5,-4,-6,-4,-8,4,-6,2,1,5,-5,-2,-9,-7,-9,3,-5,1,-6,1,-10,3,-6,6,-2,8,-2,5,-5,4,-10,1,3,5,-2,7,-5,-7,-9,-2,6,6,1,6,4,5,-1,7,-8,-9,-6,-3,-4,-8,-8,4,0,6,-6,7,-5,4,2,2,-13,6,-7,0,-10,5,-18,-1,-13,-3,-11,-4,-10,1,-10,-5,-9,-3,-2,-5,-3,-4,-9,0,-6,-1,-9,2,-7,-1,-7,-1,-6,-5,-3,0,-5,-2,-5,-4,-7,1,-7,0,-10,6,-6,2,0,6,5,1,2,2,0,4,1,7,-1,6,-5,10,-2,6,0,5,-4,7,0,3,-4,4,-2,8,-5,8,-2,4,5,-4,-4,9,5,-3,3,-4,0,5,-5,8,-1,3,-2,3,1,6,2,2,1,5,-1,6,4,7,1,-7,4,7,9,3,4,4,8,4,5,1,2,-1,8,3,6,1,2,3,3,0,5,0,11,3,5,5,3,5,5,5,1,4,0,5,7,9,4,-9,5,2,-4,5,3,5,5,-2,1,7,5,5,3,4,5,2,0,3,4,-1,0,2,5,1,5,2,7,-5,6,-6,6,0,6,-1,-2,6,5,8,4,2,-1,3,4,6,6,3,5,-1,9,2,0,5,-8,3,6,2,6,-3,6,-4,8,-2,3,1,6,-3,6,2,4,0,2,1,5,-5,-3,-5,-4,-4,-3,0,1,-4,-3,-5,-4,-5,1,-3,8,-6,8,-3,5,-3,7,-6,3,0,5,-3,2,-3,9,-3,7,3,2,6,2,4,1,6,3,8,-1,4,0,3,-1,6,2,8,1,2,-1,3,2,5,2,6,0,3,4,3,3,-5,1,-6,2,-1,1,-4,3,-5,1,-6,0,-4;1621,-105,3,-3,-7,0,-4,6,6,-2,2,-1;1207,-102,-4,-1,-13,7,9,2,5,-3,4,-3,-1,-2;1609,-99,-4,0,-6,1,-3,2,1,4,7,-2,3,-2,2,-3;1617,-96,-2,-2,-7,9,-2,6,3,0,4,-8,4,-5;1244,-101,-8,-3,-1,2,1,3,4,6,10,4,1,2,8,3,7,0,4,1,3,-1,-3,-3,-11,-4,-8,-3,-7,-7;1179,-81,4,-3,6,1,2,-4,-11,-2,-7,-1,-6,0,4,5,5,1,3,3;1229,-81,-1,-6,-15,-2,-14,1,0,4,8,2,6,-3,7,0,9,4;1599,-83,0,-2,-8,4,-5,3,-4,4,2,1,4,-3,8,-4,3,-3;1575,-73,-2,-1,-4,2,-4,4,0,2,6,-4,4,-3;1086,-68,19,-1,3,4,18,-4,4,-7,15,-2,12,-6,-11,-4,-11,5,-9,-1,-11,1,-9,2,-12,4,-7,1,-4,-2,-18,4,-2,5,-9,0,7,10,12,-1,8,-3,4,-1,1,-4;1347,-62,-5,-7,-1,8,2,3,2,4,2,-3,0,-5;1559,-68,-3,-1,-4,4,-5,6,-2,8,2,1,1,-3,3,-3,4,-6,5,-3,-1,-3;1520,-55,-5,-1,-2,-2,-5,-3,-6,-2,-5,0,-8,3,-6,3,1,3,9,-2,5,1,2,5,1,0,1,-5,6,0,3,4,5,3,-1,6,6,1,2,-2,0,-6,-3,-6;1272,-35,-3,-3,-7,2,-2,4,10,1,2,-4;1305,-31,3,-8,-8,5,-8,0,-6,0,-7,0,2,6,13,0,11,-3;1531,-45,-3,-3,-2,6,-2,4,-4,3,-6,5,-7,3,2,2,6,-3,3,-2,4,-2,4,-5,4,-3,1,-5;1341,-12,3,-16,11,-6,8,11,11,6,9,0,9,-4,7,-3,11,-2,17,-7,19,-6,7,-5,5,-5,2,-6,16,-6,3,-5,-9,-1,2,-7,9,-6,6,-11,6,0,0,-4,7,-2,-3,-2,11,-4,-1,-3,-7,-1,-2,3,-9,1,-10,2,-8,6,-5,6,-6,8,-13,5,-8,-3,-6,-3,1,-8,-8,-3,-5,1,-11,1,-9,8,-10,2,-2,-3,-13,0,4,8,7,3,-3,11,-5,8,-19,9,-8,0,-15,10,-3,-5,-4,-1,-2,4,0,4,-8,5,11,3,7,0,-1,3,-15,0,-4,6,-9,2,-4,5,14,2,5,3,16,-4,1,-4;1252,14,-8,-10,-7,-2,-10,2,-16,0,-9,-2,-2,-7,9,-9,6,4,18,4,0,-5,-5,2,-4,-6,-9,-4,10,-13,-2,-3,9,-12,0,-6,-6,-3,-4,3,5,8,-10,-4,-2,3,1,4,-7,6,1,10,-7,-3,1,-12,0,-14,-6,-2,-4,3,3,9,-2,10,-4,0,-3,7,4,7,1,7,5,16,2,4,9,7,8,-3,12,-1,12,0,10,7,1,-2;1287,11,-1,-8,-5,1,-1,-7,4,-5,-3,-1,-4,6,-3,13,2,8,3,4,1,-6,6,-1,1,-4;1058,-59,-11,0,-8,9,-13,8,-4,6,-8,8,-5,7,-8,14,-8,9,-3,8,-4,8,-9,7,-5,8,-8,6,-10,11,-1,5,6,-1,16,-2,9,-9,7,-7,6,-4,9,-11,11,0,8,-7,6,-8,7,-5,-4,-8,6,-4,4,0,1,-7,4,-5,7,-1,5,-7,-2,-12,-1,-16;1179,18,11,-9,-12,-1,-3,-7,0,-9,-9,-7,-1,-10,-4,-15,-1,3,-11,-4,-4,6,-7,1,-5,3,-12,-4,-4,5,-7,0,-8,1,-1,13,-5,3,-5,8,-1,9,1,9,6,7,7,-3,8,2,2,8,4,2,12,2,7,8,5,6,4,4,9,5,7,7,5,8,4,0,5,-5,1,-4,6,-3,9,-3,-1,-4,-7,0,2,-5,-7,-4,-6,-9,7,-9,-1,-5;1264,84,1,-6,0,-6,-3,-9,-4,10,-4,-5,3,-8,-3,-4,-12,6,-3,7,3,5,-6,4,-3,-4,-5,1,-7,-6,-2,3,4,8,6,3,6,4,3,-5,8,3,2,5,7,0,-1,8,8,-5,1,-5,1,-4;812,62,-9,-2,-4,8,-2,14,4,16,7,-5,5,-7,5,-11,-2,-10,-4,-3;-609,101,-9,-1,-2,1,3,3,0,4,6,1,2,0,0,-8;1240,103,-4,-4,-3,-6,-3,-3,-6,7,2,3,2,3,1,6,6,0,-2,-6,8,9,-1,-9;1185,93,-13,-9,5,7,7,6,6,7,5,10,2,-8,-7,-6,-5,-7;1219,119,6,-3,6,0,0,-4,-5,-5,-6,-3,0,5,0,5,-1,5;1255,122,3,-12,-8,3,0,-3,3,-6,-5,-3,0,7,-3,1,-2,6,6,-1,0,4,-6,8,9,-1,3,-3;1215,131,-2,-9,-5,5,-5,8,9,-1,3,-3;1213,185,6,-3,3,3,1,-3,-1,-4,3,-7,-2,-8,-6,-4,-2,-8,2,-8,6,-1,4,1,13,-5,-1,-6,3,-2,-1,-5,-8,5,-4,6,-2,-4,-7,6,-9,-2,-5,3,1,4,3,2,-3,3,-1,-4,-5,6,-2,4,0,10,4,-4,1,16,3,9,6,0;-656,182,-2,-2,-8,0,-6,-1,0,5,1,1,8,0,5,-1,2,-2;-769,179,-3,-2,-6,2,-5,3,1,3,4,0,2,0,7,-1,5,-2,2,-3,-7,0;-726,199,9,-2,1,2,8,0,6,-3,2,0,2,-3,6,0,-1,-3,5,0,5,-4,-4,-4,-5,2,-4,0,-4,0,-1,-2,-4,0,-2,2,-3,-1,-4,-7,-3,2,0,2,-7,2,-4,-1,-7,1,-4,-2,-6,3,1,4,10,-2,7,-1,4,3,-5,4,0,4,-6,1,2,3,6,0;1103,187,-8,-5,-8,3,-1,9,5,4,11,3,6,0,2,-4,-4,-4,-3,-6;-1555,191,-2,-2,-2,2,0,2,-2,4,1,1,1,2,0,2,0,1,1,-1,4,-1,2,-1,1,-1,3,-4,-4,-3,-3,-1;-1561,206,-3,0,-2,2,-1,1,1,1,3,-1,3,-1,-1,-2;-1568,212,0,-1,-5,0,0,1,5,0;-1577,213,-1,0,-3,0,-2,2,0,1,3,1,1,0,2,-4;-1593,220,-2,-1,-3,2,1,0,1,1,2,0,1,-2;-797,228,4,-4,10,1,3,-2,9,-6,6,-5,3,0,6,-2,-1,-3,8,0,7,-4,-1,-2,-7,-2,-6,0,-7,1,-15,-1,7,5,-4,3,-6,0,-4,3,-2,6,-6,0,-9,2,-3,2,-13,2,-4,2,4,2,-10,1,-7,-5,-4,0,-2,-3,-4,-1,-5,1,6,3,2,4,4,2,5,2,8,1,2,1,9,-1,8,0,9,-3;-775,238,-3,-1,-2,6,-4,3,2,6,3,0,4,-9,0,-5;1212,228,-5,-8,-5,8,-1,8,6,9,8,8,5,-3,-2,-6,-6,-16;-778,266,-11,-2,-1,4,5,1,7,-1,0,-2;-770,266,-2,-7,-2,1,1,5,-5,4,0,1,8,-4;1346,341,2,-3,-6,-6,-4,3,-5,-2,-3,-6,-6,3,0,5,5,6,6,-2,4,5,7,-3;346,357,-7,-5,1,-1,0,-1,-10,-4,-5,1,-2,4,4,0,1,0,1,3,8,0,9,3;237,357,5,-3,8,0,8,0,-1,-2,6,1,-1,-3,-15,-1,0,2,-12,2,2,4;155,382,-3,-8,1,-3,-2,-5,-8,4,-5,1,-14,5,2,5,11,-1,11,1,7,1;92,412,6,-7,-1,-13,-5,0,-4,-3,-4,3,0,12,-2,6,5,-1,5,3;1410,371,-4,-8,2,-5,-5,-7,-13,-4,-18,-1,-14,-11,-7,3,0,8,-18,-2,-11,-5,-12,0,10,-8,-7,-16,-6,-5,-5,4,2,9,-6,3,-4,7,10,3,5,6,10,6,7,6,20,3,11,-2,10,18,7,-5,15,10,5,4,7,12,-2,12,4,6,11,2,5,-14,0,-8,-9,-10,0,-11;96,422,-4,-8,-4,2,-3,7,2,3,7,4,2,-8;1439,442,7,-2,7,4,2,-11,-14,-3,-9,-10,-16,7,-5,-11,-11,0,-2,10,5,7,11,1,3,14,3,8,11,-11,8,-3;-637,465,8,-1,9,0,-5,-4,-4,0,-12,4,-3,3,4,3,3,-5;-618,491,-5,0,-13,3,-9,5,3,1,13,-3,11,-4,0,-2;-1235,485,-5,-1,-17,4,-3,4,-8,3,-2,3,-11,2,-3,5,0,3,11,-2,6,-2,9,-1,4,-4,5,-4,10,-4,4,-6;-561,507,-7,-9,7,3,6,-2,-3,-3,9,-3,4,3,10,-4,-3,-7,7,2,1,-5,4,-7,-5,-8,-4,-1,-7,2,2,8,-2,2,-12,-9,-6,0,7,5,-10,2,-10,0,-20,0,-1,3,6,4,-4,2,8,6,10,16,7,6,8,3,5,0,-2,-3,-5,-6;-1327,540,10,1,-4,-11,9,-8,-4,0,-6,4,-4,5,-5,3,-1,5,0,3,5,-2;1436,507,11,-17,-15,3,-6,-14,9,-11,0,-7,-8,6,-6,-7,-2,8,1,10,-1,11,2,7,1,14,-6,9,1,14,9,5,-4,4,5,2,2,-7,4,-10,-1,-9,4,-11;-68,523,-18,-6,-14,1,8,11,-5,10,14,8,7,4,9,1,10,-6,-5,-7,2,-7,-8,-9;127,556,-6,-8,-11,6,-1,4,15,3,3,-5;-1530,571,-10,-4,-5,3,-2,5,9,3,6,2,6,-1,5,-3,-9,-5;-30,586,-11,-10,10,1,11,0,-2,-8,-9,-9,10,-1,10,-13,7,-1,6,-12,3,-4,12,-2,-1,-6,-6,-3,4,-5,-9,-5,-13,0,-17,-3,-5,2,-6,-5,-9,1,-7,-3,-6,2,15,10,9,2,-16,2,-3,4,11,3,-6,5,2,7,15,-1,2,6,-7,6,-12,2,-3,3,4,4,-3,3,-6,-5,0,10,-6,5,4,10,8,8,8,0,12,0;-1656,599,-6,-1,-6,1,-7,3,10,2,8,-1,1,-4;-793,622,-4,-6,-4,1,-3,3,1,1,4,3,4,0,2,-2;-819,627,-12,-5,-7,0,-2,3,8,4,13,0,0,-2;-1717,638,6,-2,6,1,8,-3,10,-1,-1,-1,-7,-2,-8,2,-4,2,-9,-1,-2,1,1,4;-852,657,2,-5,5,2,6,-3,11,-3,12,-3,0,-5,8,1,7,-4,-9,-3,-15,3,-6,4,-10,-5,-14,-5,-4,5,-13,-1,8,5,2,8,3,9,7,0;-145,665,-2,-7,11,-7,-13,-7,-29,-7,-9,-2,-13,1,-28,4,10,4,-22,5,18,2,0,3,-21,2,6,7,16,1,15,-7,15,6,13,-3,16,5,17,0;-759,671,-11,0,-2,5,4,5,9,2,8,-3,0,-4,-1,-2,-7,-3;-1800,690,25,-8,26,-10,-1,-6,7,-3,-3,8,27,-2,20,-9,-10,-5,-16,-1,-1,-9,-4,-2,-9,0,-8,3,-13,3,-2,5,-10,1,-12,-1,-5,3,2,4,-12,-2,5,-5,-6,-4;-1800,650,0,40;-956,691,-7,-3,-13,3,-8,-1,-14,4,9,3,7,4,10,-2,6,-2,3,-2,7,-4;-1800,715,3600,-7,-11,0,-2,3,-3587,4;-1800,715,1,1,9,0,14,-3,-1,-2,-10,-2,-13,-1,0,7;-905,695,0,-10,13,8,12,-7,-3,-7,10,-7,10,7,7,9,1,11,14,-1,15,-1,13,-5,1,-5,-8,-6,7,-5,-1,-5,-19,-7,-14,-1,-11,3,-3,-5,-9,-9,-3,-4,-12,-7,-14,-1,-8,-4,-1,-6,-11,-2,-13,-8,-10,-11,-4,-8,-1,-12,15,-1,4,-10,5,-7,14,2,19,-4,10,-4,7,-5,12,-3,11,-4,16,-1,11,-1,-1,-8,3,-10,7,-11,15,-10,8,3,5,11,-5,15,-7,6,16,4,11,7,6,7,-1,7,-7,9,-12,7,12,11,-5,9,-3,15,7,3,17,-3,10,-1,9,2,9,-3,12,-6,3,-4,18,0,0,-9,3,-12,9,-2,7,-6,15,6,10,11,6,4,8,-9,13,-12,11,-12,-4,-7,13,-5,9,-6,16,-3,7,-3,4,-8,7,-2,4,-3,1,-12,-7,-3,-7,-4,-17,-3,-12,-9,-17,-1,-22,2,-15,0,-10,-1,-8,-7,-13,-4,-15,-14,-11,-9,8,2,16,13,21,8,15,1,9,-5,-9,-6,3,-11,3,-8,13,-5,17,2,10,11,0,-7,7,-4,-12,-6,-23,-6,-9,-4,-12,-8,-7,1,-1,9,18,8,-16,0,-11,-2,1,-3,-10,-5,-11,-3,-10,-3,-6,-7,-1,-1,0,-6,3,-5,4,0,-1,3,3,-2,-1,-3,-6,-1,-5,0,-8,-2,-4,0,-6,-1,-8,-3,15,2,3,-2,-14,-3,-7,0,0,2,-3,-3,3,-1,-2,-7,-7,-8,-1,3,-2,0,-3,3,2,-5,2,-2,0,-4,-3,-4,-5,-8,-1,1,3,6,-5,4,-2,8,-1,-4,2,-6,-7,1,7,-3,0,-9,3,-1,1,-3,2,-10,-7,-8,-10,-3,-7,-6,-5,0,-5,-4,-1,-3,-11,-7,-6,-5,-4,-6,-2,-7,2,-7,3,-8,5,-7,0,-5,4,-11,0,-7,0,-4,-3,-6,-3,-1,-5,1,-1,4,-4,3,-5,8,-5,8,-2,4,2,7,-2,5,-8,8,-4,2,-10,-5,-2,1,-5,5,-6,2,-11,-1,-9,1,-8,-1,-4,-1,2,-3,0,-4,2,-2,-2,-1,-4,1,-4,-2,-7,0,-7,6,-9,-1,-7,2,-6,-1,-9,-2,-9,-8,-10,-4,-5,-5,-3,-4,0,-7,1,-5,2,-3,-4,-9,-2,-7,-1,-14,-1,-5,2,-5,3,-5,2,-8,7,-7,2,-6,4,-5,11,-2,4,-5,9,3,7,1,8,2,6,2,6,4,3,6,0,8,2,3,7,3,11,2,8,0,6,0,3,-2,0,-5,-6,-5,-2,-7,2,-1,-2,-5,-2,-7,-3,2,-2,0,0,-1,2,-1,0,-2,-2,-5,1,-1,-1,-4,1,-1,-2,-5,-2,-2,-1,-1,-2,-3,3,-2,1,2,3,-2,1,0,2,2,3,0,1,-1,1,0,5,0,5,0,3,1,1,1,3,0,3,-1,2,0,2,1,5,-1,1,-1,3,-2,3,-2,4,-1,3,-3,-1,-1,-1,-2,1,-4,-2,-3,-1,-4,-1,-5,1,-2,0,-5,-1,-1,-1,-4,0,-3,-2,-2,1,-3,1,-2,3,-5,4,-4,5,-4,3,-4,0,-2,4,0,1,0,3,-2,5,1,4,2,6,2,3,3,6,0,-1,-1,6,-1,4,-2,4,-3,3,-2,6,-1,7,7,4,1,0,4,2,8,6,5,6,0,1,2,8,-1,8,5,4,3,4,4,4,0,3,-3,-2,-3,-1,-3,-5,-1,3,-4,0,-6,-5,-5,4,-8,4,0,3,8,-4,3,0,8,12,4,-1,4,4,4,3,-7,7,-1,7,-5,0,-3,9,-1,11,1,5,-4,8,-1,6,3,0,2,12,1,12,0,-8,-3,3,-5,8,0,8,-5,1,-8,5,0,4,-2,7,-4,6,-7,0,-5,4,0,6,-5,4,-3,12,-2,1,2,8,0,10,-2,4,-2,7,-2,11,-8,1,-4,4,0,2,-6,6,-17,5,-2,1,-7,-8,-8,3,-3,18,-1,0,-10,8,6,12,-3,17,-7,5,-5,-2,-6,12,3,19,-5,15,0,15,-8,13,-11,7,-3,9,0,4,-4,3,-12,2,-6,-4,-17,-5,-6,-14,-14,-7,-12,-7,-8,-3,-1,-3,-7,1,-19,-3,-15,-1,-7,-3,-4,-2,-13,-10,-13,-1,-10,-9,-5,-2,-6,-11,0,-15,-4,-8,-4,-11,-3,-11,-8,-9,-10,-1,-7,1,-6,-2,-10,-2,-5,-7,-5,-11,-18,-9,-8,-7,-4,-4,-10,-7,-6,-4,-6,-11,-6,-8,2,-5,-1,-9,5,-7,-1,-6,6,-1,-5,13,-9,-2,-7,7,-4,-1,-5,-9,-13,-15,-5,-20,-2,-11,1,2,-6,-2,-8,2,-5,-6,-3,-11,-2,-9,4,-4,-3,1,-10,7,-3,5,4,3,-6,-9,-3,-8,-6,-1,-10,-3,-5,-9,0,-8,-6,-3,-7,10,-7,10,-2,-4,-9,-12,-6,-6,-12,-9,-4,-4,-4,3,-11,6,-6,-4,1,-9,0,-4,-2,-9,-4,-2,-9,-4,-1,-12,4,-11,7,-12,5,-4,7,3,6,-5,6,-1,17,4,10,11,8,-15,3,9,8,3,17,12,-4,5,21,-7,3,-3,-13,-6,2,3,14,3,19,5,6,-3,10,-1,11,4,1,6,16,7,16,5,15,-3,15,3,8,-1,12,6,13,2,19,3,21,3,22,-1,16,-2,15,-10,5,-1,4,-19,10,-18,11,-8,7,-4,8,1,3,-8,13,-10,18,-9,20,-4,5,-4,7,-7,7,-8,4,4,4,-5,10,3,7,8,6,5,7,-2,5,-4,-5,-6,5,2,2,-1,9,3,2,2,6,4,7,-1,4,6,2,6,4,-1,3,4,1,-1,5,3,3,5,1,4,6,4,5,-4,3,2,6,-2,9,2,2,-2,9,-4,5,-3,3,-2,6,2,2,-2,1,-2,3,-5,3,-5,-1,-2,-3,-4,-3,-2,0,-1,-2,5,-6,-3,-1,-1,-1,-5,-1,-2,6,-1,-2,-3,1,-2,4,-4,1,-3,1,-4,0,0,-2,-2,1,-5,2,-2,3,1,1,0,3,-3,2,-4,2,-3,1,-1,3,-3,2,1,-3,-2,-2,-2,2,-4,1,-1,2,0,3,1,4,-2,1,2,2,-4,3,-4,4,-2,3,-5,4,-5,4,1,2,2,-2,1,1,-2,3,-3,1,-1,-3,-6,1,-3,1,-5,2,-5,0,-3,2,-5,2,-6,0,-5,2,-5,4,-12,11,-5,3,-8,3,-6,-1,-8,-3,-5,-1,-7,2,-7,2,-9,5,-8,1,-11,5,-9,4,-2,3,-6,1,-10,3,-4,4,-11,6,-5,6,-2,5,3,1,-1,3,2,3,0,3,-3,5,-1,4,-3,5,-9,10,-10,7,-5,7,-9,4,-1,2,1,6,-5,3,-6,5,-2,7,-6,0,-6,6,-4,5,-1,3,-5,7,-4,8,1,4,-8,4,-3,-1,-6,3,-1,-4,1,-5,1,-7,4,-4,7,-7,2,-3,1,0,2,-4,1,0,2,-6,3,-3,3,-3,6,-5,3,-10,3,-4,3,-5,0,-5,5,0,4,-5,4,-4,0,-2,-5,-4,-1,0,-3,6,-7,6,-7,5,-5,2,0,8,-1,5,-5,3,-7,5,-1,-2,-2,3,-7,2,-6,6,1,1,4,-1,4,4,0,5,-7,7,-6,3,-4,6,-4,6,-4,8,-4,9,-2,5,-6,6,-5,1,-1,3,-6,1,-3,2,-10,1,-2,2,-1,6,-10,10,-8,14,0,2,-5,3,-7,9,-2,8,-5,5,2,8,0,9,-3,8,4,9,2,18,-2,14,-3,8,-3,5,1,2,15,-4,5,-9,3,3,-2,8,-3,8,-2,0,-19,10,-7,4,-18,4,-6,9,2,6,-13,5,-2,8,-12,7,0,5,-6,4,-9,3,-2,9,-13,8,-6,9,-9,1,-16,0,-12,3,-21,10,-9,2,-18,4,-14,-1,-19,5,-12,4,-11,-2,2,-7,-6,-1,-11,-2,-9,-3,-11,-2,-2,5,5,10,11,3,-3,3,-13,-6,-7,-6,-14,-7,7,-5,-9,-8,-11,-4,-10,-3,-3,-4,-15,-5,-3,-5,-12,-4,-7,0,-9,-2,-10,-4,-9,-3,-17,-3,-1,2,11,4,9,3,11,6,12,1,5,4,14,6,2,2,8,4,1,7,6,6,-12,-3,-3,2,-6,-4,-6,5,-3,-3,-4,5,-10,-4,-6,0,-1,6,2,3,-6,4,-13,-2,-9,5,-6,2,-1,6,-7,4,4,6,8,5,3,5,8,1,7,-1,8,4,8,0,7,3,-2,4,-5,2,7,4,-6,0,-11,-2,-3,-3,-7,3,-15,-2,-14,3,-4,4,-13,6,14,4,22,5,8,0,-1,-5,21,0,-8,6,-12,4,-7,5,-10,4,-14,4,6,5,18,0,12,5,3,5,10,4,10,1,19,5,9,-1,15,6,15,-3,8,-4,4,2,17,-1,-1,-2,16,-2,10,1,21,-3,19,-1,8,-1,13,2,15,-3,11,-2,19,-2,16,-5,10,-1,9,4,12,3,15,-1,15,4,16,3,7,-4,7,2,3,5,7,-1,16,-9,14,7,1,-8,12,2,4,3,12,-1,16,-4,23,-4,14,-2,10,1,13,-5,-14,-5,18,-2,27,1,9,2,10,-6,11,5,-10,4,6,4,12,0,9,1,8,-2,10,-6,11,1,17,-5,16,2,15,0,-2,6,9,2,16,-4,0,-9,6,8,8,0,5,10,-11,6,-12,4,1,11,12,7,13,-1,10,-5,14,-11,-9,-5,19,-2;-1142,731,-5,-4,23,3,13,-5,12,5,9,-4,8,-9,5,4,-7,10,9,1,10,-1,11,-4,6,-10,3,-7,17,-5,18,-5,-1,-4,-16,-1,6,-4,-3,-3,-18,1,-18,3,-11,-1,-19,-3,-30,-2,-13,-1,-6,5,-13,3,-9,-1,-12,8,6,1,16,1,14,0,13,2,-19,2,-22,-1,-14,0,-5,4,23,4,-16,0,-17,3,8,7,7,4,27,6,10,-2;-1045,734,-9,-6,-15,7,3,1,13,0,8,-2;-763,731,0,-3,-10,1,-11,0,-11,-2,-3,1,-11,5,1,4,4,1,23,-1,18,-6;-866,732,8,-7,9,8,26,5,17,-11,-2,-6,20,3,10,4,22,-6,14,-4,1,-5,19,3,10,-7,24,-4,9,-4,9,-9,-18,-5,23,-6,16,-3,15,-9,15,0,-3,-7,-17,-12,-12,4,-16,10,-13,-1,-1,-6,10,-6,14,-5,4,-2,6,-10,-3,-7,-13,2,-25,8,14,-8,11,-6,1,-4,-27,4,-21,6,-12,5,3,3,-15,5,-14,5,0,-3,-29,-2,-9,4,7,7,19,0,20,2,-3,3,4,5,12,10,-2,4,-4,4,-15,5,-21,3,7,2,-11,7,-9,0,-8,4,-5,-3,-18,-2,-36,3,-22,3,-16,1,-8,4,10,4,-14,0,-3,10,8,9,10,4,26,3,-8,-6;-1004,738,12,-2,18,2,3,-3,-10,-5,16,-4,-2,-9,-17,-4,-9,1,-7,3,-25,8,0,3,21,-1,-11,7,11,4;1436,732,-15,0,-21,1,-1,1,9,4,13,1,14,-4,1,-3;-932,728,-11,-8,-11,1,-6,8,0,5,5,5,10,2,21,0,19,-2,-15,-9,-12,-2;-1205,714,-26,-5,-5,4,-23,6,3,3,8,8,9,7,-10,6,34,1,14,-2,25,0,10,-3,11,-4,-13,-3,-24,-7,-13,-7,0,-4;1507,751,-11,-4,-16,1,-19,4,3,3,18,-2,25,-2;-936,750,-6,-4,-14,1,-12,2,5,5,14,2,9,-3,4,-3;1451,756,-8,-8,-37,0,-16,-2,-20,7,5,6,13,2,27,0,36,-5;-985,767,8,-4,0,-6,-5,-7,-16,-1,-11,2,0,5,-16,0,-1,7,11,0,15,3,14,0,1,1;-1082,762,4,-4,9,2,10,0,2,-5,-6,-5,-34,-1,-25,-5,-15,0,-2,3,21,5,-45,-2,-14,2,14,10,9,3,28,-4,18,-6,17,0,-14,9,9,4,10,-1,4,-5;575,707,-6,-1,-32,2,-3,4,-18,3,-1,5,10,2,-1,6,20,8,-9,2,24,8,-3,5,23,5,33,7,33,1,17,4,20,1,7,-4,-7,-3,-36,-5,-30,-4,-31,-10,-15,-10,-16,-9,2,-9,19,-8;-947,771,11,-3,20,0,9,-3,-3,-4,12,-3,6,-2,14,0,14,-1,16,2,20,1,17,-1,10,-4,3,-4,-7,-2,-14,-3,-13,2,-29,-2,-20,0,-17,1,-26,3,-4,6,-1,5,-10,4,-21,1,-11,4,4,4,20,-1;-1162,776,-1,-7,-8,-4,-9,0,-19,-4,-16,-2,-14,2,17,8,21,6,15,0,14,1;491,413,5,-7,5,-1,3,-2,-8,-1,-2,-8,-2,-4,-3,-2,0,-5,3,-7,9,-2,7,-5,15,-2,15,3,1,2,-2,7,2,11,-8,3,3,7,-7,0,2,9,10,-3,8,4,-7,6,-3,5,-8,-2,-1,-8,-3,7,-1,2,3,4,-2,4,-12,3,-4,9,-6,3,0,3,10,-1,0,7,9,2,8,-1,2,9,-2,7,-10,-1,-8,2,-12,-4,-9,-2,-5,-6,-9,-2,-10,-10,9,-9,-1,-7,11,-12,5,-5;-1800,650,3600,0,-13,-5,-13,1,9,-5,6,-8,5,-3,1,-4,-3,-3,-18,2,-28,-7,-9,-1,-16,-8,-14,-6,-4,-4,-14,7,-26,-8,-5,4,-9,-5,-14,2,-3,-7,-12,-10,1,-4,11,-2,-1,-14,-10,-1,-4,-8,4,-4,-17,-6,-4,-11,-15,-2,-3,-11,-14,-9,-4,7,-4,15,-6,22,5,14,9,6,0,4,16,3,17,12,18,10,18,8,8,15,-12,-1,-6,-9,-26,-11,-8,13,-26,-4,-25,-16,8,-7,-22,-2,-15,-1,0,7,-15,2,-13,-5,-30,1,-33,-3,-32,-19,-39,-24,16,-1,5,-6,10,-2,6,5,11,-1,14,-11,1,-9,-8,-10,-1,-12,-4,-16,-15,-14,-4,-7,-13,-12,-14,-11,-6,-6,-14,-6,-6,0,-6,5,-14,-7,-1,-4,-4,1,-4,-4,-3,-3,0,-7,-5,-2,-2,-2,-4,-3,-6,-2,-5,-2,0,-5,-1,-1,4,-1,6,-5,8,-12,3,-6,0,-12,-4,-5,-9,-2,-8,-4,-9,-1,-1,5,2,8,-5,10,8,2,-7,8,-5,2,-1,-1,-3,-1,-1,2,-2,0,-3,2,3,4,2,2,-1,1,3,6,-1,2,-6,1,-4,2,-14,-3,-8,-4,-10,-3,5,5,-2,4,8,6,-6,5,-8,-3,-12,-7,-6,-6,-10,-1,-5,-5,6,-6,8,-2,0,-5,8,-2,11,7,9,-4,7,0,1,-6,-14,-2,-5,-6,-9,-5,-5,-7,10,-5,4,-10,6,-9,7,-8,0,-8,-6,-2,2,-6,6,-3,-2,-8,-2,-8,-6,-1,-7,-10,-8,-14,-9,-12,-14,-9,-14,-8,-11,-1,-6,-5,-4,3,-6,-4,-14,-5,-10,-2,-4,-11,-5,0,-3,7,3,4,-14,3,-5,-1,-13,-9,-8,-9,-2,-7,7,-11,10,-13,9,-6,6,-8,4,-19,-1,-17,-8,-7,-12,-6,-8,-9,-12,-9,-4,6,3,7,-8,6,-8,1,-4,6,-5,10,-9,4,-9,0,2,8,-9,0,-1,-11,-5,-15,-3,-8,0,-8,7,0,4,-9,2,-9,5,-5,6,-2,5,-5,3,-1,6,-6,4,-6,0,-7,-1,-5,1,-3,1,-6,4,-3,3,-9,0,-3,-7,-1,-9,8,-12,8,-1,5,-6,6,-1,9,-4,5,1,7,-2,5,-4,3,-2,5,-5,6,-5,5,-2,-6,-2,5,2,7,3,9,-1,8,3,7,-4,6,1,11,-4,5,-3,12,-2,13,-4,8,-7,-5,-11,-7,-6,1,-6,2,3,13,-2,9,-8,12,2,3,-6,2,-7,8,-3,5,-1,5,-2,5,-4,6,-9,0,1,-4,-3,-6,-5,2,-1,-1,-3,1,-4,1,-1,-4,-7,0,-12,-2,0,-8,-5,-5,-14,-7,-12,-12,-7,-6,-10,-7,0,-4,-5,-3,-9,-3,-5,-1,-3,-8,2,-13,1,-8,-4,-9,0,-17,-6,-1,-4,-8,3,-3,-9,-3,-4,-6,-4,-3,-9,9,-5,14,-4,10,-3,5,-5,9,-3,13,-2,6,-9,14,-4,19,-3,13,0,12,-2,10,-14,-6,-7,1,-13,12,4,4,-3,3,-11,9,-8,2,-3,8,-7,7,-19,-2,-16,0,-14,-1,-19,3,-11,2,-11,1,-4,13,-5,1,-8,-1,-10,-5,-12,3,-10,8,-10,3,-6,9,-8,13,-5,-1,-7,3,-3,-4,-6,1,2,-5,-1,-2,3,-7,4,-9,5,-2,2,-4,7,-4,0,-4,-1,-4,1,-3,3,-3,2,-3,1,-2,-1,7,3,5,3,1,3,-3,0,-6,-2,-6,2,-4,2,1,0,-3,8,2,8,0,6,-1,7,7,7,6,7,7,3,3,1,-1,-1,-4,-1,-2,1,-8,4,-7,6,-3,7,-2,6,-1,5,-6,2,-3,4,-2,0,-2,-4,-6,-1,-3,-4,-3,-4,-7,-5,1,-2,-3,-1,-5,1,-6,-1,-2,-5,0,-6,-3,-1,-5,-2,-2,-6,0,-4,-3,0,-4,-5,-3,-6,1,-6,-3,-5,0,-7,-3,-2,-5,0,-3,-10,-4,-16,-5,-9,-7,-5,-1,-3,1,-5,-4,-7,-2,-8,-1,-3,0,-2,-3,-3,0,-1,-3,-5,0,-3,-1,-7,0,-3,6,1,6,-2,3,-2,7,-3,4,2,1,-1,4,1,2,0,4,-1,5,-4,3,0,4,-5,3,-6,9,-3,8,-7,7,-4,1,-7,10,-1,7,1,6,-6,11,-5,4,-5,2,-3,6,0,2,-3,5,-3,2,-3,8,-7,8,-5,7,-5,0,2,5,0,4,2,4,-1,1,-3,-4,-2,-8,-2,-5,-3,-2,-3,4,-5,4,-7,15,-1,-1,4,-11,6,-10,8,-16,4,-5,3,-6,9,-11,-2,-1,0,-7,12,-9,2,-2,3,-10,-2,-2,1,-10,4,-12,4,-2,5,-4,6,-12,3,-9,5,-5,14,-9,5,-6,6,-6,3,-3,5,-3,2,-3,0,-4,-6,-3,4,-2,4,-2,2,-4,4,-5,5,0,10,3,10,1,9,3,5,1,4,2,5,0,4,0,4,2,6,1,4,3,4,0,0,-3,-1,-5,0,-6,-2,-3,-2,-11,-5,-11,-6,-13,-9,-15,-9,-11,-11,-13,-10,-9,-15,-9,-10,-8,-11,-12,-2,-5,-2,-3,-7,-4,-3,-4,-3,-1,-2,-7,-3,-4,-2,-6,-4,-4,-5,-12,1,-6,6,-3,1,-3,-3,-6,1,-3,-1,-5,3,-6,5,-10,3,-2,2,-5,-1,-10,2,-8,0,-16,2,-5,-3,-7,-4,-7,-6,-6,-10,-4,-11,-5,-11,-11,-4,-1,-7,-8,-4,-2,-1,-7,5,-8,2,-5,0,-3,2,0,-1,-10,-1,-4,2,-2,-1,-4,-5,-4,-8,-3,-12,-6,-4,-3,1,-4,2,-1,-1,-5,-2,-8,-1,-8,-3,-5,-7,-5,-2,-1,-4,-5,-3,-5,-5,-7,-12,-11,-7,-6,-7,-4,-11,-4,-5,-1,-1,-2,-6,1,-5,-2,-11,2,-6,-1,-4,0,-11,-4,-8,-1,-6,-4,-5,0,-4,3,-3,1,-5,4,0,-1,-2,2,1,6,-4,7,3,2,0,7,-6,10,-5,8,-8,13,-7,8,-4,7,-2,10,-3,7,-3,15,0,12,-1,6,-4,4,-5,8,-6,12,-2,7,-8,9,-1,8,-1,6,2,9,3,9,1,5,3,9,2,4,6,6,3,5,1,7,0,6,-3,3,-3,6,-2,6,0,2,3,4,-3,10,-2,7,-5,6,1,2,-1,3,-3,8,-8,10,-10,10,-7,9,-6,10,0,3,2,3,3,8,2,7,-2,2,3,11,2,8,-4,6,-5,2,-2,5,-2,1,0,3,-10,-4,-4,1,-4,-3,-8,1,-5,6,-4,7,-7,7,-7,0,-9,0,-8,-2,-8,-2,-16,-6,-6,-3,-9,-3,-9,3,-4,0,-7,2,-6,0,-12,-2,-7,-3,-10,-4,-2,1,-3,0,-10,4,-9,8,-9,5,-6,7,-3,1,-7,4,-5,5,-2,4,-1,7,-5,6,-4,4,-2,1,-3,2,-1,5,-1,2,-3,1,-6,5,-4,0,-2,3,0,2,-3,2,-1,2,-1,8,1,4,-4,8,-5,3,4,2,5,7,2,5,-1,6,3,5,2,9,-2,10,-1,5,1,5,-2,5,-6,4,1,4,0,5,4,3,3,5,0,3,3,7,6,7,3,1,3,6,0,5,4,7,6,3,7,10,5,4,9,1,8,7,5,3,8,8,-2,13,4,8,1,6,6,6,10,5,8,4,7,10,3,7,7,0,6,-5,10,1,10,-2,4,0,10,5,11,2,6,4,10,3,17,2,16,1,5,-2,10,4,10,0,4,-2,7,0,11,5,7,-2,0,-5,8,4,1,-2,-5,-5,0,-5,3,-2,-1,-9,-6,-5,1,-5,6,0,2,-5,4,-2,12,-3,4,1,8,-2,13,-4,5,-9,9,-2,14,-4,11,-5,5,2,5,5,-3,8,3,4,8,5,6,1,14,-2,3,-4,4,0,3,-2,10,-1,3,-3,13,0,10,-3,9,-3,5,-1,8,3,4,3,9,1,7,-2,3,-5,2,4,8,-3,8,0,5,2,3,3,-1,1,3,5,2,7,1,3,4,8,5,7,-1,8,2,4,-3,5,4,4,-6,-1,-9,2,-7,-6,-15,-1,-8,5,-11,1,-2,-4,-7,-2,-10,6,-11,0,-6,10,-7,5,5,8,-6,5,11,9,15,1,4,7,19,-1,12,6,12,3,17,0,17,-7,14,-4,12,2,9,-1,12,5,1,5,-2,6,-6,4,-6,1,-3,3,-13,9,-12,4,-8,5,7,2,8,8,-5,4,14,4,0,3,-9,-2,-8,-1,-6,-3,-10,-1,-8,-3,0,-6,5,-3,10,1,-2,-4,-11,-2,-13,-5,-6,2,2,4,-10,3,1,2,10,4,-3,2,-16,2,0,4,-10,-1,-3,-6,-8,-7,0,-3,-5,-2,-3,1,-2,-12,-6,-4,-3,-7,3,-6,1,-4,9,-3,-2,-2,-12,-1,-4,-3,-8,-5,-4,4,1,2,-7,1,-5,0,-12,-2,7,-6,-5,-1,-6,0,-5,5,-2,-2,3,-6,5,-5,-4,-2,5,-5,5,-3,0,-5,-9,2,3,-5,-6,-1,4,-9,-7,0,-8,4,-4,8,-2,7,-4,5,-5,5,0,3,-2,1,0,2,-6,4,-1,4,1,7,1,3,-1,2,-2,1,-3,3,-5,2,-9,3,-6,4,-9,3,-8,7,2,1,-5,4,0,4,-6,1,-3,-4,-3,3,0,4,2,1,-8,1,-8,-3,1,-5,-1,-3,3,-5,9,-5,5,-8,11,-8,8,0,3,-3,-3,-2,9,-3,7,-3,9,-5,1,-2,-2,-4,-6,5,-8,1,-4,-6,7,-4,-1,-5,-5,-1,-5,-8,-4,-1,0,3,2,6,2,2,-4,5,-3,5,-4,2,-3,4,-6,2,-5,4,-7,1,-8,4,-9,7,-7,5,-3,10,-5,1,-8,4,-5,-2,-6,-4,-4,-1,-9,-6,-19,3,-15,-3,-1,-6,0,-6,-9,-7,-13,-2,-1,-3,-6,-6,-4,-8,4,-6,-6,-4,-2,-7,-7,-2,-7,-7,-13,0,-10,0,-6,-4,-4,-4,-5,1,-3,4,-3,5,-10,2,-4,-3,-5,2,-5,-1,2,8,-1,6,-5,1,-2,3,1,7,4,4,0,4,2,6,0,4,-2,3,0,4,0,7,-4,4,14,7,12,-1,14,0,11,-2,8,1,16,-1,5,6,2,20,-10,11,-8,5,-15,4,-1,7,13,2,17,-3,-3,12,9,-5,23,8,3,8,9,2,8,2,5,3,9,15,14,4,8,0,2,2,8,0,2,-2,7,5,-2,4,-1,6,-4,5,0,10,2,3,2,3,9,1,4,2,8,3,-1,-5,-2,-3,1,-3,5,-1,-2,-4,-3,1,-8,-7,3,-5,0,-4,10,-2,0,-4,11,2,5,3,11,-4,5,-3,7,3,16,4,12,4,10,-2,1,-3,10,0,2,5,14,3,-2,8,0,8,5,6,9,4,8,-8,8,0,2,8,1,6,-3,-1,-7,3,-1,6,13,3,13,1,10,-2,11,1,11,5,-10,5,-18,-1,-18,-3,-16,-3,-6,6,-10,3,2,10,-4,9,4,6,9,6,23,11,7,2,-1,4,-14,5,-17,-3,-10,-7,2,-6,-16,-8,-20,-9,-7,-14,7,-7,10,-5,-9,-11,-11,-3,-4,-17,-5,-9,-12,1,-6,-8,-12,0,-3,9,-8,11,-8,15,-6,6,-20,-12,-13,-2,-14,5,-4,11,-3,23,9,6,27,9,19,10,19,14,24,19,16,8,28,12,22,5,16,-1,15,8,19,0,18,2,31,-7,-13,-3,11,-6,10,3,17,-6,27,-2,38,-12,8,-4,0,-7,-11,-5,-16,-3,-45,8,-7,-2,16,-7,1,-15,13,-3,8,-2,1,4,-6,5,7,3,24,-6,8,3,-6,7,23,10,9,-1,10,-3,5,7,-8,6,5,6,-7,6,28,-4,5,-5,-12,-1,0,-6,7,-3,16,2,2,6,21,5,35,9,8,-1,-10,-6,12,-1,7,3,19,1,15,4,11,-6,12,6,-11,6,6,4,29,-4,14,-3,36,-11,7,5,-10,5,-1,3,-12,1,4,4,-6,8,0,3,18,9,7,9,7,2,27,-2,2,-6,-10,-8,7,-3,3,-7,-2,-14,11,-6,-5,-7,-19,-14,11,-1,4,3,11,3,3,5,9,5,-6,5,4,7,-11,1,-2,5,8,10,-13,8,18,7,-2,7,5,1,5,-6,-4,-10,11,-1,-5,7,17,4,21,0,18,-6,-9,9,-1,10,18,3,24,-1,21,1,-8,6,12,6,11,0,20,5,26,2,3,2,27,1,8,-2,22,5,19,0,2,5,10,4,24,4,17,-3,-14,-3,23,-1,2,-5,10,2,29,0,22,-5,8,-4,-2,-5,-11,-3,-26,-5,-8,-3,12,-2,15,-2,9,2,5,-7,5,3,16,2,32,-2,2,-5,42,-1,1,7,21,-1,16,0,16,-6,5,-6,-6,-4,12,-8,16,-4,10,10,16,-4,17,3,19,-4,7,3,17,-1,-8,9,14,4,90,-6,9,-6,26,-8,40,2,20,-1,8,-4,-1,-8,12,-3,14,2,18,1,18,-2,19,1,18,-9,12,3,-8,7,5,4,31,-3,21,1,29,-5,-3586,-4;-938,775,-5,0,-19,1,-2,2,20,0,7,-2,-1,-1;-1102,777,-19,-3,-14,3,8,4,14,1,14,-2,-3,-3;247,779,-22,-5,-18,3,7,2,-6,4,21,2,4,-4,14,-2;-1097,786,-12,-2,-16,0,0,2,10,3,5,-1,13,-2;-958,781,-15,-3,-8,3,-5,4,0,4,13,-1,5,0,12,-4,-2,-3;-1001,783,4,-4,-16,1,-16,3,-23,1,10,3,-12,2,-1,4,20,-1,27,-4,7,-5;1051,783,-57,-4,19,13,8,1,7,0,26,-6,-3,-4;183,797,32,-7,-25,-4,-5,-8,-9,-2,-5,-8,-12,0,-21,6,9,3,-15,3,-20,9,-8,8,28,3,5,-3,14,0,4,3,15,1,13,-4;254,804,20,-3,-15,-6,-29,-1,-29,2,-2,2,-14,1,-11,4,31,3,14,-2,10,3,25,-3;511,805,-13,-1,-9,-1,-1,-1,-12,-2,-11,2,6,4,-23,0,20,2,15,0,2,-3,6,3,9,1,15,-2,-4,-2;999,789,-21,-1,-28,2,-17,4,-8,7,-13,2,26,7,21,3,20,-6,23,-9,-3,-9;-870,797,12,-4,-14,-3,-18,-7,-18,-1,-21,1,-11,5,1,3,8,3,-19,0,-11,3,-6,5,7,4,7,3,10,1,-4,2,23,1,13,-6,17,-2,16,-2,8,-6;-685,831,27,-1,21,-1,18,-3,0,-2,-24,-5,-25,-2,-9,-2,22,0,-23,-6,-17,-3,-17,-8,-20,-2,-7,-2,-30,-1,14,-1,-7,-2,8,-5,-9,-3,-16,-3,-5,-4,-14,-3,2,-2,17,0,0,-2,-27,-6,-26,3,-29,-2,-15,1,-19,1,-1,5,18,2,-5,7,7,1,26,-5,-13,7,-17,2,8,4,18,2,3,3,-14,4,-4,6,27,-1,8,-1,16,4,-23,1,-35,-1,-18,4,-8,4,-12,3,-2,3,15,2,12,0,19,2,15,4,12,-1,11,-3,8,6,13,1,18,1,30,1,6,-1,29,1,21,0,22,-1;-271,835,63,-8,-19,-4,-38,0,-54,-1,5,-2,35,1,31,-3,19,3,8,-4,-11,-5,26,3,48,4,30,-2,6,-4,-41,-7,-5,-3,-32,-1,23,-1,-12,-7,-8,-6,0,-12,12,-6,-15,-1,-17,-3,19,-5,2,-9,-11,0,13,-9,-22,-1,12,-4,-4,-3,-14,-2,-14,0,13,-7,0,-4,-20,4,-5,-3,14,-2,13,-6,3,-8,-17,-2,-8,4,-12,5,3,-6,-12,-6,27,0,14,-1,-27,-8,-27,-8,-30,-4,-11,0,-10,-4,-14,-10,-22,-7,-6,-1,-14,-2,-14,-2,-9,-7,0,-7,-5,-6,-16,-8,4,-8,-5,-8,-5,-10,-14,-1,-15,9,-20,0,-9,5,-7,10,-17,12,-5,7,-2,9,-14,9,4,7,-7,4,10,12,15,3,4,4,2,8,-11,-3,-6,-2,-9,-1,-12,3,-1,7,4,5,10,0,20,-2,-17,6,-9,3,-10,-1,-8,3,11,9,-6,4,-8,7,-12,10,-13,4,0,4,-27,6,-21,1,-27,-1,-24,0,-12,3,-17,6,26,3,20,1,-42,2,-23,4,1,4,38,5,37,5,4,4,-27,3,9,4,34,7,15,1,-4,5,23,2,31,2,31,0,11,-3,26,5,24,-3,14,-1,21,-3,-24,5,1,4,34,6,35,0,13,3,35,1,80,-1';
+  let cache = null;
+  /** Returns an array of polylines, each a Float32Array of [lon, lat, lon, lat, …]. */
+  R.worldLand = function () {
+    if (cache) return cache;
+    cache = RAW.split(';').map((s) => {
+      const v = s.split(',').map(Number);
+      const out = new Float32Array(v.length);
+      let x = 0;
+      let y = 0;
+      for (let i = 0; i < v.length; i += 2) {
+        x += v[i];
+        y += v[i + 1];
+        out[i] = x / 10;
+        out[i + 1] = y / 10;
+      }
+      return out;
+    });
+    return cache;
+  };
+})(window.RYLAQWorkspace);
+
+/* ---- modules/globe.js ---- */
+/*
+ * globe.js — dependency-free orthographic globe for the Situation Room.
+ *
+ * Clean-room implementation (no third-party code). Draws on a <canvas>:
+ * sphere, graticule, Natural Earth coastlines (R.worldLand) and evidence
+ * markers taken ONLY from records already loaded in this session. It loads no
+ * map tiles, no fonts and no remote assets, and makes no network requests.
+ *
+ * Interaction: drag / arrow keys rotate, wheel / + − zoom, 0 resets, Enter
+ * selects the marker nearest the reticle. Auto-rotation and pulses are
+ * disabled when the user prefers reduced motion or the tab is hidden.
+ * A text alternative (marker table) is rendered by the caller.
+ */
+(function (R) {
+  'use strict';
+  const RAD = Math.PI / 180;
+  const reduceMotion = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  function cssVar(el, name, fallback) {
+    const v = getComputedStyle(el).getPropertyValue(name).trim();
+    return v || fallback;
+  }
+
+  /**
+   * create(host, opts) → controller
+   * opts: { view: {lon, lat, zoom, auto}, label, onSelect(point), onView(view), compact }
+   */
+  function create(host, opts) {
+    const o = opts || {};
+    const view = o.view || { lon: 10, lat: 20, zoom: 1, auto: true };
+    const canvas = document.createElement('canvas');
+    canvas.className = 'rq-globe-canvas';
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('tabindex', '0');
+    canvas.setAttribute('aria-label', (o.label || 'Evidence globe') + '. Use arrow keys to rotate, plus and minus to zoom, Enter to open the marker nearest the centre. A text list of markers follows.');
+    host.appendChild(canvas);
+    const tip = document.createElement('div');
+    tip.className = 'rq-globe-tip';
+    tip.setAttribute('aria-hidden', 'true');
+    host.appendChild(tip);
+
+    const ctx = canvas.getContext('2d');
+    let W = 0;
+    let H = 0;
+    let dpr = 1;
+    let points = [];
+    let hover = null;
+    let selected = null;
+    let raf = 0;
+    let lastT = 0;
+    let dragging = null;
+    let idleUntil = 0;
+    let anim = null;
+    let alive = true;
+
+    function resize() {
+      const r = host.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = Math.max(200, r.width);
+      H = Math.max(200, r.height);
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      draw(performance.now());
+    }
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null;
+    if (ro) ro.observe(host);
+
+    const radius = () => (Math.min(W, H) / 2) * 0.86 * view.zoom;
+
+    /** Orthographic projection. Returns [x, y, visible]. */
+    function project(lon, lat) {
+      const l = (lon - view.lon) * RAD;
+      const p = lat * RAD;
+      const p0 = view.lat * RAD;
+      const cosc = Math.sin(p0) * Math.sin(p) + Math.cos(p0) * Math.cos(p) * Math.cos(l);
+      const r = radius();
+      const x = W / 2 + r * Math.cos(p) * Math.sin(l);
+      const y = H / 2 - r * (Math.cos(p0) * Math.sin(p) - Math.sin(p0) * Math.cos(p) * Math.cos(l));
+      return [x, y, cosc > 0];
+    }
+    /** Inverse projection for the reticle readout. */
+    function invert(x, y) {
+      const r = radius();
+      const px = (x - W / 2) / r;
+      const py = -(y - H / 2) / r;
+      const rho = Math.sqrt(px * px + py * py);
+      if (rho > 1) return null;
+      const c = Math.asin(rho);
+      const p0 = view.lat * RAD;
+      const lat = rho === 0 ? view.lat : Math.asin(Math.cos(c) * Math.sin(p0) + (py * Math.sin(c) * Math.cos(p0)) / rho) / RAD;
+      const lon = view.lon + Math.atan2(px * Math.sin(c), rho * Math.cos(c) * Math.cos(p0) - py * Math.sin(c) * Math.sin(p0)) / RAD;
+      return { lat, lon: ((lon + 540) % 360) - 180 };
+    }
+
+    function strokePolyline(arr, step) {
+      let pen = false;
+      for (let i = 0; i < arr.length; i += step) {
+        const [x, y, vis] = project(arr[i], arr[i + 1]);
+        if (vis) {
+          if (pen) ctx.lineTo(x, y);
+          else {
+            ctx.moveTo(x, y);
+            pen = true;
+          }
+        } else pen = false;
+      }
+    }
+
+    function draw(t) {
+      if (!W) return;
+      const col = {
+        sea: cssVar(host, '--globe-sea', '#07152a'),
+        seaEdge: cssVar(host, '--globe-sea-edge', '#0b2545'),
+        grid: cssVar(host, '--globe-grid', 'rgba(45,212,191,0.14)'),
+        land: cssVar(host, '--globe-land', 'rgba(94,234,212,0.85)'),
+        rim: cssVar(host, '--globe-rim', 'rgba(45,212,191,0.55)'),
+        quake: cssVar(host, '--globe-quake', '#fb7185'),
+        place: cssVar(host, '--globe-place', '#22d3ee'),
+        signal: cssVar(host, '--globe-signal', '#fbbf24'),
+        entity: cssVar(host, '--globe-entity', '#a78bfa'),
+        text: cssVar(host, '--globe-text', '#d8e6f5')
+      };
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      const r = radius();
+      const cx = W / 2;
+      const cy = H / 2;
+
+      // Atmosphere glow + sphere.
+      const glow = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, r * 1.18);
+      glow.addColorStop(0, col.rim);
+      glow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 1.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      const sea = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.4, r * 0.1, cx, cy, r);
+      sea.addColorStop(0, col.seaEdge);
+      sea.addColorStop(1, col.sea);
+      ctx.fillStyle = sea;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Graticule every 15°.
+      ctx.strokeStyle = col.grid;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let lon = -180; lon < 180; lon += 15) {
+        const a = [];
+        for (let lat = -90; lat <= 90; lat += 3) a.push(lon, lat);
+        strokePolyline(a, 2);
+      }
+      for (let lat = -75; lat <= 75; lat += 15) {
+        const a = [];
+        for (let lon = -180; lon <= 180; lon += 3) a.push(lon, lat);
+        strokePolyline(a, 2);
+      }
+      ctx.stroke();
+
+      // Coastlines.
+      ctx.strokeStyle = col.land;
+      ctx.lineWidth = o.compact ? 0.9 : 1.15;
+      ctx.beginPath();
+      for (const ln of R.worldLand()) strokePolyline(ln, 2);
+      ctx.stroke();
+
+      // Rim.
+      ctx.strokeStyle = col.rim;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Markers.
+      const phase = reduceMotion() ? 0 : (t / 1000) % 2;
+      for (const pt of points) {
+        const [x, y, vis] = project(pt.lon, pt.lat);
+        pt._x = x;
+        pt._y = y;
+        pt._vis = vis;
+        if (!vis) continue;
+        const c = col[pt.kind] || col.place;
+        const base = pt.kind === 'quake' ? 2.5 + (pt.weight || 0) * 7 : pt.kind === 'entity' ? 5 : 4;
+        if (pt.kind === 'quake' && phase) {
+          ctx.strokeStyle = c;
+          ctx.globalAlpha = 1 - (phase % 1);
+          ctx.beginPath();
+          ctx.arc(x, y, base + (phase % 1) * 14, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+        ctx.fillStyle = c;
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        if (pt.kind === 'entity') {
+          ctx.moveTo(x, y - base);
+          ctx.lineTo(x + base, y);
+          ctx.lineTo(x, y + base);
+          ctx.lineTo(x - base, y);
+          ctx.closePath();
+        } else if (pt.kind === 'signal') {
+          ctx.rect(x - base * 0.8, y - base * 0.8, base * 1.6, base * 1.6);
+        } else ctx.arc(x, y, base, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        if (pt === hover || pt === selected) {
+          ctx.strokeStyle = col.text;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(x, y, base + 5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+      if (o.onView) o.onView({ lat: view.lat, lon: view.lon, zoom: view.zoom, visible: points.filter((p) => p._vis).length });
+    }
+
+    function needsLoop() {
+      if (!alive || document.hidden || reduceMotion()) return false;
+      return !!anim || (view.auto && !dragging && performance.now() > idleUntil) || points.some((p) => p.kind === 'quake');
+    }
+    function loop(t) {
+      raf = 0;
+      if (!alive) return;
+      if (!host.isConnected) return destroy();
+      const dt = lastT ? Math.min(64, t - lastT) : 16;
+      lastT = t;
+      if (anim) {
+        const k = Math.min(1, (t - anim.t0) / anim.ms);
+        const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        view.lon = anim.from.lon + anim.dLon * e;
+        view.lat = anim.from.lat + (anim.to.lat - anim.from.lat) * e;
+        if (k >= 1) anim = null;
+      } else if (view.auto && !dragging && t > idleUntil && !reduceMotion()) {
+        view.lon = ((view.lon + dt * 0.004 + 540) % 360) - 180;
+      }
+      draw(t);
+      if (needsLoop()) raf = requestAnimationFrame(loop);
+    }
+    function kick() {
+      if (!raf && alive) {
+        lastT = 0;
+        raf = requestAnimationFrame(loop);
+      }
+    }
+    function redraw() {
+      if (needsLoop()) kick();
+      else draw(performance.now());
+    }
+    const onVis = () => redraw();
+    document.addEventListener('visibilitychange', onVis);
+
+    function nearest(x, y, maxD) {
+      let best = null;
+      let bd = maxD;
+      for (const p of points) {
+        if (!p._vis) continue;
+        const d = Math.hypot(p._x - x, p._y - y);
+        if (d < bd) {
+          bd = d;
+          best = p;
+        }
+      }
+      return best;
+    }
+    function pause() {
+      idleUntil = performance.now() + 8000;
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      dragging = { x: e.clientX, y: e.clientY, lon: view.lon, lat: view.lat, moved: false };
+      canvas.setPointerCapture(e.pointerId);
+      anim = null;
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (dragging) {
+        const k = 0.35 / view.zoom;
+        const dx = e.clientX - dragging.x;
+        const dy = e.clientY - dragging.y;
+        if (Math.abs(dx) + Math.abs(dy) > 3) dragging.moved = true;
+        view.lon = ((dragging.lon - dx * k + 540) % 360) - 180;
+        view.lat = Math.max(-85, Math.min(85, dragging.lat + dy * k));
+        pause();
+        draw(performance.now());
+        return;
+      }
+      const h = nearest(x, y, 12);
+      if (h !== hover) {
+        hover = h;
+        canvas.style.cursor = h ? 'pointer' : 'grab';
+        if (h) {
+          tip.textContent = h.label;
+          tip.style.left = Math.min(W - 220, Math.max(4, x + 12)) + 'px';
+          tip.style.top = Math.max(4, y - 10) + 'px';
+          tip.classList.add('is-on');
+        } else tip.classList.remove('is-on');
+        if (!raf) draw(performance.now());
+      }
+    });
+    const endDrag = (e) => {
+      if (!dragging) return;
+      const wasClick = !dragging.moved;
+      dragging = null;
+      if (wasClick) {
+        const rect = canvas.getBoundingClientRect();
+        const p = nearest(e.clientX - rect.left, e.clientY - rect.top, 14);
+        if (p) select(p);
+      }
+      redraw();
+    };
+    canvas.addEventListener('pointerup', endDrag);
+    canvas.addEventListener('pointercancel', () => {
+      dragging = null;
+      redraw();
+    });
+    canvas.addEventListener('pointerleave', () => {
+      hover = null;
+      tip.classList.remove('is-on');
+    });
+    canvas.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        view.zoom = Math.max(0.7, Math.min(4, view.zoom * (e.deltaY < 0 ? 1.12 : 1 / 1.12)));
+        pause();
+        redraw();
+      },
+      { passive: false }
+    );
+    canvas.addEventListener('keydown', (e) => {
+      const step = 6 / view.zoom;
+      let handled = true;
+      if (e.key === 'ArrowLeft') view.lon -= step;
+      else if (e.key === 'ArrowRight') view.lon += step;
+      else if (e.key === 'ArrowUp') view.lat = Math.min(85, view.lat + step);
+      else if (e.key === 'ArrowDown') view.lat = Math.max(-85, view.lat - step);
+      else if (e.key === '+' || e.key === '=') view.zoom = Math.min(4, view.zoom * 1.2);
+      else if (e.key === '-' || e.key === '_') view.zoom = Math.max(0.7, view.zoom / 1.2);
+      else if (e.key === '0') Object.assign(view, { zoom: 1 });
+      else if (e.key === 'Enter') {
+        const p = nearest(W / 2, H / 2, Math.min(W, H) / 3);
+        if (p) select(p);
+      } else handled = false;
+      if (handled) {
+        e.preventDefault();
+        view.lon = ((view.lon + 540) % 360) - 180;
+        pause();
+        redraw();
+      }
+    });
+
+    function select(p) {
+      selected = p;
+      focus(p.lat, p.lon);
+      if (o.onSelect) o.onSelect(p);
+    }
+    function focus(lat, lon) {
+      pause();
+      const to = { lat: Math.max(-80, Math.min(80, lat)), lon };
+      if (reduceMotion()) {
+        view.lat = to.lat;
+        view.lon = lon;
+        return redraw();
+      }
+      let dLon = lon - view.lon;
+      if (dLon > 180) dLon -= 360;
+      if (dLon < -180) dLon += 360;
+      anim = { from: { lat: view.lat, lon: view.lon }, to, dLon, t0: performance.now(), ms: 900 };
+      kick();
+    }
+    function destroy() {
+      alive = false;
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      if (ro) ro.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
+    }
+
+    resize();
+    redraw();
+    return {
+      view,
+      setPoints(list) {
+        points = list || [];
+        host.setAttribute('data-points', String(points.length));
+        redraw();
+      },
+      focus,
+      redraw,
+      setAuto(on) {
+        view.auto = !!on;
+        redraw();
+      },
+      destroy,
+      invert: () => invert(W / 2, H / 2)
+    };
+  }
+
+  R.globe = { create, reduceMotion };
 })(window.RYLAQWorkspace);
 
 /* ---- modules/searchPipeline.js ---- */
@@ -5822,6 +6525,328 @@ No sanctions clearance. No AML determination. No procurement bid advice.
   });
 })(window.RYLAQWorkspace);
 
+/* ---- modules/situationRoom.js ---- */
+/*
+ * situationRoom.js — Situation Room: the command-center landing view.
+ *
+ * DESIGN PROVENANCE: the layout language (dense multi-panel intelligence
+ * grid, live wire/ticker, status strip) and the HUD language (reticle,
+ * corner brackets, telemetry readouts, optic modes) are INSPIRED BY the
+ * public WorldMonitor and God's Eye View projects. No code, assets, styles
+ * or data were copied from either project; this is a clean-room
+ * implementation built on RYLAQ's own verified sources. Neither project is
+ * integrated, embedded or called (see docs/THIRD_PARTY_SOURCE_POLICY.md).
+ *
+ * PRIVACY: feeds use fixed, non-personal queries (no search terms), stay on
+ * STANDBY until the user activates them, and are wiped by Clear Session.
+ * The globe plots only records already loaded in this session.
+ */
+(function (R) {
+  'use strict';
+  const { h, icon, fmt, clear, extLink } = R.util;
+  const ui = R.ui;
+  const C = R.clients;
+
+  const REG_TOPICS = [
+    ['sanctions', 'Sanctions'],
+    ['export controls', 'Export controls'],
+    ['tariff', 'Tariffs & trade remedies'],
+    ['insurance', 'Insurance'],
+    ['cybersecurity', 'Cybersecurity'],
+    ['procurement', 'Procurement'],
+    ['climate disclosure', 'Climate disclosure']
+  ];
+  const st = { topic: 'sanctions', mode: 'std', layers: { quake: true, place: true, entity: true, signal: true } };
+  R.events.on('session:cleared', () => Object.assign(st, { topic: 'sanctions', mode: 'std', layers: { quake: true, place: true, entity: true, signal: true } }));
+
+  const FEEDS = {
+    quakes: () => ({ key: 'feed:usgs:global7d', sourceId: 'usgs', label: 'Global seismic · USGS M4.5+ · 7 days', run: () => C.usgs.global(7, 4.5, { persistent: true }) }),
+    kev: () => ({ key: 'feed:kev:recent', sourceId: 'cisaKev', label: 'Exploited vulnerabilities · CISA KEV · newest', run: () => C.kev.recent(12, { persistent: true }) }),
+    reg: (topic) => ({ key: 'feed:fr:' + topic, sourceId: 'federalRegister', label: 'US regulatory wire · ' + topic, run: () => C.federalRegister.search(topic, { perPage: 10, order: 'newest', persistent: true }) }),
+    fx: () => ({ key: 'feed:ecb:USD', sourceId: 'ecb', label: 'EUR/USD reference · ECB', run: () => C.ecb.exr('USD', 30, { persistent: true }) })
+  };
+  const feedDefs = () => [FEEDS.quakes(), FEEDS.kev(), FEEDS.reg(st.topic), FEEDS.fx()];
+
+  function activateFeeds() {
+    const keys = feedDefs().map((d) => R.tasks.ensure(d).key);
+    R.util.announce('Activating public feeds. Fixed queries only; no search terms are sent.');
+    R.tasks.runAll(keys);
+    R.shell.refresh();
+  }
+  const feedsActive = () => feedDefs().some((d) => {
+    const t = R.tasks.get(d.key);
+    return t && t.status !== 'idle';
+  });
+
+  /* ------------------------------ markers ------------------------------ */
+  function collectPoints() {
+    const pts = [];
+    const add = (p) => st.layers[p.kind] && isFinite(p.lat) && isFinite(p.lon) && pts.push(p);
+    const tasks = [...R.tasks.feeds(), ...R.tasks.all()];
+    for (const t of tasks) {
+      for (const r of t.records || []) {
+        const d = r.data || {};
+        if (r.kind === 'earthquake' && isFinite(d.lat)) add({ kind: 'quake', lat: d.lat, lon: d.lon, weight: Math.max(0, Math.min(1, ((d.mag || 4.5) - 4.5) / 3)), label: r.title, record: r });
+        else if (r.kind === 'place') add({ kind: 'place', lat: d.lat, lon: d.lon, label: 'Place · ' + r.title, record: r });
+        else if (r.kind === 'country' && isFinite(d.lat)) add({ kind: 'place', lat: d.lat, lon: d.lon, label: 'Country reference · ' + r.title + (d.capital ? ' (' + d.capital + ')' : ''), record: r });
+        else if (r.kind === 'forecast' && d.flags && d.flags.length) add({ kind: 'signal', lat: d.lat, lon: d.lon, label: 'Forecast threshold signal · ' + d.flags[0], record: r });
+      }
+    }
+    const s = R.state.session;
+    if (s && s.resolved && isFinite(s.resolved.lat) && s.resolved.lat !== null) {
+      const name = s.primary ? s.primary.title : s.resolved.placeLabel || s.query;
+      add({ kind: 'entity', lat: s.resolved.lat, lon: s.resolved.lon, label: 'Subject reference · ' + name, record: s.primary || null });
+    }
+    return pts;
+  }
+
+  let globe = null;
+  let markerList = null;
+  let hud = null;
+  function refreshLive() {
+    if (globe && hud && hud.isConnected) globe.setPoints(collectPoints());
+    if (markerList && markerList.isConnected) renderMarkerList();
+  }
+  R.events.on('task:update', (t) => {
+    if (t.status !== 'loading') refreshLive();
+  });
+
+  function renderMarkerList() {
+    const pts = collectPoints().slice(0, 40);
+    clear(markerList);
+    if (!pts.length) {
+      markerList.appendChild(h('p', { class: 'rq-muted rq-mono' }, 'NO MARKERS. Activate public feeds or run a search with a location, port or country.'));
+      return;
+    }
+    markerList.appendChild(
+      h(
+        'table',
+        { class: 'rq-table rq-table-dense' },
+        h('caption', { class: 'rq-sr' }, 'Globe markers (text alternative)'),
+        h('thead', null, h('tr', null, ...['Layer', 'Marker', 'Lat', 'Lon', ''].map((c) => h('th', { scope: 'col' }, c)))),
+        h(
+          'tbody',
+          null,
+          ...pts.map((p) =>
+            h(
+              'tr',
+              null,
+              h('td', null, h('span', { class: 'rq-layer-chip rq-layer-' + p.kind }, p.kind === 'quake' ? 'SEISMIC' : p.kind === 'entity' ? 'SUBJECT' : p.kind === 'signal' ? 'SIGNAL' : 'PLACE')),
+              h('th', { scope: 'row' }, h('button', { type: 'button', class: 'rq-link-btn', onclick: () => (p.record ? R.shell.openDetail(p.record) : null) }, fmt.truncate(p.label, 90))),
+              h('td', { class: 'rq-mono' }, Number(p.lat).toFixed(2)),
+              h('td', { class: 'rq-mono' }, Number(p.lon).toFixed(2)),
+              h('td', null, ui.button('Locate', () => globe && globe.focus(p.lat, p.lon), { cls: 'rq-btn-xs', aria: 'Rotate globe to ' + p.label }))
+            )
+          )
+        )
+      )
+    );
+  }
+
+  /* ------------------------------ panels ------------------------------ */
+  function panel(title, opts, ...children) {
+    const o = opts || {};
+    return h(
+      'section',
+      { class: 'rq-panel' + (o.cls ? ' ' + o.cls : ''), 'aria-label': title },
+      h('header', { class: 'rq-panel-head' }, h('span', { class: 'rq-panel-title' }, o.live ? h('span', { class: 'rq-live-dot', 'aria-hidden': 'true' }) : null, title), o.meta ? h('span', { class: 'rq-panel-meta' }, o.meta) : null, o.actions || null),
+      h('div', { class: 'rq-panel-body' }, ...children)
+    );
+  }
+
+  /** Dense wire-style list for feed panels. */
+  function wireList(recs, kind) {
+    return h(
+      'ol',
+      { class: 'rq-wire' },
+      ...recs.map((r) => {
+        const d = r.data || {};
+        const tag = kind === 'quake' ? 'M' + fmt.num(d.mag, 1) : kind === 'kev' ? (r.fields.find((f) => f[0] === 'Date added to KEV') || [])[1] || 'KEV' : kind === 'reg' ? (r.fields.find((f) => f[0] === 'Publication date') || [])[1] || 'FR' : '';
+        const time = kind === 'quake' && d.time ? new Date(d.time).toISOString().slice(5, 16).replace('T', ' ') + 'Z' : '';
+        return h(
+          'li',
+          { class: 'rq-wire-row' + (kind === 'quake' && d.mag >= 6 ? ' is-hot' : '') },
+          h('span', { class: 'rq-wire-tag rq-mono' }, tag),
+          h('button', { type: 'button', class: 'rq-wire-title', onclick: () => R.shell.openDetail(r) }, kind === 'quake' ? r.title.replace(/^M[\d.]+ — /, '') : r.title),
+          time ? h('span', { class: 'rq-wire-time rq-mono' }, time) : null,
+          kind === 'quake' && isFinite(d.lat) ? h('button', { type: 'button', class: 'rq-wire-locate', 'aria-label': 'Locate on globe: ' + r.title, onclick: () => globe && globe.focus(d.lat, d.lon) }, icon('globe', 'rq-icon-xs')) : null
+        );
+      })
+    );
+  }
+
+  function feedPanel(def, kind, auto) {
+    return ui.taskPanel(def, { auto, compact: true, noHitWarning: kind !== 'reg', render: (recs) => wireList(recs.slice(0, kind === 'quake' ? 40 : 12), kind) });
+  }
+
+  function tickerItems() {
+    const items = [];
+    const q = R.tasks.get('feed:usgs:global7d');
+    if (q && q.records) q.records.filter((r) => r.data.mag >= 5.5).slice(0, 6).forEach((r) => items.push(['SEISMIC', r.title]));
+    const k = R.tasks.get('feed:kev:recent');
+    if (k && k.records) k.records.slice(0, 5).forEach((r) => items.push(['KEV', r.title]));
+    const f = R.tasks.get(FEEDS.reg(st.topic).key);
+    if (f && f.records) f.records.slice(0, 5).forEach((r) => items.push(['REG', r.title]));
+    R.signals.collect().slice(0, 6).forEach((sg) => items.push(['SESSION', sg.text]));
+    return items;
+  }
+
+  function ticker() {
+    const items = tickerItems();
+    const wrap = h('div', { class: 'rq-ticker', role: 'region', 'aria-label': 'Latest items wire' });
+    if (!items.length) {
+      wrap.appendChild(h('div', { class: 'rq-ticker-static rq-mono' }, h('span', { class: 'rq-ticker-tag' }, 'WIRE'), 'FEEDS ON STANDBY — activate public feeds or run a search to populate the wire. No hit ≠ clear.'));
+      return wrap;
+    }
+    const line = () => items.map(([tag, text]) => h('span', { class: 'rq-ticker-item' }, h('span', { class: 'rq-ticker-tag' }, tag), fmt.truncate(text, 110)));
+    wrap.appendChild(h('div', { class: 'rq-ticker-track', 'aria-hidden': 'true' }, h('div', { class: 'rq-ticker-run' }, line(), line())));
+    wrap.appendChild(h('ul', { class: 'rq-sr' }, ...items.map(([tag, text]) => h('li', null, tag + ': ' + text))));
+    return wrap;
+  }
+
+  /* ------------------------------ globe panel ------------------------------ */
+  const MODES = [['std', 'STD'], ['nvg', 'NVG'], ['flir', 'FLIR'], ['crt', 'CRT']];
+  function globePanel(ctx) {
+    const view = R.state.globeView || (R.state.globeView = { lon: 20, lat: 18, zoom: 1, auto: true });
+    const host = h('div', { class: 'rq-globe-host' });
+    const readout = h('span', { class: 'rq-hud-readout rq-mono' }, 'CTR —');
+    const vis = h('span', { class: 'rq-hud-readout rq-mono' }, 'MARKERS 0');
+    hud = h(
+      'div',
+      { class: 'rq-hud rq-optic-' + st.mode },
+      host,
+      h('div', { class: 'rq-hud-reticle', 'aria-hidden': 'true' }),
+      h('div', { class: 'rq-hud-scan', 'aria-hidden': 'true' }),
+      h('span', { class: 'rq-hud-corner tl', 'aria-hidden': 'true' }),
+      h('span', { class: 'rq-hud-corner tr', 'aria-hidden': 'true' }),
+      h('span', { class: 'rq-hud-corner bl', 'aria-hidden': 'true' }),
+      h('span', { class: 'rq-hud-corner br', 'aria-hidden': 'true' }),
+      h('div', { class: 'rq-hud-top rq-mono', 'aria-hidden': 'true' }, h('span', null, 'OPTIC ' + (MODES.find((m) => m[0] === st.mode) || MODES[0])[1]), h('span', { class: 'rq-utc' }, R.shell.utcNow())),
+      h('div', { class: 'rq-hud-bottom', 'aria-live': 'off' }, readout, vis)
+    );
+    if (globe) globe.destroy();
+    globe = R.globe.create(host, {
+      view,
+      label: 'Situation Room evidence globe',
+      onSelect: (p) => (p.record ? R.shell.openDetail(p.record) : R.util.announce(p.label)),
+      onView: (v) => {
+        readout.textContent = `CTR ${Math.abs(v.lat).toFixed(1)}°${v.lat >= 0 ? 'N' : 'S'} ${Math.abs(((v.lon + 540) % 360) - 180).toFixed(1)}°${((v.lon + 540) % 360) - 180 >= 0 ? 'E' : 'W'} · ZOOM ${v.zoom.toFixed(1)}×`;
+        vis.textContent = `MARKERS ${v.visible}`;
+      }
+    });
+    globe.setPoints(collectPoints());
+    const s = ctx.session;
+    if (s && s.resolved && isFinite(s.resolved.lat) && s.resolved.lat !== null && st.focusedFor !== s.id) {
+      st.focusedFor = s.id;
+      setTimeout(() => globe && globe.focus(s.resolved.lat, s.resolved.lon), 60);
+    }
+    const layerToggle = (k, label) => {
+      const id = R.util.uid('ly');
+      return h('label', { class: 'rq-chip-toggle', for: id }, h('input', { id, type: 'checkbox', checked: st.layers[k] ? true : null, onchange: (e) => {
+        st.layers[k] = e.target.checked;
+        refreshLive();
+      } }), h('span', { class: 'rq-layer-chip rq-layer-' + k }, label));
+    };
+    const controls = h(
+      'div',
+      { class: 'rq-globe-controls' },
+      h('div', { class: 'rq-seg', role: 'group', 'aria-label': 'Optic mode' }, ...MODES.map(([k, l]) => h('button', { type: 'button', class: 'rq-seg-btn' + (st.mode === k ? ' is-on' : ''), 'aria-pressed': st.mode === k ? 'true' : 'false', onclick: () => {
+        st.mode = k;
+        R.shell.refresh();
+      } }, l))),
+      h('div', { class: 'rq-row rq-row-tight', role: 'group', 'aria-label': 'Layers' }, layerToggle('quake', 'SEISMIC'), layerToggle('place', 'PLACES'), layerToggle('entity', 'SUBJECT'), layerToggle('signal', 'SIGNALS')),
+      h(
+        'div',
+        { class: 'rq-row rq-row-tight' },
+        ui.button(view.auto ? 'Auto-rotate on' : 'Auto-rotate off', (e) => {
+          globe.setAuto(!view.auto);
+          e.currentTarget.querySelector('span').textContent = view.auto ? 'Auto-rotate on' : 'Auto-rotate off';
+        }, { cls: 'rq-btn-xs', icon: 'refresh' }),
+        s && s.resolved && s.resolved.lat !== undefined && s.resolved.lat !== null ? ui.button('Recenter on subject', () => globe.focus(s.resolved.lat, s.resolved.lon), { cls: 'rq-btn-xs', icon: 'globe' }) : null
+      )
+    );
+    return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
+  }
+
+  /** Compact globe for other modules (e.g. Climate & Catastrophe). */
+  R.situation = {
+    mountGlobe(host, points, center) {
+      const g = R.globe.create(host, { view: { lon: center ? center.lon : 0, lat: center ? center.lat : 20, zoom: 1.6, auto: false }, compact: true, label: 'Local event globe', onSelect: (p) => p.record && R.shell.openDetail(p.record) });
+      g.setPoints(points);
+      return g;
+    },
+    collectPoints,
+    activateFeeds
+  };
+
+  /* ------------------------------ module ------------------------------ */
+  R.modules.register({
+    id: 'situation',
+    group: 'risk',
+    order: 0,
+    icon: 'globe',
+    title: 'Situation Room',
+    short: 'Situation Room',
+    description: 'Command-center view: evidence globe, live public wires and your session’s signals in one screen.',
+    warnings: ['Situational awareness from public sources only — not a real-time control tower, not a risk score, and no hit ≠ clear.'],
+    render(ctx) {
+      const s = ctx.session;
+      const active = feedsActive();
+      const live = R.sources.list.filter((x) => R.runtime.mode(x.id) === 'live').length;
+      const sig = R.signals.collect();
+      const strip = h(
+        'div',
+        { class: 'rq-strip', role: 'group', 'aria-label': 'Situation status' },
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'UTC'), h('span', { class: 'rq-utc' }, R.shell.utcNow())),
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'FEEDS'), h('span', { class: active ? 'rq-ok' : 'rq-warn-t' }, active ? 'ACTIVE' : 'STANDBY')),
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'LIVE SOURCES'), String(live)),
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'SUBJECT'), s ? fmt.truncate(s.primary ? s.primary.title : s.resolved.countryName || s.resolved.placeLabel || s.query, 40) : 'NONE'),
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'SESSION SIGNALS'), String(sig.length)),
+        h('span', { class: 'rq-strip-spacer' }),
+        active
+          ? ui.button('Refresh feeds', () => {
+              feedDefs().forEach((d) => {
+                const t = R.tasks.get(d.key);
+                if (t && t.status !== 'loading') t.status = 'idle';
+              });
+              activateFeeds();
+            }, { icon: 'refresh', cls: 'rq-btn-sm' })
+          : ui.button('Activate public feeds', () => activateFeeds(), { icon: 'download', variant: 'primary', cls: 'rq-btn-sm' })
+      );
+      markerList = h('div', { class: 'rq-marker-list', 'aria-live': 'polite' });
+      const regSelect = ui.select('Topic', REG_TOPICS, st.topic, (v) => {
+        st.topic = v;
+        if (feedsActive()) {
+          const d = FEEDS.reg(v);
+          R.tasks.ensure(d);
+          R.tasks.start(d.key);
+        }
+        R.shell.refresh();
+      }, { key: 'sr-topic', cls: 'rq-field-inline' });
+      const standbyNote = active ? null : h('p', { class: 'rq-standby rq-mono' }, 'STANDBY · Activating sends fixed, non-personal queries (never your search terms) directly from your browser to USGS, CISA (GitHub), the Federal Register and the ECB.');
+      const subjectPanel = s
+        ? panel('Current subject', { live: true, meta: s.chosen.label }, h('div', { class: 'rq-subject-hud' }, h('div', { class: 'rq-subject-name' }, s.primary ? s.primary.title : s.resolved.countryName || s.resolved.placeLabel || s.query), h('div', { class: 'rq-row rq-row-tight' }, ui.badge('Interpretation: ' + s.chosen.confidence, 'org'), s.primary ? ui.confidence(s.primaryConfidence) : null)), sig.length ? h('ul', { class: 'rq-signal-list rq-compact-list' }, ...sig.slice(0, 6).map((x) => h('li', { class: 'rq-signal' }, ui.badge(x.tone === 'serious' ? 'Serious' : 'Review', x.tone), h('button', { type: 'button', class: 'rq-link-btn', onclick: () => R.shell.openDetail(x.record) }, fmt.truncate(x.text, 100))))) : h('p', { class: 'rq-muted' }, 'No source-reported signals yet. This is not evidence of low risk.'), h('div', { class: 'rq-row rq-row-tight' }, ui.button('Overview', () => R.shell.go('overview', { focus: true }), { cls: 'rq-btn-xs' }), ui.button('Relationships', () => R.shell.go('relationships', { focus: true }), { cls: 'rq-btn-xs' }), ui.button('Evidence pack', () => R.exporters.evidencePackJSON(), { cls: 'rq-btn-xs', icon: 'download' })))
+        : panel('Current subject', { meta: 'none' }, h('p', { class: 'rq-muted' }, 'No active investigation. Search a company, insurer, port, country, CVE, tender or risk concept above — results are plotted here when they carry coordinates.'), h('div', { class: 'rq-row rq-row-tight' }, ...['Port of Rotterdam', 'Malaysia', 'Allianz SE', 'CVE-2024-3094'].map((q) => ui.button(q, () => R.shell.search(q), { cls: 'rq-btn-xs' }))));
+      const statusPanel = panel('Source status', { meta: live + ' live' }, ui.bars([['Live (verified)', live, 'ok'], ['Link-out / verify', R.sources.list.length - live, 'neutral'], ['Unavailable this session', R.sources.list.filter((x) => R.runtime.get(x.id).mode === 'unavailable').length, 'warn']], { label: 'Source modes' }), ui.button('Open Coverage Console', () => R.shell.go('coverage', { focus: true }), { cls: 'rq-btn-xs', icon: 'gauge' }));
+      const grid = h(
+        'div',
+        { class: 'rq-sr-grid' },
+        globePanel(ctx),
+        panel('Global seismic wire', { cls: 'rq-panel-tall', live: active, meta: 'USGS · M4.5+ · 7d' }, active ? feedPanel(FEEDS.quakes(), 'quake', true) : standbyNote || null, h('p', { class: 'rq-fineprint' }, 'Seismic events do not confirm facility damage, insured loss or supplier disruption.')),
+        subjectPanel,
+        panel('Exploited vulnerabilities', { live: active, meta: 'CISA KEV' }, active ? feedPanel(FEEDS.kev(), 'kev', true) : h('p', { class: 'rq-muted rq-mono' }, 'STANDBY'), h('p', { class: 'rq-fineprint' }, 'A KEV entry does not show which suppliers run the affected product.')),
+        panel('US regulatory wire', { live: active, meta: 'Federal Register', actions: regSelect }, active ? feedPanel(FEEDS.reg(st.topic), 'reg', true) : h('p', { class: 'rq-muted rq-mono' }, 'STANDBY'), h('p', { class: 'rq-fineprint' }, 'Not legal advice. Verify applicability and dates with counsel.')),
+        panel('FX reference', { live: active, meta: 'ECB · EUR/USD' }, active ? ui.taskPanel(FEEDS.fx(), { auto: true, compact: true, render: (recs) => h('div', { class: 'rq-fx' }, h('div', { class: 'rq-fx-val rq-mono' }, (recs[0].fields[0] || [])[1] || '—'), h('div', { class: 'rq-muted rq-mono' }, (recs[0].fields[1] || [])[1] || ''), h('div', { class: 'rq-muted' }, 'Reference rate, not a tradable price.'), h('button', { type: 'button', class: 'rq-link-btn', onclick: () => R.shell.openDetail(recs[0]) }, 'Details')) }) : h('p', { class: 'rq-muted rq-mono' }, 'STANDBY')),
+        panel('Markers (text alternative)', { cls: 'rq-panel-wide', meta: 'from loaded records' }, markerList),
+        statusPanel
+      );
+      const out = h('div', { class: 'rq-situation' }, strip, ticker(), grid, h('p', { class: 'rq-fineprint' }, 'Design language inspired by public situational-awareness projects (clean-room implementation; no code, assets or data reused; no affiliation). ', extLink('https://github.com/koala73/worldmonitor', 'WorldMonitor'), ' · ', extLink('https://github.com/bilawalsidhu/gods-eye-view', 'God’s Eye View'), ' — reference links only.'));
+      setTimeout(renderMarkerList, 0);
+      return out;
+    }
+  });
+})(window.RYLAQWorkspace);
+
 /* ---- modules/climateCatastrophe.js ---- */
 /*
  * climateCatastrophe.js — MODULE 14: Physical, Climate & Catastrophe
@@ -5839,6 +6864,22 @@ No sanctions clearance. No AML determination. No procurement bid advice.
 
   const local = { place: '' };
   R.events.on('session:cleared', () => (local.place = ''));
+
+  // Local event globe (shares the Situation Room globe engine).
+  let localGlobe = null;
+  function localPoints(r) {
+    const pts = [{ kind: 'entity', lat: r.lat, lon: r.lon, label: 'Reference point · ' + (r.placeLabel || 'resolved location') }];
+    const q = R.tasks.get(T.quakes(r.lat, r.lon, 500, 30).key);
+    (q && q.records ? q.records : []).forEach((x) => isFinite(x.data.lat) && pts.push({ kind: 'quake', lat: x.data.lat, lon: x.data.lon, weight: Math.max(0, Math.min(1, ((x.data.mag || 4.5) - 4.5) / 3)), label: x.title, record: x }));
+    const f = R.tasks.get(T.forecast(r.lat, r.lon, r.placeLabel).key);
+    if (f && f.records && f.records[0] && f.records[0].data.flags.length) pts.push({ kind: 'signal', lat: r.lat + 0.6, lon: r.lon + 0.6, label: 'Forecast threshold signal · ' + f.records[0].data.flags[0], record: f.records[0] });
+    return pts;
+  }
+  R.events.on('task:update', (t) => {
+    const s = R.state.session;
+    if (!localGlobe || !s || !/^(usgs:|om:fc:)/.test(t.key) || s.resolved.lat === undefined || s.resolved.lat === null) return;
+    localGlobe.setPoints(localPoints(s.resolved));
+  });
 
   function placePicker(ctx) {
     const s = ctx.session;
@@ -5892,6 +6933,15 @@ No sanctions clearance. No AML determination. No procurement bid advice.
           ? h(
               'div',
               null,
+              ui.section('Local event globe', { icon: 'globe', desc: 'Reference point, nearby M4.5+ events and forecast signals. Drag to rotate; select a marker for details. Positions are not facility or loss data.' }, (() => {
+                const host = h('div', { class: 'rq-local-globe' });
+                setTimeout(() => {
+                  if (!host.isConnected) return;
+                  if (localGlobe) localGlobe.destroy();
+                  localGlobe = R.situation.mountGlobe(host, localPoints(r), { lat: r.lat, lon: r.lon });
+                }, 0);
+                return host;
+              })()),
               ui.section('Seismic events (USGS, M4.5+, 500 km, 30 days)', { icon: 'warn' }, ui.taskPanel(T.quakes(r.lat, r.lon, 500, 30), { auto: true, limit: 10, emptyText: 'No M4.5+ earthquakes within 500 km in the last 30 days.', noHitWarning: false })),
               ui.section('Weather forecast & threshold signals (Open-Meteo)', { icon: 'cloud' }, ui.taskPanel(T.forecast(r.lat, r.lon, r.placeLabel), { auto: true })),
               isUS ? ui.section('Official NWS alerts', { icon: 'warn' }, ui.taskPanel(T.nws(r.lat, r.lon), { auto: true, emptyText: 'No active NWS alerts for this point.', noHitWarning: false })) : ui.warning('Official NWS alerts cover the US only. Use national meteorological services (via WMO) elsewhere.', 'info'),
@@ -6923,7 +7973,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         ui.section('Privacy', { icon: 'shield' }, R.shell.privacyContent()),
         ui.section('Display preferences (memory only)', { icon: 'sliders' },
           h('div', { class: 'rq-filters' },
-            ui.select('Theme', [['system', 'Follow system'], ['light', 'Light'], ['dark', 'Dark']], p.theme, (v) => ((p.theme = v), refresh()), { key: 'pref-theme' }),
+            ui.select('Theme', [['ops', 'Situation room (HUD)'], ['dark', 'Dark'], ['light', 'Light'], ['system', 'Follow system (light/dark)']], p.theme, (v) => ((p.theme = v), refresh()), { key: 'pref-theme' }),
             ui.select('Density', [['comfortable', 'Comfortable'], ['compact', 'Compact']], p.density, (v) => ((p.density = v), refresh()), { key: 'pref-density' }),
             ui.select('Result view', [['cards', 'Cards'], ['table', 'Table']], p.viewMode, (v) => ((p.viewMode = v), refresh()), { key: 'pref-view' })
           ),
@@ -6974,12 +8024,22 @@ No sanctions clearance. No AML determination. No procurement bid advice.
 
   /* ------------------------------- theme ------------------------------- */
   const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  // Themes: 'ops' (situation-room HUD, default), 'dark', 'light', 'system'.
   function applyTheme() {
     const p = R.state.prefs.theme;
-    const dark = p === 'dark' || (p === 'system' && mq && mq.matches);
-    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    const resolved = p === 'system' ? (mq && mq.matches ? 'dark' : 'light') : p;
+    root.setAttribute('data-theme', resolved);
     root.setAttribute('data-density', R.state.prefs.density);
   }
+  const THEME_CYCLE = { ops: 'dark', dark: 'light', light: 'ops', system: 'ops' };
+  const THEME_LABEL = { ops: 'Situation-room theme', dark: 'Dark theme', light: 'Light theme' };
+  shell.cycleTheme = function () {
+    const cur = root.getAttribute('data-theme');
+    R.state.prefs.theme = THEME_CYCLE[cur] || 'ops';
+    applyTheme();
+    announce(THEME_LABEL[root.getAttribute('data-theme')] + ' (this session only).');
+  };
+  shell.utcNow = () => new Date().toISOString().slice(11, 19) + 'Z';
   shell.applyTheme = applyTheme;
   if (mq && mq.addEventListener) mq.addEventListener('change', () => root && applyTheme());
 
@@ -7110,12 +8170,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
 
   function buildHeader() {
     const privacyBadge = h('button', { type: 'button', class: 'rq-privacy-badge', onclick: () => shell.openPrivacy(), 'aria-label': 'RYLAQ Privacy: open privacy details' }, icon('lock', 'rq-icon-sm'), h('span', null, R.legal.privacyBadge));
-    const themeBtn = h('button', { type: 'button', class: 'rq-icon-btn', 'aria-label': 'Toggle dark mode (not saved)', onclick: () => {
-      const cur = root.getAttribute('data-theme');
-      R.state.prefs.theme = cur === 'dark' ? 'light' : 'dark';
-      applyTheme();
-      announce('Theme changed for this session.');
-    } }, icon('moon'));
+    const themeBtn = h('button', { type: 'button', class: 'rq-icon-btn', 'aria-label': 'Switch theme: situation room, dark, light (not saved)', title: 'Theme', onclick: () => shell.cycleTheme() }, icon('moon'));
     return h(
       'header',
       { class: 'rq-header' },
@@ -7128,6 +8183,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       h(
         'div',
         { class: 'rq-header-actions' },
+        h('div', { class: 'rq-cmd-status', role: 'group', 'aria-label': 'Workspace status' }, h('span', { class: 'rq-cmd-chip rq-mono' }, h('span', { class: 'rq-live-dot', 'aria-hidden': 'true' }), 'UTC ', h('span', { class: 'rq-utc' }, shell.utcNow())), h('span', { class: 'rq-cmd-chip rq-mono' }, 'LIVE SOURCES ' + R.sources.list.filter((x) => x.corsVerified).length), h('span', { class: 'rq-cmd-chip rq-mono' }, 'ZERO RETENTION')),
         privacyBadge,
         h(
           'div',
@@ -7382,7 +8438,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     searchInput.value = '';
     clear(detectEl);
     applyTheme();
-    shell.go('overview');
+    shell.go(shell.initialModule || 'situation');
     announce('Session cleared. All in-memory searches, results, watchlist items, keys and preferences were wiped.');
   };
 
@@ -7527,7 +8583,9 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       { label: 'Export evidence pack (JSON)', run: () => R.exporters.evidencePackJSON() },
       { label: 'Open privacy', run: () => shell.openPrivacy() },
       { label: 'Open coverage console', run: () => shell.go('coverage', { focus: true }) },
-      { label: 'Toggle theme', run: () => { R.state.prefs.theme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; applyTheme(); } },
+      { label: 'Switch theme (situation room / dark / light)', run: () => shell.cycleTheme() },
+      { label: 'Open Situation Room', run: () => shell.go('situation', { focus: true }) },
+      { label: 'Activate Situation Room public feeds', run: () => { shell.go('situation'); R.situation.activateFeeds(); } },
       { label: 'Toggle table/card view', run: () => { R.state.prefs.viewMode = R.state.prefs.viewMode === 'table' ? 'cards' : 'table'; renderModule(); } },
       { label: 'Run advanced query', run: () => shell.go('advanced', { focus: true }) },
       { label: 'Open insurance regulator directory (IAIS members)', run: () => shell.openExternal('https://www.iaisweb.org/about-the-iais/iais-members/') },
@@ -7581,7 +8639,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
   function boot() {
     root = document.getElementById('rylaq-workspace');
     if (!root) return;
-    const initialModule = root.getAttribute('data-initial-module') || 'overview';
+    const initialModule = root.getAttribute('data-initial-module') || 'situation';
+    shell.initialModule = initialModule;
     clear(root);
     root.classList.add('rylaq-workspace');
     modalLayer = h('div', { class: 'rq-modal-layer' });
@@ -7606,6 +8665,12 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     applyTheme();
     shell.go(R.modules.get(initialModule) ? initialModule : 'overview');
     renderStatus();
+
+    // One clock for every UTC readout (header, strip, HUD). Text only; no data is sent.
+    setInterval(() => {
+      const t = shell.utcNow();
+      root.querySelectorAll('.rq-utc').forEach((el) => (el.textContent = t));
+    }, 1000);
 
     R.events.on('net:update', queueStatus);
     R.events.on('task:update', queueStatus);

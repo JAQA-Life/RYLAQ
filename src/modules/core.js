@@ -148,7 +148,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
    * ------------------------------------------------------------------ */
   function freshPrefs() {
     return {
-      theme: 'system', // 'system' | 'light' | 'dark'
+      theme: 'ops', // 'ops' (situation-room HUD) | 'dark' | 'light' | 'system'
       density: 'comfortable', // 'comfortable' | 'compact'
       hiddenGroups: new Set(),
       hiddenSources: new Set(),
@@ -167,8 +167,16 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     keys: {}, // optional user-entered API keys, memory only, never logged/exported
     currentModule: 'overview',
     helpDismissed: false,
+    // Situation Room feeds: fixed, non-personal queries that survive new
+    // searches but are wiped by Clear Session / refresh like everything else.
+    feedTasks: new Map(),
+    feedGen: 0,
+    globeView: null,
     reset() {
       this.generation += 1;
+      this.feedGen += 1;
+      this.feedTasks = new Map();
+      this.globeView = null;
       if (this.session && this.session.controller) this.session.controller.abort();
       this.session = null;
       this.prefs = freshPrefs();

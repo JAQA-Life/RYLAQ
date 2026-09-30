@@ -136,6 +136,15 @@ The header legal comment is in `core.js` and in the built script.
 
 → `docs/ACCEPTANCE_CHECKLIST.md`
 
+## Decision log
+
+- **2026-09-30 — Design direction.** At the product owner's request, the UI/UX takes its design language from WorldMonitor (dense intelligence grid, wire, status strip) and God's Eye View (HUD globe, reticle, optic modes). The outcome:
+  - The Situation Room is the landing module.
+  - The situation-room HUD theme is the default. Dark and light remain available; the original §5 white/slate palette is now the "light" theme.
+  - The implementation is clean-room: no code or assets reused, and nothing from those projects embedded or called. §10 policy is unchanged, and both projects remain reference/link-out only.
+  - The globe uses public-domain Natural Earth outlines and no tiles.
+  - Feeds are fixed, non-personal, user-activated queries to already-verified sources.
+
 ## Open decisions
 
 1. **Licence.** The repository has a GPL-3.0 `LICENSE`, while the product states "All rights reserved". RYLAQ must pick one; see the README.

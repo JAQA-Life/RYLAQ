@@ -109,6 +109,19 @@ Status as of this build: all SMOKE, STATIC and VERIFY items pass. MANUAL items a
 | PROC1–PROC10 | SMOKE (routing) + DESIGN. TED and portals are link-out (verified: no CORS). Deadline radar is in memory and states that no verified API publishes deadlines. Translation-risk badges are shown. |
 | FIN1–FIN20 | SMOKE (CIK, finance universe, exports) + DESIGN (8-K item signals, derived metrics with formulas, no scores, link-outs for liens, insolvency and ratings, no heavy auto-loads) |
 
+## Situation Room & HUD design
+
+| Test | Verified by |
+|---|---|
+| Lands on the Situation Room; the globe renders with zero network requests | SMOKE |
+| Feeds start on standby; activation contacts only fixed public endpoints, with no request bodies or search terms | SMOKE |
+| Globe plots feed markers; keyboard rotate/zoom works; optic mode switches | SMOKE |
+| Clear Session wipes feeds and markers | SMOKE |
+| Theme cycles situation room → dark → light | SMOKE |
+| Reduced motion disables auto-rotate, pulses and the ticker | DESIGN (`prefers-reduced-motion`) |
+| Text alternative for the globe (marker table, aria-label) | DESIGN |
+| No third-party code or assets from the inspiring projects | DESIGN (THIRD_PARTY_NOTICES.md) |
+
 ## Known limitations (honest)
 
 - **Open tender discovery is link-out only.** TED's API did not return CORS headers for browser POSTs, and SAM.gov needs a key. Live procurement data is limited to US federal awards (USAspending).

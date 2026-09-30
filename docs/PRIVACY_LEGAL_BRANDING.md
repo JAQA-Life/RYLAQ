@@ -13,6 +13,8 @@
 | Requests carry no cookies or referrer | `fetch` uses `credentials: 'omit'`, `referrerPolicy: 'no-referrer'` and `cache: 'no-store'`. The page sends `Referrer-Policy: no-referrer`. |
 | Link-outs | Opened by the user's browser in a new tab with `noopener noreferrer`. A link carries the query only when the source has a search template, and the UI labels it "opens with your query". **Official-link-only mode** removes queries from all link-outs. |
 | No file upload, clipboard read, geolocation, camera, microphone or contacts | Not implemented. `Permissions-Policy` disables them. The safety check asserts there is no file input. |
+| Situation Room feeds | Fixed, non-personal queries (never search terms) to verified sources: USGS, CISA KEV mirror, Federal Register, ECB. They stay on **standby** until the user clicks *Activate public feeds*. They are memory-only, survive new searches, and are wiped by Clear Session or a refresh. |
+| Globe | Plots only records already loaded in the session. It loads no tiles, fonts or remote assets and makes no network requests. |
 | Exports | Generated in the browser. Filenames are fixed and never contain the search term. The user is warned and chooses whether to include the search term. |
 
 **Published privacy statement:**
@@ -76,6 +78,6 @@ The product carries no legacy workspace branding. The safety check fails on lega
 
 ## Visual brand
 
-- RYLAQ navy `#0B2545` and teal `#14B8A6`. All colours are CSS custom properties (`--rq-*`, `--t-*`) scoped under `.rylaq-workspace`, so global RYLAQ CSS can override them.
+- Default **situation-room (HUD) theme**: near-black `#05080F`, cyan `#22D3EE`, teal `#5EEAD4`, monospace telemetry. Light theme uses RYLAQ navy `#0B2545` and teal `#14B8A6`. All colours are CSS custom properties (`--rq-*`, `--t-*`) scoped under `.rylaq-workspace`, so global RYLAQ CSS can override them.
 - System font stack only, inline SVG icons only, no external images.
 - The logo slot is an inline SVG monogram next to the "RYLAQ" wordmark in `src/assets/rylaq-workspace.js` (`logo()`). Replace it there with the official mark as inline SVG.

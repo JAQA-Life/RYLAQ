@@ -23,6 +23,16 @@ A source may be **live** only if **all** of these hold:
 
 If any of these is uncertain, the source is marked **verify** and falls back to link-out. **A proxy is never used to get around CORS.**
 
+## Design inspiration (clean-room)
+
+The **Situation Room** landing view and the default **situation-room (HUD) theme** take their *design language* from WorldMonitor and God's Eye View. From WorldMonitor: a dense multi-panel intelligence grid, a live wire/ticker and a status strip. From God's Eye View: a globe with reticle, corner brackets, telemetry readouts and optic modes (NVG / FLIR / CRT). This is allowed under pattern **2** above:
+
+- It is a clean-room implementation. No code, CSS, images, fonts, data or configuration from either project was copied, adapted or bundled.
+- Neither project is embedded (no iframe), called, forked or depended on at runtime.
+- The globe is RYLAQ's own dependency-free canvas renderer (`src/modules/globe.js`). It uses public-domain Natural Earth outlines (see `THIRD_PARTY_NOTICES.md`), with no map tiles and no WebGL libraries.
+- Everything plotted comes from RYLAQ's verified public sources. The Situation Room feeds are fixed, non-personal queries that stay on standby until the user activates them.
+- The UI shows both projects only as reference link-outs, with a no-affiliation statement.
+
 ## Specific projects
 
 | Project | Status | Reason |

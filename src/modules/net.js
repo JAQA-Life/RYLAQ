@@ -126,12 +126,13 @@
     if (!o.probe && cache.has(key)) return Promise.resolve(cache.get(key));
     if (!o.probe && inflight.has(key)) return inflight.get(key);
 
-    const generation = R.state.generation;
+    const genNow = () => (o.persistent ? R.state.feedGen : R.state.generation);
+    const generation = genNow();
     const p = new Promise((resolve) => {
       queue.push({
         sourceId,
         start: () => run(src, url, method, bodyStr, o, generation).then((res) => {
-          if (res.ok && !o.probe && generation === R.state.generation) cache.set(key, res);
+          if (res.ok && !o.probe && generation === genNow()) cache.set(key, res);
           resolve(res);
         })
       });
@@ -152,7 +153,8 @@
       timedOut = true;
       ctrl.abort();
     }, src.timeoutMs || 12000);
-    const outer = o.probe ? null : sessionSignal();
+    // Persistent feed requests are not cancelled by a new search (they carry no search term).
+    const outer = o.probe || o.persistent ? null : sessionSignal();
     const onOuter = () => ctrl.abort();
     if (outer) {
       if (outer.aborted) ctrl.abort();
@@ -163,7 +165,7 @@
     const finish = (res) => {
       clearTimeout(timer);
       if (outer) outer.removeEventListener('abort', onOuter);
-      if (generation !== R.state.generation && !o.probe) return { ok: false, errorKind: 'aborted' };
+      if (!o.probe && generation !== (o.persistent ? R.state.feedGen : R.state.generation)) return { ok: false, errorKind: 'aborted' };
       rs.lastFetch = new Date();
       if (res.ok) rs.ok++;
       else if (res.errorKind !== 'aborted') rs.fail++;
@@ -258,38 +260,46 @@
    * producing normalized records. Tasks are keyed and de-duplicated per
    * session so modules can share results; nothing survives Clear Session.
    * ------------------------------------------------------------------ */
+  const isFeed = (key) => String(key).startsWith('feed:');
+  function store(key) {
+    if (isFeed(key)) return R.state.feedTasks;
+    return R.state.session ? R.state.session.tasks : null;
+  }
+  const genOf = (key) => (isFeed(key) ? R.state.feedGen : R.state.generation);
+
   R.tasks = {
+    isFeed,
     /** def: { key, sourceId, label, run: async () => records[] } */
     ensure(def) {
-      const s = R.state.session;
-      if (!s) return null;
-      let t = s.tasks.get(def.key);
+      const st = store(def.key);
+      if (!st) return null;
+      let t = st.get(def.key);
       if (t && t.status !== 'error') return t;
       t = { key: def.key, sourceId: def.sourceId, label: def.label, status: 'idle', records: [], errorKind: null, def };
-      s.tasks.set(def.key, t);
+      st.set(def.key, t);
       return t;
     },
     get(key) {
-      const s = R.state.session;
-      return s ? s.tasks.get(key) : null;
+      const st = store(key);
+      return st ? st.get(key) : null;
     },
     async start(key) {
-      const s = R.state.session;
-      if (!s) return null;
-      const t = s.tasks.get(key);
+      const st = store(key);
+      if (!st) return null;
+      const t = st.get(key);
       if (!t || t.status === 'loading' || t.status === 'done' || t.status === 'empty') return t;
       if (!R.runtime.isLive(t.sourceId)) {
         t.status = 'linkout';
         R.events.emit('task:update', t);
         return t;
       }
-      const gen = R.state.generation;
+      const gen = genOf(key);
       t.status = 'loading';
       t.errorKind = null;
       R.events.emit('task:update', t);
       try {
         const out = await t.def.run();
-        if (gen !== R.state.generation) return t;
+        if (gen !== genOf(key)) return t;
         if (out && out.error) {
           t.status = out.error === 'linkout' ? 'linkout' : 'error';
           t.errorKind = out.error;
@@ -301,7 +311,7 @@
           t.retrievedAt = new Date();
         }
       } catch (e) {
-        if (gen !== R.state.generation) return t;
+        if (gen !== genOf(key)) return t;
         t.status = 'error';
         t.errorKind = 'bad_shape';
         console.error('[RYLAQ] task failed:', t.sourceId); // no query / payload in logs
@@ -326,9 +336,13 @@
       }
       return this.runAll(keys);
     },
+    /** Session tasks only (feeds are listed separately via feeds()). */
     all() {
       const s = R.state.session;
       return s ? [...s.tasks.values()] : [];
+    },
+    feeds() {
+      return [...R.state.feedTasks.values()];
     },
     records() {
       return this.all().flatMap((t) => t.records || []);

@@ -42,7 +42,7 @@
         ui.section('Privacy', { icon: 'shield' }, R.shell.privacyContent()),
         ui.section('Display preferences (memory only)', { icon: 'sliders' },
           h('div', { class: 'rq-filters' },
-            ui.select('Theme', [['system', 'Follow system'], ['light', 'Light'], ['dark', 'Dark']], p.theme, (v) => ((p.theme = v), refresh()), { key: 'pref-theme' }),
+            ui.select('Theme', [['ops', 'Situation room (HUD)'], ['dark', 'Dark'], ['light', 'Light'], ['system', 'Follow system (light/dark)']], p.theme, (v) => ((p.theme = v), refresh()), { key: 'pref-theme' }),
             ui.select('Density', [['comfortable', 'Comfortable'], ['compact', 'Compact']], p.density, (v) => ((p.density = v), refresh()), { key: 'pref-density' }),
             ui.select('Result view', [['cards', 'Cards'], ['table', 'Table']], p.viewMode, (v) => ((p.viewMode = v), refresh()), { key: 'pref-view' })
           ),

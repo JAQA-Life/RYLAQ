@@ -124,13 +124,13 @@ function page({ title, description, canonical, initialModule }) {
   // String.prototype.replace would otherwise interpret.
   out = out.replace(cssBlock[0], () => `<style>\n${css}\n</style>`);
   out = out.replace(jsBlock[0], () => `<script>\n${js}</script>`);
-  out = out.replace('data-initial-module="overview"', `data-initial-module="${initialModule}"`);
+  out = out.replace('data-initial-module="situation"', `data-initial-module="${initialModule}"`);
   return out;
 }
 
 const WORKSPACE_URL = SITE + WS_PATH;
 const PAGES = [
-  { file: 'dist/index.html', initialModule: 'overview', canonical: WORKSPACE_URL, title: 'RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace', description: 'Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first RYLAQ workspace powered by selected public APIs and official link-outs.' },
+  { file: 'dist/index.html', initialModule: 'situation', canonical: WORKSPACE_URL, title: 'RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace', description: 'Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first RYLAQ workspace powered by selected public APIs and official link-outs.' },
   { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: SITE + '/global-risk', title: 'RYLAQ Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first RYLAQ workspace powered by selected public APIs and official link-outs.' },
   { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: SITE + '/finance-risk', title: 'RYLAQ Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first RYLAQ workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
   { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: SITE + '/insurance-reinsurance', title: 'RYLAQ Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first RYLAQ workspace. Not insurance, underwriting, claims, or coverage advice.' },
@@ -144,7 +144,7 @@ const embed = `<!-- RYLAQ Workspace embed fragment. Paste into a custom HTML blo
 <style>
 ${css}
 </style>
-<main id="rylaq-workspace" class="rylaq-workspace" data-initial-module="overview"><noscript>This workspace needs JavaScript.</noscript></main>
+<main id="rylaq-workspace" class="rylaq-workspace" data-initial-module="situation"><noscript>This workspace needs JavaScript.</noscript></main>
 <script>
 ${js}</script>
 `;

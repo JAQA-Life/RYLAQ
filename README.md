@@ -54,9 +54,19 @@ Full detail: [`docs/SOURCE_REGISTRY.md`](docs/SOURCE_REGISTRY.md).
 
 To promote a source to live, add checks to `scripts/verify-cors.mjs`. Then run it locally or through the *Verify public sources* GitHub workflow, commit `config/cors-verification.json`, and run `npm run build`. The build updates both the in-app registry and the CSP.
 
-## Modules (29)
+## Design: Situation Room + HUD theme
 
-- **Risk:** Overview / Risk Triage · Organization 360 · Global Risk Universe (82 domains) · Cyber, Technology, AI & Software Supply Chain · Physical, Climate & Catastrophe · ESG, Conduct, Human Rights & Nature · Trade, Customs & Category · Supply Chain & Third-Party · Regulatory Change Radar · Standards & Frameworks
+The workspace opens on the **Situation Room**: a command-center grid with an interactive evidence globe, live public wires and the current investigation's signals. The default **situation-room theme** is dark, with a HUD look: grid background, cyan instrumentation, monospace telemetry and bracketed panels. **Dark** and **Light** themes are one click away (they are not saved). The design language is inspired by WorldMonitor and God's Eye View through a clean-room implementation, with no code or assets reused; see `THIRD_PARTY_NOTICES.md`.
+
+| Feature | Details |
+|---|---|
+| Evidence globe | Dependency-free canvas orthographic globe with Natural Earth coastlines and no map tiles. Drag, wheel and keyboard control; auto-rotate; optic modes STD / NVG / FLIR / CRT; layer toggles; and a text-alternative marker table. Markers come only from records loaded in the session: seismic events, places, subject reference points and forecast signals. |
+| Public feeds | Global seismic (USGS), exploited vulnerabilities (CISA KEV), US regulatory wire (Federal Register, fixed topics) and EUR/USD (ECB). They are **on standby until you activate them**, send fixed non-personal queries, and are wiped by Clear Session. |
+| Integration | Search results are plotted automatically, and the Climate & Catastrophe module has a local event globe. Reduced-motion preferences disable rotation, pulses and the ticker. |
+
+## Modules (30)
+
+- **Risk:** Situation Room · Overview / Risk Triage · Organization 360 · Global Risk Universe (82 domains) · Cyber, Technology, AI & Software Supply Chain · Physical, Climate & Catastrophe · ESG, Conduct, Human Rights & Nature · Trade, Customs & Category · Supply Chain & Third-Party · Regulatory Change Radar · Standards & Frameworks
 - **Finance:** Finance Risk Universe (32 domains) · Counterparty Financial Fragility · Public Filing & Financial Statement Lens · Credit, Insolvency & Litigation · Financial Crime, Sanctions & Enforcement · Market, Macro & Sovereign · FX, Interest Rate & Commodity
 - **Insurance & Reinsurance:** Intelligence · Financial Strength
 - **Procurement & Bids:** Procurement & Bid Radar · Awards & Past Performance · Grants & Public Funding · PPP, Concessions & Infrastructure

@@ -15,6 +15,22 @@
   const local = { place: '' };
   R.events.on('session:cleared', () => (local.place = ''));
 
+  // Local event globe (shares the Situation Room globe engine).
+  let localGlobe = null;
+  function localPoints(r) {
+    const pts = [{ kind: 'entity', lat: r.lat, lon: r.lon, label: 'Reference point · ' + (r.placeLabel || 'resolved location') }];
+    const q = R.tasks.get(T.quakes(r.lat, r.lon, 500, 30).key);
+    (q && q.records ? q.records : []).forEach((x) => isFinite(x.data.lat) && pts.push({ kind: 'quake', lat: x.data.lat, lon: x.data.lon, weight: Math.max(0, Math.min(1, ((x.data.mag || 4.5) - 4.5) / 3)), label: x.title, record: x }));
+    const f = R.tasks.get(T.forecast(r.lat, r.lon, r.placeLabel).key);
+    if (f && f.records && f.records[0] && f.records[0].data.flags.length) pts.push({ kind: 'signal', lat: r.lat + 0.6, lon: r.lon + 0.6, label: 'Forecast threshold signal · ' + f.records[0].data.flags[0], record: f.records[0] });
+    return pts;
+  }
+  R.events.on('task:update', (t) => {
+    const s = R.state.session;
+    if (!localGlobe || !s || !/^(usgs:|om:fc:)/.test(t.key) || s.resolved.lat === undefined || s.resolved.lat === null) return;
+    localGlobe.setPoints(localPoints(s.resolved));
+  });
+
   function placePicker(ctx) {
     const s = ctx.session;
     let val = local.place;
@@ -67,6 +83,15 @@
           ? h(
               'div',
               null,
+              ui.section('Local event globe', { icon: 'globe', desc: 'Reference point, nearby M4.5+ events and forecast signals. Drag to rotate; select a marker for details. Positions are not facility or loss data.' }, (() => {
+                const host = h('div', { class: 'rq-local-globe' });
+                setTimeout(() => {
+                  if (!host.isConnected) return;
+                  if (localGlobe) localGlobe.destroy();
+                  localGlobe = R.situation.mountGlobe(host, localPoints(r), { lat: r.lat, lon: r.lon });
+                }, 0);
+                return host;
+              })()),
               ui.section('Seismic events (USGS, M4.5+, 500 km, 30 days)', { icon: 'warn' }, ui.taskPanel(T.quakes(r.lat, r.lon, 500, 30), { auto: true, limit: 10, emptyText: 'No M4.5+ earthquakes within 500 km in the last 30 days.', noHitWarning: false })),
               ui.section('Weather forecast & threshold signals (Open-Meteo)', { icon: 'cloud' }, ui.taskPanel(T.forecast(r.lat, r.lon, r.placeLabel), { auto: true })),
               isUS ? ui.section('Official NWS alerts', { icon: 'warn' }, ui.taskPanel(T.nws(r.lat, r.lon), { auto: true, emptyText: 'No active NWS alerts for this point.', noHitWarning: false })) : ui.warning('Official NWS alerts cover the US only. Use national meteorological services (via WMO) elsewhere.', 'info'),

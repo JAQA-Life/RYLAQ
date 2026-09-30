@@ -18,12 +18,22 @@
 
   /* ------------------------------- theme ------------------------------- */
   const mq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  // Themes: 'ops' (situation-room HUD, default), 'dark', 'light', 'system'.
   function applyTheme() {
     const p = R.state.prefs.theme;
-    const dark = p === 'dark' || (p === 'system' && mq && mq.matches);
-    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    const resolved = p === 'system' ? (mq && mq.matches ? 'dark' : 'light') : p;
+    root.setAttribute('data-theme', resolved);
     root.setAttribute('data-density', R.state.prefs.density);
   }
+  const THEME_CYCLE = { ops: 'dark', dark: 'light', light: 'ops', system: 'ops' };
+  const THEME_LABEL = { ops: 'Situation-room theme', dark: 'Dark theme', light: 'Light theme' };
+  shell.cycleTheme = function () {
+    const cur = root.getAttribute('data-theme');
+    R.state.prefs.theme = THEME_CYCLE[cur] || 'ops';
+    applyTheme();
+    announce(THEME_LABEL[root.getAttribute('data-theme')] + ' (this session only).');
+  };
+  shell.utcNow = () => new Date().toISOString().slice(11, 19) + 'Z';
   shell.applyTheme = applyTheme;
   if (mq && mq.addEventListener) mq.addEventListener('change', () => root && applyTheme());
 
@@ -154,12 +164,7 @@
 
   function buildHeader() {
     const privacyBadge = h('button', { type: 'button', class: 'rq-privacy-badge', onclick: () => shell.openPrivacy(), 'aria-label': 'RYLAQ Privacy: open privacy details' }, icon('lock', 'rq-icon-sm'), h('span', null, R.legal.privacyBadge));
-    const themeBtn = h('button', { type: 'button', class: 'rq-icon-btn', 'aria-label': 'Toggle dark mode (not saved)', onclick: () => {
-      const cur = root.getAttribute('data-theme');
-      R.state.prefs.theme = cur === 'dark' ? 'light' : 'dark';
-      applyTheme();
-      announce('Theme changed for this session.');
-    } }, icon('moon'));
+    const themeBtn = h('button', { type: 'button', class: 'rq-icon-btn', 'aria-label': 'Switch theme: situation room, dark, light (not saved)', title: 'Theme', onclick: () => shell.cycleTheme() }, icon('moon'));
     return h(
       'header',
       { class: 'rq-header' },
@@ -172,6 +177,7 @@
       h(
         'div',
         { class: 'rq-header-actions' },
+        h('div', { class: 'rq-cmd-status', role: 'group', 'aria-label': 'Workspace status' }, h('span', { class: 'rq-cmd-chip rq-mono' }, h('span', { class: 'rq-live-dot', 'aria-hidden': 'true' }), 'UTC ', h('span', { class: 'rq-utc' }, shell.utcNow())), h('span', { class: 'rq-cmd-chip rq-mono' }, 'LIVE SOURCES ' + R.sources.list.filter((x) => x.corsVerified).length), h('span', { class: 'rq-cmd-chip rq-mono' }, 'ZERO RETENTION')),
         privacyBadge,
         h(
           'div',
@@ -426,7 +432,7 @@
     searchInput.value = '';
     clear(detectEl);
     applyTheme();
-    shell.go('overview');
+    shell.go(shell.initialModule || 'situation');
     announce('Session cleared. All in-memory searches, results, watchlist items, keys and preferences were wiped.');
   };
 
@@ -571,7 +577,9 @@
       { label: 'Export evidence pack (JSON)', run: () => R.exporters.evidencePackJSON() },
       { label: 'Open privacy', run: () => shell.openPrivacy() },
       { label: 'Open coverage console', run: () => shell.go('coverage', { focus: true }) },
-      { label: 'Toggle theme', run: () => { R.state.prefs.theme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; applyTheme(); } },
+      { label: 'Switch theme (situation room / dark / light)', run: () => shell.cycleTheme() },
+      { label: 'Open Situation Room', run: () => shell.go('situation', { focus: true }) },
+      { label: 'Activate Situation Room public feeds', run: () => { shell.go('situation'); R.situation.activateFeeds(); } },
       { label: 'Toggle table/card view', run: () => { R.state.prefs.viewMode = R.state.prefs.viewMode === 'table' ? 'cards' : 'table'; renderModule(); } },
       { label: 'Run advanced query', run: () => shell.go('advanced', { focus: true }) },
       { label: 'Open insurance regulator directory (IAIS members)', run: () => shell.openExternal('https://www.iaisweb.org/about-the-iais/iais-members/') },
@@ -625,7 +633,8 @@
   function boot() {
     root = document.getElementById('rylaq-workspace');
     if (!root) return;
-    const initialModule = root.getAttribute('data-initial-module') || 'overview';
+    const initialModule = root.getAttribute('data-initial-module') || 'situation';
+    shell.initialModule = initialModule;
     clear(root);
     root.classList.add('rylaq-workspace');
     modalLayer = h('div', { class: 'rq-modal-layer' });
@@ -650,6 +659,12 @@
     applyTheme();
     shell.go(R.modules.get(initialModule) ? initialModule : 'overview');
     renderStatus();
+
+    // One clock for every UTC readout (header, strip, HUD). Text only; no data is sent.
+    setInterval(() => {
+      const t = shell.utcNow();
+      root.querySelectorAll('.rq-utc').forEach((el) => (el.textContent = t));
+    }, 1000);
 
     R.events.on('net:update', queueStatus);
     R.events.on('task:update', queueStatus);

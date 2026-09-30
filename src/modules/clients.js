@@ -263,39 +263,48 @@
   };
 
   /* ------------------------------- USGS ------------------------------- */
+  function quakeRecord(f, ref) {
+    const p = f.properties || {};
+    const [lo, la, depth] = (f.geometry && f.geometry.coordinates) || [];
+    const dist = ref && isFinite(la) ? haversineKm(ref.lat, ref.lon, la, lo) : null;
+    const badges = [{ text: 'Seismic event', tone: 'warn' }];
+    if (p.alert) badges.push({ text: 'USGS PAGER alert: ' + p.alert, tone: p.alert === 'green' ? 'neutral' : 'serious' });
+    if (p.tsunami) badges.push({ text: 'Tsunami flag (source-reported)', tone: 'serious' });
+    return rec('usgs', 'earthquake', {
+      title: `M${fmt.num(p.mag, 1)} — ${p.place || 'location not reported'}`,
+      subtitle: new Date(p.time).toISOString().replace('T', ' ').slice(0, 16) + ' UTC',
+      recordId: f.id,
+      url: p.url,
+      endpoint: 'fdsnws/event/1/query',
+      category: 'public-event',
+      badges,
+      fields: [
+        ['Magnitude', fmt.num(p.mag, 1) + (p.magType ? ' ' + p.magType : '')],
+        ['Time (UTC)', new Date(p.time).toISOString()],
+        ['Depth (km)', fmt.num(depth, 1)],
+        ['Coordinates', isFinite(la) ? `${Number(la).toFixed(3)}, ${Number(lo).toFixed(3)}` : null],
+        ref ? ['Distance from reference point (km, derived by RYLAQ)', dist !== null ? fmt.num(dist, 0) : null] : null,
+        ['Review status', p.status],
+        ['Significance (USGS sig)', p.sig]
+      ].filter(Boolean),
+      data: { mag: p.mag, dist, alert: p.alert, time: p.time, lat: la, lon: lo }
+    });
+  }
   C.usgs = {
     async near(lat, lon, radiusKm, days, minMag) {
       const start = new Date(Date.now() - (days || 30) * 86400000).toISOString().slice(0, 10);
       const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${lat}&longitude=${lon}&maxradiuskm=${radiusKm || 500}&minmagnitude=${minMag || 4.5}&starttime=${start}&orderby=magnitude&limit=20`;
       const r = await call('usgs', url, { validate: (j) => isArr(j.features) });
       if (r.error) return r;
-      const records = r.data.features.map((f) => {
-        const p = f.properties || {};
-        const [lo, la, depth] = (f.geometry && f.geometry.coordinates) || [];
-        const dist = isFinite(la) ? haversineKm(lat, lon, la, lo) : null;
-        const badges = [{ text: 'Seismic event', tone: 'warn' }];
-        if (p.alert) badges.push({ text: 'USGS PAGER alert: ' + p.alert, tone: p.alert === 'green' ? 'neutral' : 'serious' });
-        if (p.tsunami) badges.push({ text: 'Tsunami flag (source-reported)', tone: 'serious' });
-        return rec('usgs', 'earthquake', {
-          title: `M${fmt.num(p.mag, 1)} — ${p.place || 'location not reported'}`,
-          subtitle: new Date(p.time).toISOString().replace('T', ' ').slice(0, 16) + ' UTC',
-          recordId: f.id,
-          url: p.url,
-          endpoint: 'fdsnws/event/1/query',
-          category: 'public-event',
-          badges,
-          fields: [
-            ['Magnitude', fmt.num(p.mag, 1) + (p.magType ? ' ' + p.magType : '')],
-            ['Time (UTC)', new Date(p.time).toISOString()],
-            ['Depth (km)', fmt.num(depth, 1)],
-            ['Distance from reference point (km, derived by RYLAQ)', dist !== null ? fmt.num(dist, 0) : null],
-            ['Review status', p.status],
-            ['Significance (USGS sig)', p.sig]
-          ],
-          data: { mag: p.mag, dist, alert: p.alert, time: p.time }
-        });
-      });
-      return { records, meta: { query: { radiusKm, days, minMag } } };
+      return { records: r.data.features.map((f) => quakeRecord(f, { lat, lon })), meta: { query: { radiusKm, days, minMag } } };
+    },
+    /** Global feed (fixed query, no user data): M≥minMag worldwide over the last N days. */
+    async global(days, minMag, opts) {
+      const start = new Date(Date.now() - (days || 7) * 86400000).toISOString().slice(0, 10);
+      const url = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=${minMag || 4.5}&starttime=${start}&orderby=time&limit=150`;
+      const r = await call('usgs', url, Object.assign({ validate: (j) => isArr(j.features) }, opts || {}));
+      if (r.error) return r;
+      return { records: r.data.features.map((f) => quakeRecord(f, null)), meta: { total: r.data.features.length } };
     }
   };
 
@@ -406,9 +415,9 @@
   R.events.on('session:cleared', () => {
     kevCatalog = null;
   });
-  async function loadKev() {
+  async function loadKev(opts) {
     if (kevCatalog) return { data: kevCatalog };
-    const r = await call('cisaKev', 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json', { validate: (j) => isArr(j.vulnerabilities) });
+    const r = await call('cisaKev', 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json', Object.assign({ validate: (j) => isArr(j.vulnerabilities) }, opts || {}));
     if (r.error) return r;
     kevCatalog = r.data;
     return r;
@@ -446,8 +455,8 @@
       const v = r.data.vulnerabilities.find((x) => String(x.cveID).toUpperCase() === cve.toUpperCase());
       return { records: v ? [kevRecord(v, r.data.catalogVersion)] : [], meta: { catalogVersion: r.data.catalogVersion, count: r.data.count } };
     },
-    async recent(n) {
-      const r = await loadKev();
+    async recent(n, opts) {
+      const r = await loadKev(opts);
       if (r.error) return r;
       const rows = r.data.vulnerabilities.slice().sort((a, b) => String(b.dateAdded).localeCompare(String(a.dateAdded)));
       return { records: rows.slice(0, n || 15).map((v) => kevRecord(v, r.data.catalogVersion)), meta: { total: r.data.count, catalogVersion: r.data.catalogVersion } };
@@ -710,7 +719,7 @@
       if (o.agency) url += '&conditions%5Bagencies%5D%5B%5D=' + enc(o.agency);
       if (o.from) url += '&conditions%5Bpublication_date%5D%5Bgte%5D=' + enc(o.from);
       if (o.to) url += '&conditions%5Bpublication_date%5D%5Blte%5D=' + enc(o.to);
-      const r = await call('federalRegister', url, { validate: (j) => obj(j) });
+      const r = await call('federalRegister', url, { validate: (j) => obj(j), persistent: !!o.persistent });
       if (r.error) return r;
       return { records: (r.data.results || []).map(frRecord), meta: { total: r.data.count || 0 } };
     },
@@ -972,8 +981,8 @@
 
   /* -------------------------------- ECB -------------------------------- */
   C.ecb = {
-    async exr(ccy, n) {
-      const r = await call('ecb', `https://data-api.ecb.europa.eu/service/data/EXR/D.${enc(ccy)}.EUR.SP00.A?format=jsondata&lastNObservations=${n || 30}`, { allow404: true, validate: (j) => j === null || isArr(j.dataSets) });
+    async exr(ccy, n, opts) {
+      const r = await call('ecb', `https://data-api.ecb.europa.eu/service/data/EXR/D.${enc(ccy)}.EUR.SP00.A?format=jsondata&lastNObservations=${n || 30}`, Object.assign({ allow404: true, validate: (j) => j === null || isArr(j.dataSets) }, opts || {}));
       if (r.error) return r;
       if (!r.data) return { records: [] };
       const ds = r.data.dataSets[0] || {};

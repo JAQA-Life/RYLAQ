@@ -2,7 +2,8 @@
 
 ## Branching
 
-- `main` is production. A push to `main` that changes `dist/` triggers the optional Hostinger deploy.
+- `main` is production. A push to `main` that changes `dist/` publishes the `dist/` contents to the `hostinger` branch, which Hostinger Git deploy serves from `public_html/`. The optional FTPS deploy also runs if its secrets are configured.
+- `hostinger` is generated. Never edit it by hand, and never merge it anywhere.
 - Work on feature branches (for example `claude/<topic>`) and open a pull request into `main`.
 - CI (`.github/workflows/ci.yml`) must pass before merging.
 
@@ -64,7 +65,7 @@ Never mark a source live by hand. The build derives live mode and CSP from this 
 
 ## Supply-chain hygiene for Actions
 
-- Workflows use `permissions: contents: read`.
+- Workflows use `permissions: contents: read`, except `publish-hostinger-branch.yml`. That workflow needs `contents: write` to push the `hostinger` branch; it never force-pushes and only runs on `main`.
 - Third-party actions are pinned to release tags. For maximum safety, pin to full commit SHAs after review:
   `uses: SamKirkland/FTP-Deploy-Action@<40-char-sha> # v4.3.5`.
 - The deploy job never runs for forks, and it can be gated behind a protected `production` environment.

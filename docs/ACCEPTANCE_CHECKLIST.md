@@ -24,7 +24,7 @@ Status as of this build: all SMOKE, STATIC and VERIFY items pass. MANUAL items a
 | 10–11 | Refresh and Clear Session wipe state | SMOKE (Clear Session); DESIGN (memory only) |
 | 12 | No search term in URL | SMOKE + STATIC |
 | 13–15 | No analytics, font CDNs or unnecessary CDNs | STATIC |
-| 16 | `dist/index.html` serves statically on Hostinger | MANUAL (docs/HOSTINGER_DEPLOYMENT.md) |
+| 16 | `dist/index.html` serves statically on Hostinger at the domain root (`hostinger` branch → `public_html/`, no 403) | MANUAL (docs/HOSTINGER_DEPLOYMENT.md §0–2) |
 | 17–18 | `.htaccess` headers present, no directory listing | STATIC (content); MANUAL (live response headers) |
 | 19 | HTTPS works | MANUAL (enable SSL in hPanel; `.htaccess` redirects) |
 | 20–21 | GitHub Actions deploy works; secrets not exposed | MANUAL (needs secrets); DESIGN (masked secrets, no echo) |

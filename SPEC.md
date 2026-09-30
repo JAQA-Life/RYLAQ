@@ -128,8 +128,8 @@ The header legal comment is in `core.js` and in the built script.
 
 | Area | Files |
 |---|---|
-| Hostinger | `.htaccess` (CSP with script hash and verified `connect-src`), `docs/HOSTINGER_DEPLOYMENT.md` (manual, Git, Actions, Nginx, rollback) |
-| GitHub Actions | `ci.yml`, `deploy-hostinger.yml`, `verify-sources.yml` |
+| Hostinger | `.htaccess` (CSP with script hash and verified `connect-src`), `docs/HOSTINGER_DEPLOYMENT.md` (Git deploy of the `hostinger` branch, manual, FTPS, Nginx, rollback, 403 troubleshooting) |
+| GitHub Actions | `ci.yml`, `publish-hostinger-branch.yml`, `deploy-hostinger.yml` (optional), `verify-sources.yml` |
 | Scripts | `build.mjs`, `check-static-safety.mjs`, `validate-links.mjs`, `verify-cors.mjs`, `preview.mjs`, `smoke-test.mjs` |
 
 ## 38–39. Acceptance tests & final checklist
@@ -146,6 +146,8 @@ The header legal comment is in `core.js` and in the built script.
   - The implementation is clean-room: no code or assets reused, and nothing from those projects embedded or called. §10 policy is unchanged, and both projects remain reference/link-out only.
   - The globe uses public-domain Natural Earth outlines and no tiles.
   - Feeds are fixed, non-personal, user-activated queries to already-verified sources.
+
+- **2026-09-30 — Hosting path.** The site is served from the domain root, `https://jaqa.life/` (build default `--workspace-path /`), and deployed with Hostinger Git from the generated `hostinger` branch, which contains only the `dist/` contents. This fixes the Hostinger *403 Forbidden* that occurred when the deployed branch root had no `index.html`, and keeps source files off the web server.
 
 ## Open decisions
 

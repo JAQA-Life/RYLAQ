@@ -8,7 +8,7 @@
  *   src/modules/corsConfig.js           compiled from config/cors-verification.json
  *
  * Output is deterministic (no timestamps) so CI can verify dist/ is up to date.
- * Options: --site https://jaqa.life  --workspace-path /workspace/
+ * Options: --site https://jaqa.life  --workspace-path /   (site served from the domain root)
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -23,7 +23,7 @@ const arg = (n, d) => {
   return i >= 0 && args[i + 1] ? args[i + 1] : d;
 };
 const SITE = arg('--site', 'https://jaqa.life').replace(/\/$/, '');
-const WS_PATH = arg('--workspace-path', '/workspace/');
+const WS_PATH = arg('--workspace-path', '/').replace(/^\/?/, '/').replace(/\/?$/, '/');
 const rel = (p) => path.join(root, p);
 const read = (p) => readFileSync(rel(p), 'utf8');
 const write = (p, s) => {
@@ -119,7 +119,7 @@ function page({ title, description, canonical, initialModule }) {
     `<meta property="og:type" content="website">`,
     `<meta property="og:url" content="${canonical}">`
   ].join('\n'));
-  out = out.replace(/"url":"https:\/\/jaqa\.com\/workspace\/"/, `"url":"${canonical}"`);
+  out = out.replace(/"@type":"WebApplication",(.*?)"url":"[^"]*"/, (m, mid) => `"@type":"WebApplication",${mid}"url":"${canonical}"`);
   // Function replacements: the inlined code contains `$&`-style sequences that
   // String.prototype.replace would otherwise interpret.
   out = out.replace(cssBlock[0], () => `<style>\n${css}\n</style>`);
@@ -131,10 +131,10 @@ function page({ title, description, canonical, initialModule }) {
 const WORKSPACE_URL = SITE + WS_PATH;
 const PAGES = [
   { file: 'dist/index.html', initialModule: 'situation', canonical: WORKSPACE_URL, title: 'JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace', description: 'Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
-  { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: SITE + '/global-risk', title: 'JAQA Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
-  { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: SITE + '/finance-risk', title: 'JAQA Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first JAQA workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
-  { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: SITE + '/insurance-reinsurance', title: 'JAQA Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first JAQA workspace. Not insurance, underwriting, claims, or coverage advice.' },
-  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: SITE + '/procurement-bids', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' }
+  { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: WORKSPACE_URL + 'global-risk/', title: 'JAQA Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
+  { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: WORKSPACE_URL + 'finance-risk/', title: 'JAQA Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first JAQA workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
+  { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: WORKSPACE_URL + 'insurance-reinsurance/', title: 'JAQA Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first JAQA workspace. Not insurance, underwriting, claims, or coverage advice.' },
+  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: WORKSPACE_URL + 'procurement-bids/', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' }
 ];
 console.log('Building JAQA static artifact');
 for (const p of PAGES) write(p.file, page(p));

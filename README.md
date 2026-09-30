@@ -73,7 +73,7 @@ The workspace opens on the **Situation Room**: a command-center grid with an int
 
 ## Deployment
 
-See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). In short, upload the **contents** of `dist/` to `public_html/workspace/` (or `public_html/`), including `.htaccess`. Hostinger needs no Node.js, PHP, database or build step. The optional GitHub Actions FTPS deploy is in `.github/workflows/deploy-hostinger.yml`.
+See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). The site is built for the domain root, `https://jaqa.life/`. On every push to `main`, `.github/workflows/publish-hostinger-branch.yml` publishes **only the contents of `dist/`** to the `hostinger` branch. Point **hPanel → Advanced → Git** at branch `hostinger` with an empty directory (that is, `public_html/`). Never point it at `main`: the repository root has no `index.html`, so Hostinger answers *403 Forbidden*. Manual upload of the `dist/` contents (including `.htaccess`) and the optional FTPS workflow (`deploy-hostinger.yml`, skipped until secrets are set) also work. Hostinger needs no Node.js, PHP, database or build step.
 
 ## Licence
 

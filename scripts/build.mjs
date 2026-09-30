@@ -5,6 +5,7 @@
  *   dist/.htaccess                      security headers incl. CSP with script hash
  *   dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/index.html
  *   embed/jaqa-workspace-embed.html    fragment for CMS / intranet custom-HTML blocks
+ *   release/jaqa-web.zip                the dist/ files as one download for Hostinger File Manager upload
  *   src/modules/corsConfig.js           compiled from config/cors-verification.json
  *
  * Output is deterministic (no timestamps) so CI can verify dist/ is up to date.
@@ -215,6 +216,73 @@ AddDefaultCharset utf-8
 AddType text/html .html
 `;
 write('dist/.htaccess', htaccess);
+
+/* 5b. release/jaqa-web.zip: the exact dist/ files (incl. .htaccess) as one download
+ * to upload to Hostinger (File Manager → public_html → Upload → Extract).
+ * Entries are STORED (no compression) with a fixed 1980-01-01 timestamp and sorted
+ * names, so the archive is byte-identical on every build and CI can diff it. */
+{
+  const CRC = new Uint32Array(256).map((_, n) => {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    return c >>> 0;
+  });
+  const crc32 = (buf) => {
+    let c = 0xffffffff;
+    for (const b of buf) c = CRC[(c ^ b) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  };
+  const files = ['.htaccess', ...PAGES.map((p) => p.file.replace(/^dist\//, ''))].sort();
+  const DOS_DATE = (0 << 9) | (1 << 5) | 1; // 1980-01-01
+  const locals = [];
+  const centrals = [];
+  let offset = 0;
+  for (const name of files) {
+    const data = readFileSync(rel('dist/' + name));
+    const nameBuf = Buffer.from(name, 'utf8');
+    const crc = crc32(data);
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(10, 4); // version needed
+    local.writeUInt16LE(0x0800, 6); // UTF-8 names
+    local.writeUInt16LE(0, 8); // stored
+    local.writeUInt16LE(0, 10); // time
+    local.writeUInt16LE(DOS_DATE, 12);
+    local.writeUInt32LE(crc, 14);
+    local.writeUInt32LE(data.length, 18);
+    local.writeUInt32LE(data.length, 22);
+    local.writeUInt16LE(nameBuf.length, 26);
+    local.writeUInt16LE(0, 28);
+    const central = Buffer.alloc(46);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE((3 << 8) | 20, 4); // made by: Unix
+    central.writeUInt16LE(10, 6);
+    central.writeUInt16LE(0x0800, 8);
+    central.writeUInt16LE(0, 10);
+    central.writeUInt16LE(0, 12);
+    central.writeUInt16LE(DOS_DATE, 14);
+    central.writeUInt32LE(crc, 16);
+    central.writeUInt32LE(data.length, 20);
+    central.writeUInt32LE(data.length, 24);
+    central.writeUInt16LE(nameBuf.length, 28);
+    central.writeUInt32LE((0o100644 << 16) >>> 0, 38); // -rw-r--r--
+    central.writeUInt32LE(offset, 42);
+    locals.push(local, nameBuf, data);
+    centrals.push(central, nameBuf);
+    offset += local.length + nameBuf.length + data.length;
+  }
+  const cd = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(cd.length, 12);
+  end.writeUInt32LE(offset, 16);
+  const zip = Buffer.concat([...locals, cd, end]);
+  mkdirSync(rel('release'), { recursive: true });
+  writeFileSync(rel('release/jaqa-web.zip'), zip);
+  console.log('  wrote release/jaqa-web.zip', `(${zip.length.toLocaleString()} bytes, ${files.length} files)`);
+}
 
 /* 6. docs/SOURCE_REGISTRY.md generated from the actual registry (never drifts from code). */
 {

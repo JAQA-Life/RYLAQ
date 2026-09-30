@@ -72,6 +72,8 @@ Notes:
 
 ## 3. Manual upload (File Manager)
 
+**Easiest:** use the ready-made package [`release/jaqa-web.zip`](../release/jaqa-web.zip), which contains exactly the `dist/` files, including `.htaccess`. Upload it to `public_html/`, right-click → **Extract** into `public_html/` itself, then delete the ZIP. The step-by-step guide is in [`release/README.md`](../release/README.md). If Git deploy is configured, disable it first, or the next deploy replaces the upload. The steps below do the same with individual files.
+
 1. Make sure `dist/` is current: run `npm run build && npm run check`, or rely on CI.
 2. In **hPanel → Files → File Manager**, open `public_html/` and delete the placeholder files.
 3. Upload **all files inside `dist/`**, not the `dist` folder itself, including the hidden `.htaccess`. Enable *Show hidden files* to confirm it is there. Alternatively, download the `hostinger` branch as a ZIP from GitHub, upload it, and extract it in `public_html/`.

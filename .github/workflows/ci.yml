@@ -30,7 +30,7 @@ jobs:
       - name: dist/ is up to date with src/ (reproducible build)
         run: |
           node scripts/build.mjs
-          git diff --exit-code -- dist embed src/modules/corsConfig.js || (echo "::error::dist/ is stale. Run 'npm run build' and commit the result." && exit 1)
+          git diff --exit-code -- dist embed release src/modules/corsConfig.js || (echo "::error::dist/ is stale. Run 'npm run build' and commit the result." && exit 1)
       - name: Static safety check (privacy, storage, trackers, CDNs, keys, branding, rel=noopener)
         run: node scripts/check-static-safety.mjs
       - name: Link sanity check

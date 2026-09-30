@@ -14,6 +14,7 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 | `.htaccess` (root) | Used only if Hostinger deploys the repository root (`main`). It routes every request into `dist/` and returns 404 for source files. |
 | `dist/.htaccess` | Security headers, HTTPS redirect, no directory listing, gzip, and a strict CSP. `script-src` is pinned to the script's SHA-256 hash and `connect-src` allows only verified API origins. |
 | `dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/` | Optional standalone routes: the same app with route-specific title, meta and canonical, opening on the matching module. |
+| `release/jaqa-web.zip` | **Download-and-upload package**: the `dist/` files, including `.htaccess`, in one ZIP for Hostinger File Manager. Upload it to `public_html/` and extract it there. See [`release/README.md`](release/README.md). |
 | `embed/jaqa-workspace-embed.html` | Fragment for CMS/intranet custom-HTML blocks. It contains no html/head/body, and its styles are scoped to `.jaqa-workspace`. |
 | `src/` | Readable source: `src/index.html` loads the unbundled modules, so the app also runs from `src/` without a build. |
 | `config/cors-verification.json` | Evidence for live mode: the result of real requests sent with `Origin: https://jaqa.life`. |
@@ -25,7 +26,7 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 
 ```bash
 # No install needed for production. For development:
-npm run build          # regenerate dist/, embed/, docs/SOURCE_REGISTRY.md, corsConfig.js
+npm run build          # regenerate dist/, embed/, release/jaqa-web.zip, docs/SOURCE_REGISTRY.md, corsConfig.js
 npm run check          # static safety + link sanity checks
 npm run preview        # http://127.0.0.1:8080 (serves dist/, no logging)
 npm run test:smoke     # Playwright end-to-end test with mocked providers (needs `playwright`)
@@ -73,6 +74,8 @@ The workspace opens on the **Situation Room**: a command-center grid with an int
 - **Evidence:** Relationship Explorer · Scenario Stress Lab · Watchlist / Evidence Board · Advanced Query · Coverage Console · Session & Privacy
 
 ## Deployment
+
+**Simplest:** download [`release/jaqa-web.zip`](release/jaqa-web.zip), upload it in Hostinger File Manager to `public_html/`, and extract it there (steps in [`release/README.md`](release/README.md)).
 
 See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). The site is built for the domain root, `https://jaqa.life/`. On every push to `main`, `.github/workflows/publish-hostinger-branch.yml` publishes **only the contents of `dist/`** to the `hostinger` branch. Point **hPanel → Advanced → Git** at branch `hostinger` with an empty directory (that is, `public_html/`). If Hostinger stays pointed at `main`, the repository-root `.htaccess` serves `dist/` at `/` and hides everything else, so that works too once the app is merged. Manual upload of the `dist/` contents (including `.htaccess`) and the optional FTPS workflow (`deploy-hostinger.yml`, skipped until secrets are set) also work. Hostinger needs no Node.js, PHP, database or build step.
 

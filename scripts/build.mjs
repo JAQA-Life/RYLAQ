@@ -13,7 +13,8 @@
  * Output is deterministic (no timestamps) so CI can verify dist/ is up to date.
  * Options: --site https://jaqa.life  --workspace-path /   (site served from the domain root)
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync, statSync, copyFileSync } from 'node:fs';
+import { createSeo } from './build-seo.mjs';
 import { createHash } from 'node:crypto';
 import vm from 'node:vm';
 import path from 'node:path';
@@ -138,23 +139,29 @@ write('dist/' + ASSET.js, js);
 write('dist/' + ASSET.css, css + '\n');
 write('dist/' + ASSET.boot, bootJs);
 
+// Source registry (evaluated like the browser does) for SEO pages and docs.
+function loadRegistry() {
+  const sandbox = { window: {}, console };
+  vm.createContext(sandbox);
+  for (const f of ['src/modules/core.js', 'src/modules/corsConfig.js', 'src/modules/sourceRegistry.js']) vm.runInContext(read(f), sandbox, { filename: f });
+  return sandbox.window.JAQAWorkspace;
+}
+const REG = loadRegistry();
+const lastmod = [cors.verifiedAt, monitorConfig.verifiedAt].filter(Boolean).sort().pop()?.slice(0, 10) || '2026-09-30';
+const seo = createSeo({ SITE, R: REG, monitorConfig, lastmod });
+const siteCss = read('src/assets/jaqa-site.css').trim() + '\n';
+ASSET.site = `assets/jaqa-site.${contentHash(siteCss)}.css`;
+write('dist/' + ASSET.site, siteCss);
+
 const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Static files only: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
 
 function page({ file, title, description, canonical, initialModule }) {
   // Relative asset paths, so the site also works from a sub-folder or file://.
   const up = '../'.repeat(file.split('/').length - 2);
-  const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   let out = stripDevComment(html);
-  out = out.replace(/<!-- JAQA:META:BEGIN -->[\s\S]*?<!-- JAQA:META:END -->/, () => [
-    `<title>${esc(title)}</title>`,
-    `<meta name="description" content="${esc(description)}">`,
-    `<link rel="canonical" href="${canonical}">`,
-    `<meta property="og:title" content="${esc(title)}">`,
-    `<meta property="og:description" content="${esc(description)}">`,
-    `<meta property="og:type" content="website">`,
-    `<meta property="og:url" content="${canonical}">`
-  ].join('\n'));
-  out = out.replace(/"@type":"WebApplication",(.*?)"url":"[^"]*"/, (m, mid) => `"@type":"WebApplication",${mid}"url":"${canonical}"`);
+  out = out.replace(/<!-- JAQA:META:BEGIN -->[\s\S]*?<!-- JAQA:META:END -->/, () => seo.head({ title, description, canonical, up }));
+  out = out.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => seo.workspaceLd({ title, description, canonical, home: file === 'dist/index.html' }));
+  out = out.replace(/<!-- JAQA:SEO:BEGIN -->[\s\S]*?<!-- JAQA:SEO:END -->/, () => seo.aboutSection(up));
   // Function replacements: the inlined code contains `$&`-style sequences that
   // String.prototype.replace would otherwise interpret.
   out = out.replace(cssBlock[0], () => `<link rel="stylesheet" href="${up}${ASSET.css}">`);
@@ -170,10 +177,21 @@ const PAGES = [
   { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: WORKSPACE_URL + 'global-risk/', title: 'JAQA Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
   { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: WORKSPACE_URL + 'finance-risk/', title: 'JAQA Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first JAQA workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
   { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: WORKSPACE_URL + 'insurance-reinsurance/', title: 'JAQA Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first JAQA workspace. Not insurance, underwriting, claims, or coverage advice.' },
-  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: WORKSPACE_URL + 'procurement-bids/', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' }
+  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: WORKSPACE_URL + 'procurement-bids/', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' },
+  { file: 'dist/global-monitor/index.html', initialModule: 'monitor', canonical: WORKSPACE_URL + 'global-monitor/', title: 'JAQA Global Monitor | Official Feeds, Event Map & FX Board', description: `Headlines from ${monitorConfig.feeds.length} verified official feeds (UN, WHO, GDACS, NASA, USGS, CISA, central banks, travel advice), an event map and an ECB FX board.` }
 ];
 console.log('Building JAQA static artifact');
 for (const p of PAGES) write(p.file, page(p));
+
+/* 3b. SEO / GEO / AEO: crawlable static pages, sitemap, robots, llms.txt, manifest, icons. */
+seo.staticPages({
+  write,
+  copy: (from, to) => {
+    mkdirSync(path.dirname(rel(to)), { recursive: true });
+    copyFileSync(rel(from), rel(to));
+  },
+  siteCss: ASSET.site
+});
 
 /* 4. Embed fragment (no html/head/body) for CMS custom-HTML blocks. */
 const embed = `<!-- JAQA Workspace embed fragment. Paste into a custom HTML block. Styles are scoped to .jaqa-workspace. JAQA™ is a trademark of JAQA. -->
@@ -200,7 +218,7 @@ const csp = [
   "form-action 'self'",
   "object-src 'none'",
   "worker-src 'none'",
-  "manifest-src 'none'",
+  "manifest-src 'self'",
   'upgrade-insecure-requests'
 ].join('; ');
 const htaccess = `# JAQA Workspace — static hosting security configuration (generated by scripts/build.mjs).
@@ -215,6 +233,7 @@ const htaccess = `# JAQA Workspace — static hosting security configuration (ge
 Options -Indexes
 ServerSignature Off
 DirectoryIndex index.html
+ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -258,6 +277,10 @@ AddDefaultCharset utf-8
 AddType text/html .html
 AddType text/javascript .js
 AddType text/css .css
+AddType application/manifest+json .webmanifest
+AddType text/plain .txt
+AddType application/xml .xml
+AddType image/svg+xml .svg
 AddCharset utf-8 .html .js .css
 `;
 write('dist/.htaccess', htaccess);

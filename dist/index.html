@@ -14,12 +14,25 @@
 <title>JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</title>
 <meta name="description" content="Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.">
 <link rel="canonical" href="https://jaqa.life/">
+<meta property="og:site_name" content="JAQA">
 <meta property="og:title" content="JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace">
 <meta property="og:description" content="Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://jaqa.life/">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jaqa.life/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="JAQA — global risk, finance, insurance and procurement intelligence">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace">
+<meta name="twitter:description" content="Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.">
+<meta name="twitter:image" content="https://jaqa.life/og-image.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace","applicationCategory":"BusinessApplication","operatingSystem":"Any (web browser)","url":"https://jaqa.life/","description":"Public-source triage workspace for enterprise risk, finance, insurance/reinsurance, and procurement evidence. Educational and information-discovery use only; not legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"JAQA","url":"https://jaqa.life/"}}
+{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://jaqa.life/#org","name":"JAQA","url":"https://jaqa.life/","logo":"https://jaqa.life/icon-512.png"},{"@type":"WebSite","@id":"https://jaqa.life/#website","name":"JAQA","url":"https://jaqa.life/","description":"Public-source triage for global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, regulations, events, and supply-chain exposure.","inLanguage":"en","publisher":{"@id":"https://jaqa.life/#org"}},{"@type":"WebApplication","@id":"https://jaqa.life/#app","name":"JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace","url":"https://jaqa.life/","description":"Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.","applicationCategory":"BusinessApplication","operatingSystem":"Any (web browser)","isAccessibleForFree":true,"inLanguage":"en","publisher":{"@id":"https://jaqa.life/#org"},"isPartOf":{"@id":"https://jaqa.life/#website"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is JAQA?","acceptedAnswer":{"@type":"Answer","text":"JAQA is a privacy-first web workspace for investigating public evidence about organizations, countries, ports, vulnerabilities, tenders, regulations and global risk events. It queries 19 verified public data sources directly from your browser, includes a photorealistic 3D globe (God’s Eye View) and a Global Monitor of 18 official public feeds, and links out to official sources for everything else. It does not store searches, and it does not give credit, sanctions, insurance, legal or investment determinations."}},{"@type":"Question","name":"Where does JAQA’s data come from?","acceptedAnswer":{"@type":"Answer","text":"From public sources only. 19 public APIs are called live from your browser after their browser access (CORS) and response shape were verified from the jaqa.life origin. 18 official feeds are fetched by the JAQA server for the Global Monitor after a separate verification run. Everything else — including paid, login-only and unverified sources — is an official link-out. The full list is on the Sources page."}},{"@type":"Question","name":"Does JAQA store or track my searches?","acceptedAnswer":{"@type":"Answer","text":"No. JAQA has no accounts, cookies, browser storage, service workers or analytics. Workspace searches go straight from your browser to public data providers and are never sent to or logged by JAQA, or written into the URL. Clear Session wipes the in-memory state."}},{"@type":"Question","name":"What is the 3D globe?","acceptedAnswer":{"@type":"Answer","text":"It is God’s Eye View, an open-source app by Bilawal Sidhu (MIT licence), integrated into JAQA at jaqa.life/globe/. It shows a photorealistic 3D Earth with live aircraft, ships, satellites, earthquakes, wildfires, weather, space launches and public cameras, with CRT, NVG and FLIR sensor styles. JAQA can open it at the location you are investigating."}},{"@type":"Question","name":"What is the Global Monitor?","acceptedAnswer":{"@type":"Answer","text":"A live dashboard of 18 verified official feeds — for example the UN, WHO, GDACS, NASA EONET, USGS, CISA, the ECB, the Federal Reserve, the SEC and US and UK travel advice. It shows headlines with links to the publisher, an event map from publisher-supplied coordinates, the countries named in the headlines and an ECB FX board. Headlines are shown as published; JAQA does not rank, summarize or verify them."}},{"@type":"Question","name":"Does JAQA give credit scores, sanctions clearance or advice?","acceptedAnswer":{"@type":"Answer","text":"No. JAQA shows public evidence with its source, date and match confidence. It does not produce credit scores, sanctions or AML clearance, insurance, underwriting or claims decisions, bid or award predictions, or legal, investment or treasury advice. A missing public record never means “clear”."}}]}]}
 </script>
 <style>
 html,body{margin:0;padding:0}
@@ -27,22 +40,35 @@ html,body{margin:0;padding:0}
 .jaqa-boot{box-sizing:border-box;min-height:100vh;padding:48px 20px;color:#C9D6E8;background:#05080F;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .jaqa-boot-inner{max-width:720px;margin:0 auto}
 .jaqa-boot-brand{margin:0 0 6px;font:700 13px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.3em;color:#38E1FF}
-.jaqa-boot-title{margin:0 0 20px;font-size:22px;line-height:1.3;color:#EAF2FF}
+.jaqa-boot-title{margin:0 0 20px;font-size:22px;font-weight:600;line-height:1.3;color:#EAF2FF}
 .jaqa-boot-msg{margin:0 0 20px;padding:12px 14px;border:1px solid #1E3A52;border-radius:8px;background:#0A1320;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
 .jaqa-boot[data-state="error"] .jaqa-boot-msg{border-color:#F2B84B;color:#FFE2A8;background:#1C1606}
 .jaqa-boot-help{font-size:14px;color:#9FB0C6}
 .jaqa-boot-help ol{padding-left:20px}
 .jaqa-boot-help li{margin:6px 0}
+/* Crawlable About + FAQ section below the workspace (generated at build time). */
+.jaqa-about{background:#05080F;color:#C9D6E8;border-top:1px solid #1E3A52;padding:40px 20px 96px;font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.jaqa-about-inner{max-width:980px;margin:0 auto}
+.jaqa-about h2{color:#EAF2FF;font-size:20px;margin:28px 0 12px}
+.jaqa-about h2:first-child{margin-top:0}
+.jaqa-about-features{padding-left:20px;display:grid;gap:8px}
+.jaqa-about strong{color:#EAF2FF}
+.jaqa-about details{border:1px solid #1E3A52;border-radius:6px;padding:10px 14px;margin:8px 0;background:#0A1320}
+.jaqa-about summary{cursor:pointer;color:#EAF2FF;font-weight:600}
+.jaqa-about details p{margin:8px 0 2px}
+.jaqa-about a{color:#67E8F9}
+.jaqa-about-nav{margin-top:20px}
+.jaqa-about-legal{font-size:13px;color:#8FA3BA;margin-top:14px}
 .jaqa-boot code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#EAF2FF}
 </style>
 <script src="assets/jaqa-boot.860a31e384.js"></script>
 <link rel="stylesheet" href="assets/jaqa-workspace.93b63151e0.css">
 </head>
 <body>
-<div id="jaqa-boot" class="jaqa-boot" role="status" aria-live="polite">
+<div id="jaqa-boot" class="jaqa-boot" role="status" aria-live="polite" data-nosnippet>
   <div class="jaqa-boot-inner">
     <p class="jaqa-boot-brand">JAQA</p>
-    <p class="jaqa-boot-title">Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</p>
+    <h1 class="jaqa-boot-title">JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</h1>
     <p class="jaqa-boot-msg" id="jaqa-boot-msg">Starting the workspace…</p>
     <div class="jaqa-boot-help">
       <p>If this screen does not go away within a few seconds, the app did not start. On Hostinger, check these:</p>
@@ -59,11 +85,34 @@ html,body{margin:0;padding:0}
 <main id="jaqa-workspace" class="jaqa-workspace" data-initial-module="situation">
   <noscript>
     <div style="padding:24px;font-family:system-ui,sans-serif">
-      <h1>JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</h1>
+      <p><strong>JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</strong></p>
       <p>This workspace needs JavaScript. It runs entirely in your browser: no account, no cookies, no stored searches.</p>
     </div>
   </noscript>
 </main>
+<section class="jaqa-about" id="about-jaqa" aria-labelledby="about-jaqa-h">
+<div class="jaqa-about-inner">
+<h2 id="about-jaqa-h">About JAQA</h2>
+<p>JAQA is a privacy-first web workspace for investigating public evidence about organizations, countries, ports, vulnerabilities, tenders, regulations and global risk events. It queries 19 verified public data sources directly from your browser, includes a photorealistic 3D globe (God’s Eye View) and a Global Monitor of 18 official public feeds, and links out to official sources for everything else. It does not store searches, and it does not give credit, sanctions, insurance, legal or investment determinations.</p>
+<ul class="jaqa-about-features">
+<li><strong>Situation Room.</strong> A command-center view with an interactive evidence globe, a live wire of public feeds (earthquakes, exploited vulnerabilities, US regulatory notices, ECB reference rates) and the signals from your current investigation.</li>
+<li><strong>3D Globe (God’s Eye View).</strong> The open-source God’s Eye View app (MIT licence, by Bilawal Sidhu), integrated at /globe/: a photorealistic 3D globe with live aircraft, ships, satellites, earthquakes, wildfires, weather, space launches, public cameras and sensor styles (CRT, NVG, FLIR).</li>
+<li><strong>Global Monitor.</strong> Latest headlines from official publishers (UN, WHO, GDACS, NASA EONET, USGS, NOAA NHC, CISA, UK NCSC, ECB, Federal Reserve, SEC, Bank of England, BIS, WTO, US and UK travel advice), an event map, the countries named in the headlines and an ECB FX board.</li>
+<li><strong>Organization &amp; counterparty evidence.</strong> Across the workspace: legal-entity (GLEIF LEI) records and parents, SEC filings and 8-K event signals, court dockets, US federal awards, environmental enforcement and product-recall records — each with its source, retrieval time and match confidence.</li>
+<li><strong>Risk universes.</strong> A Global Risk Universe of 82 domains and a Finance Risk Universe of 32 domains, each mapped to the public sources that can evidence it and to the gaps where none can.</li>
+<li><strong>Insurance &amp; procurement lenses.</strong> Insurer, reinsurer, broker, captive and ILS context, plus tenders, awards, grants, PPPs and concessions — with official link-outs where no verified API exists.</li>
+</ul>
+<h2>Frequently asked questions</h2>
+<details><summary>What is JAQA?</summary><p>JAQA is a privacy-first web workspace for investigating public evidence about organizations, countries, ports, vulnerabilities, tenders, regulations and global risk events. It queries 19 verified public data sources directly from your browser, includes a photorealistic 3D globe (God’s Eye View) and a Global Monitor of 18 official public feeds, and links out to official sources for everything else. It does not store searches, and it does not give credit, sanctions, insurance, legal or investment determinations.</p></details>
+<details><summary>Where does JAQA’s data come from?</summary><p>From public sources only. 19 public APIs are called live from your browser after their browser access (CORS) and response shape were verified from the jaqa.life origin. 18 official feeds are fetched by the JAQA server for the Global Monitor after a separate verification run. Everything else — including paid, login-only and unverified sources — is an official link-out. The full list is on the Sources page.</p></details>
+<details><summary>Does JAQA store or track my searches?</summary><p>No. JAQA has no accounts, cookies, browser storage, service workers or analytics. Workspace searches go straight from your browser to public data providers and are never sent to or logged by JAQA, or written into the URL. Clear Session wipes the in-memory state.</p></details>
+<details><summary>What is the 3D globe?</summary><p>It is God’s Eye View, an open-source app by Bilawal Sidhu (MIT licence), integrated into JAQA at jaqa.life/globe/. It shows a photorealistic 3D Earth with live aircraft, ships, satellites, earthquakes, wildfires, weather, space launches and public cameras, with CRT, NVG and FLIR sensor styles. JAQA can open it at the location you are investigating.</p></details>
+<details><summary>What is the Global Monitor?</summary><p>A live dashboard of 18 verified official feeds — for example the UN, WHO, GDACS, NASA EONET, USGS, CISA, the ECB, the Federal Reserve, the SEC and US and UK travel advice. It shows headlines with links to the publisher, an event map from publisher-supplied coordinates, the countries named in the headlines and an ECB FX board. Headlines are shown as published; JAQA does not rank, summarize or verify them.</p></details>
+<details><summary>Does JAQA give credit scores, sanctions clearance or advice?</summary><p>No. JAQA shows public evidence with its source, date and match confidence. It does not produce credit scores, sanctions or AML clearance, insurance, underwriting or claims decisions, bid or award predictions, or legal, investment or treasury advice. A missing public record never means “clear”.</p></details>
+<p class="jaqa-about-nav"><a href="about/">About</a> · <a href="faq/">All questions</a> · <a href="sources/">Data sources</a> · <a href="privacy/">Privacy</a> · <a href="3d-globe/">3D Globe</a> · <a href="global-monitor/">Global Monitor</a></p>
+<p class="jaqa-about-legal">© 2026 JAQA™. All rights reserved. JAQA™ is a trademark of JAQA. Educational and information-discovery use only; not legal, compliance, credit, investment, insurance, sanctions or procurement advice.</p>
+</div>
+</section>
 <script src="assets/jaqa-workspace.df745f9b3a.js"></script>
 </body>
 </html>

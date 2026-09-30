@@ -156,11 +156,18 @@ else {
       if (!/\ssrc="/.test(attrs)) failures.push(`${rp}: <script> without src`);
     }
     const refs = [...page.matchAll(/<(?:script|link)\s[^>]*(?:src|href)="([^"]+\.(?:js|css))"/g)].map((m) => m[1]);
-    if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.js$/.test(r))) failures.push(`${rp}: does not load the app script`);
-    if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.css$/.test(r))) failures.push(`${rp}: does not load the stylesheet`);
+    if (page.includes('id="jaqa-workspace"')) {
+      // Workspace pages load the app.
+      if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.js$/.test(r))) failures.push(`${rp}: does not load the app script`);
+      if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.css$/.test(r))) failures.push(`${rp}: does not load the stylesheet`);
+    } else {
+      // Static content pages (about, faq, …): site stylesheet, and no script at all.
+      if (!refs.some((r) => /jaqa-site\.[0-9a-f]+\.css$/.test(r))) failures.push(`${rp}: static page does not load the site stylesheet`);
+      if (refs.some((r) => r.endsWith('.js'))) failures.push(`${rp}: static page must not load scripts`);
+    }
     for (const r of refs) {
       if (/^(https?:)?\/\//.test(r)) failures.push(`${rp}: external asset not allowed: ${r}`);
-      else if (!existsSync(path.resolve(path.dirname(f), r))) failures.push(`${rp}: references missing asset ${r}`);
+      else if (!existsSync(r.startsWith('/') ? path.join(root, 'dist', r) : path.resolve(path.dirname(f), r))) failures.push(`${rp}: references missing asset ${r}`);
     }
   }
 }

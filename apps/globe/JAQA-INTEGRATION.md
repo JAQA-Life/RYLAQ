@@ -15,8 +15,9 @@ This folder is **God's Eye View** by Bilawal Sidhu, integrated into the JAQA sit
    - `src/jaqaFonts.css` (imported first in `src/main.js`) supplies Inter and JetBrains Mono from `@fontsource` (SIL OFL 1.1).
    - Material Symbols Outlined (Apache-2.0) is subset to the app's icons by `scripts/jaqa-subset-icons.py` into `public/fonts/material-symbols-outlined-subset.woff2` (5 KB).
    - The `icon_names` list stays in `index.html` as a comment, so upstream's `src/materialSymbolsSubset.test.mjs` still guards it.
-2. **It is built for `/globe/`** by `../../scripts/build-globe.mjs` (`vite build --base /globe/`).
-3. **It is served by `../../server/jaqa-server.mjs`**, which runs Vite's preview server with this folder's unmodified `vite.config.js`. All providers are God's Eye View's own middleware, and upstream's dev-only key-setup endpoint is not registered in production.
+2. **Search and share metadata** (description, canonical `https://jaqa.life/globe/`, Open Graph) were added to `index.html`.
+3. **It is built for `/globe/`** by `../../scripts/build-globe.mjs` (`vite build --base /globe/`).
+4. **It is served by `../../server/jaqa-server.mjs`**, which runs Vite's preview server with this folder's unmodified `vite.config.js`. All providers are God's Eye View's own middleware, and upstream's dev-only key-setup endpoint is not registered in production.
 
 Upstream's unit suite (`npm test`) passes on this copy: 4,736 passed, 0 failed, 1 skipped (as upstream).
 

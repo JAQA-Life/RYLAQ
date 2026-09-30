@@ -669,3 +669,21 @@
   .jaqa-workspace[data-theme='ops'] .rq-strip { padding: 4px 12px; }
   .jaqa-workspace[data-theme='ops'] .rq-ticker { height: 30px; }
 }
+
+/* Global Monitor + 3D Globe launcher */
+.jaqa-workspace .rq-stack { display: grid; gap: 12px; }
+.jaqa-workspace .rq-list { padding-left: 18px; display: grid; gap: 6px; }
+.jaqa-workspace .rq-mon-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.jaqa-workspace .rq-mon-grid > .rq-panel { grid-column: span 4; }
+.jaqa-workspace .rq-mon-grid > .rq-mon-map { grid-column: span 8; grid-row: span 2; }
+.jaqa-workspace .rq-mon-row { grid-template-columns: 92px minmax(0, 1fr) auto; }
+.jaqa-workspace .rq-mon-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.jaqa-workspace .rq-mon-title .rq-ext { display: inline; white-space: normal; }
+.jaqa-workspace .rq-mon-hot { padding-left: 22px; display: grid; gap: 4px; }
+.jaqa-workspace .rq-mon-fx { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+.jaqa-workspace .rq-mon-fx .rq-fx-val { font-size: 20px; }
+.jaqa-workspace .rq-mon-fx .rq-fineprint { grid-column: 1 / -1; }
+.jaqa-workspace .rq-link-inline { display: inline-flex; align-items: center; gap: 4px; }
+@media (max-width: 1100px) {
+  .jaqa-workspace .rq-mon-grid > .rq-panel, .jaqa-workspace .rq-mon-grid > .rq-mon-map { grid-column: 1 / -1; grid-row: auto; }
+}

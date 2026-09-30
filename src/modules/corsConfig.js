@@ -511,4 +511,312 @@
       }
     }
   };
+  // Global Monitor: only feeds verified by scripts/verify-monitor.mjs (served by the JAQA server).
+  R.config.monitor = {
+    "verifiedAt": "2026-09-30T18:15:34.995Z",
+    "runner": "github-actions:36757264566",
+    "categories": [
+      [
+        "world",
+        "World & diplomacy"
+      ],
+      [
+        "hazards",
+        "Disasters & hazards"
+      ],
+      [
+        "health",
+        "Health"
+      ],
+      [
+        "security",
+        "Security & cyber"
+      ],
+      [
+        "finance",
+        "Finance & regulators"
+      ],
+      [
+        "travel",
+        "Travel & trade"
+      ]
+    ],
+    "candidates": [
+      {
+        "id": "un-news",
+        "name": "UN News — all stories",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "un-peace",
+        "name": "UN News — peace and security",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "wto-news",
+        "name": "WTO news",
+        "publisher": "World Trade Organization",
+        "category": "travel",
+        "home": "https://www.wto.org/"
+      },
+      {
+        "id": "gdacs",
+        "name": "GDACS disaster alerts",
+        "publisher": "GDACS (UN / European Commission)",
+        "category": "hazards",
+        "home": "https://www.gdacs.org/"
+      },
+      {
+        "id": "eonet",
+        "name": "NASA EONET open natural events",
+        "publisher": "NASA Earth Observatory",
+        "category": "hazards",
+        "home": "https://eonet.gsfc.nasa.gov/"
+      },
+      {
+        "id": "usgs-significant",
+        "name": "USGS significant earthquakes — 30 days",
+        "publisher": "U.S. Geological Survey",
+        "category": "hazards",
+        "home": "https://earthquake.usgs.gov/"
+      },
+      {
+        "id": "nhc-atlantic",
+        "name": "NHC Atlantic tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "nhc-epacific",
+        "name": "NHC Eastern Pacific tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "reliefweb-updates",
+        "name": "ReliefWeb humanitarian updates",
+        "publisher": "UN OCHA ReliefWeb",
+        "category": "hazards",
+        "home": "https://reliefweb.int/"
+      },
+      {
+        "id": "reliefweb-disasters",
+        "name": "ReliefWeb disasters",
+        "publisher": "UN OCHA ReliefWeb",
+        "category": "hazards",
+        "home": "https://reliefweb.int/"
+      },
+      {
+        "id": "who-news",
+        "name": "WHO news releases",
+        "publisher": "World Health Organization",
+        "category": "health",
+        "home": "https://www.who.int/"
+      },
+      {
+        "id": "cisa-advisories",
+        "name": "CISA cybersecurity advisories",
+        "publisher": "U.S. CISA",
+        "category": "security",
+        "home": "https://www.cisa.gov/"
+      },
+      {
+        "id": "ncsc-uk",
+        "name": "UK NCSC news and advisories",
+        "publisher": "UK National Cyber Security Centre",
+        "category": "security",
+        "home": "https://www.ncsc.gov.uk/"
+      },
+      {
+        "id": "ecb-press",
+        "name": "ECB press releases",
+        "publisher": "European Central Bank",
+        "category": "finance",
+        "home": "https://www.ecb.europa.eu/"
+      },
+      {
+        "id": "fed-press",
+        "name": "Federal Reserve press releases",
+        "publisher": "U.S. Federal Reserve Board",
+        "category": "finance",
+        "home": "https://www.federalreserve.gov/"
+      },
+      {
+        "id": "sec-press",
+        "name": "SEC press releases",
+        "publisher": "U.S. Securities and Exchange Commission",
+        "category": "finance",
+        "home": "https://www.sec.gov/"
+      },
+      {
+        "id": "boe-news",
+        "name": "Bank of England news",
+        "publisher": "Bank of England",
+        "category": "finance",
+        "home": "https://www.bankofengland.co.uk/"
+      },
+      {
+        "id": "bis-press",
+        "name": "BIS press releases",
+        "publisher": "Bank for International Settlements",
+        "category": "finance",
+        "home": "https://www.bis.org/"
+      },
+      {
+        "id": "imf-news",
+        "name": "IMF news",
+        "publisher": "International Monetary Fund",
+        "category": "finance",
+        "home": "https://www.imf.org/"
+      },
+      {
+        "id": "us-travel",
+        "name": "U.S. travel advisories",
+        "publisher": "U.S. Department of State",
+        "category": "travel",
+        "home": "https://travel.state.gov/"
+      },
+      {
+        "id": "uk-travel",
+        "name": "UK foreign travel advice",
+        "publisher": "UK FCDO (GOV.UK)",
+        "category": "travel",
+        "home": "https://www.gov.uk/foreign-travel-advice"
+      }
+    ],
+    "feeds": [
+      {
+        "id": "un-news",
+        "name": "UN News — all stories",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "un-peace",
+        "name": "UN News — peace and security",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "wto-news",
+        "name": "WTO news",
+        "publisher": "World Trade Organization",
+        "category": "travel",
+        "home": "https://www.wto.org/"
+      },
+      {
+        "id": "gdacs",
+        "name": "GDACS disaster alerts",
+        "publisher": "GDACS (UN / European Commission)",
+        "category": "hazards",
+        "home": "https://www.gdacs.org/"
+      },
+      {
+        "id": "eonet",
+        "name": "NASA EONET open natural events",
+        "publisher": "NASA Earth Observatory",
+        "category": "hazards",
+        "home": "https://eonet.gsfc.nasa.gov/"
+      },
+      {
+        "id": "usgs-significant",
+        "name": "USGS significant earthquakes — 30 days",
+        "publisher": "U.S. Geological Survey",
+        "category": "hazards",
+        "home": "https://earthquake.usgs.gov/"
+      },
+      {
+        "id": "nhc-atlantic",
+        "name": "NHC Atlantic tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "nhc-epacific",
+        "name": "NHC Eastern Pacific tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "who-news",
+        "name": "WHO news releases",
+        "publisher": "World Health Organization",
+        "category": "health",
+        "home": "https://www.who.int/"
+      },
+      {
+        "id": "cisa-advisories",
+        "name": "CISA cybersecurity advisories",
+        "publisher": "U.S. CISA",
+        "category": "security",
+        "home": "https://www.cisa.gov/"
+      },
+      {
+        "id": "ncsc-uk",
+        "name": "UK NCSC news and advisories",
+        "publisher": "UK National Cyber Security Centre",
+        "category": "security",
+        "home": "https://www.ncsc.gov.uk/"
+      },
+      {
+        "id": "ecb-press",
+        "name": "ECB press releases",
+        "publisher": "European Central Bank",
+        "category": "finance",
+        "home": "https://www.ecb.europa.eu/"
+      },
+      {
+        "id": "fed-press",
+        "name": "Federal Reserve press releases",
+        "publisher": "U.S. Federal Reserve Board",
+        "category": "finance",
+        "home": "https://www.federalreserve.gov/"
+      },
+      {
+        "id": "sec-press",
+        "name": "SEC press releases",
+        "publisher": "U.S. Securities and Exchange Commission",
+        "category": "finance",
+        "home": "https://www.sec.gov/"
+      },
+      {
+        "id": "boe-news",
+        "name": "Bank of England news",
+        "publisher": "Bank of England",
+        "category": "finance",
+        "home": "https://www.bankofengland.co.uk/"
+      },
+      {
+        "id": "bis-press",
+        "name": "BIS press releases",
+        "publisher": "Bank for International Settlements",
+        "category": "finance",
+        "home": "https://www.bis.org/"
+      },
+      {
+        "id": "us-travel",
+        "name": "U.S. travel advisories",
+        "publisher": "U.S. Department of State",
+        "category": "travel",
+        "home": "https://travel.state.gov/"
+      },
+      {
+        "id": "uk-travel",
+        "name": "UK foreign travel advice",
+        "publisher": "UK FCDO (GOV.UK)",
+        "category": "travel",
+        "home": "https://www.gov.uk/foreign-travel-advice"
+      }
+    ]
+  };
 })(window.JAQAWorkspace);

@@ -194,7 +194,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
    * DOM helpers. All text goes through textContent / createTextNode, so API
    * strings can never inject markup. innerHTML is never used with data.
    * ------------------------------------------------------------------ */
-  const SAFE_URL = /^(https:\/\/|mailto:|#)/i;
+  // https, mailto, in-page anchors, and the integrated 3D globe on this site (/globe/…).
+  const SAFE_URL = /^(https:\/\/|mailto:|#|\/globe\/)/i;
   function safeUrl(u) {
     if (typeof u !== 'string') return null;
     const t = u.trim();

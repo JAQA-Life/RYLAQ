@@ -35,6 +35,17 @@ const write = (p, s) => {
   console.log('  wrote', p, `(${Buffer.byteLength(s).toLocaleString()} bytes)`);
 };
 
+/* 0. Global Monitor catalogue + verification (server-backed feeds). */
+const { FEEDS: MONITOR_FEEDS, CATEGORIES: MONITOR_CATEGORIES } = await import('../server/monitor-feeds.mjs');
+const monitorVerification = existsSync(rel('config/monitor-verification.json')) ? JSON.parse(read('config/monitor-verification.json')) : { feeds: {} };
+const monitorConfig = {
+  verifiedAt: monitorVerification.verifiedAt || null,
+  runner: monitorVerification.runner || null,
+  categories: MONITOR_CATEGORIES,
+  candidates: MONITOR_FEEDS.map(({ id, name, publisher, category, home }) => ({ id, name, publisher, category, home })),
+  feeds: MONITOR_FEEDS.filter((f) => monitorVerification.feeds && monitorVerification.feeds[f.id] && monitorVerification.feeds[f.id].verified).map(({ id, name, publisher, category, home }) => ({ id, name, publisher, category, home }))
+};
+
 /* 1. Compile CORS verification config into a module (also used by src/ dev mode). */
 const cors = existsSync(rel('config/cors-verification.json')) ? JSON.parse(read('config/cors-verification.json')) : { origin: null, verifiedAt: null, sources: {} };
 const corsJs = `/*
@@ -56,6 +67,8 @@ const corsJs = `/*
     null,
     2
   ).replace(/\n/g, '\n  ')};
+  // Global Monitor: only feeds verified by scripts/verify-monitor.mjs (served by the JAQA server).
+  R.config.monitor = ${JSON.stringify(monitorConfig, null, 2).replace(/\n/g, '\n  ')};
 })(window.JAQAWorkspace);
 `;
 write('src/modules/corsConfig.js', corsJs);

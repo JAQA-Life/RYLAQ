@@ -1054,6 +1054,29 @@
   };
 
   /* ------------------------------ EPA ECHO ------------------------------ */
+  /* ---------------- JAQA Global Monitor (same-origin JAQA server) ---------------- */
+  C.monitor = {
+    /** Latest headlines of one verified official feed. Fixed feed id; no search terms are sent. */
+    async feed(feed, opts) {
+      const endpoint = '/api/jaqa/monitor/feed?id=' + enc(feed.id);
+      const r = await call('jaqaMonitor', endpoint, Object.assign({ validate: (j) => !!j && j.ok === true && isArr(j.items) }, opts || {}));
+      if (r.error) return r;
+      return {
+        records: r.data.items.map((it) =>
+          rec('jaqaMonitor', 'monitor', {
+            title: it.title,
+            subtitle: feed.publisher + (it.published ? ' · ' + it.published.slice(0, 16).replace('T', ' ') + ' UTC' : ''),
+            fields: [['Publisher', feed.publisher], ['Feed', feed.name], ['Published', it.published ? it.published.replace('T', ' ').slice(0, 19) + ' UTC' : 'not stated'], ['Coordinates', isFinite(it.lat) ? it.lat.toFixed(2) + ', ' + it.lon.toFixed(2) + ' (publisher-supplied)' : undefined]],
+            links: [{ label: 'Read at ' + feed.publisher, href: it.link }],
+            data: { feedId: feed.id, category: feed.category, publisher: feed.publisher, published: it.published || null, lat: isFinite(it.lat) ? it.lat : undefined, lon: isFinite(it.lon) ? it.lon : undefined },
+            url: it.link, recordId: it.link, endpoint, category: 'official-feed-headline', confidence: 'Source-reported'
+          })
+        ),
+        meta: { fetchedAt: r.data.fetchedAt }
+      };
+    }
+  };
+
   C.epa = {
     async facilities(name) {
       const r = await call('epa', `https://echodata.epa.gov/echo/echo_rest_services.get_facility_info?output=JSON&p_fn=${enc(name)}`, { validate: (j) => obj(j) && obj(j.Results) });

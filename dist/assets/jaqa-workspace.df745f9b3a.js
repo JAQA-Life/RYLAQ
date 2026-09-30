@@ -195,7 +195,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
    * DOM helpers. All text goes through textContent / createTextNode, so API
    * strings can never inject markup. innerHTML is never used with data.
    * ------------------------------------------------------------------ */
-  const SAFE_URL = /^(https:\/\/|mailto:|#)/i;
+  // https, mailto, in-page anchors, and the integrated 3D globe on this site (/globe/…).
+  const SAFE_URL = /^(https:\/\/|mailto:|#|\/globe\/)/i;
   function safeUrl(u) {
     if (typeof u !== 'string') return null;
     const t = u.trim();
@@ -990,6 +991,314 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       }
     }
   };
+  // Global Monitor: only feeds verified by scripts/verify-monitor.mjs (served by the JAQA server).
+  R.config.monitor = {
+    "verifiedAt": "2026-09-30T18:15:34.995Z",
+    "runner": "github-actions:36757264566",
+    "categories": [
+      [
+        "world",
+        "World & diplomacy"
+      ],
+      [
+        "hazards",
+        "Disasters & hazards"
+      ],
+      [
+        "health",
+        "Health"
+      ],
+      [
+        "security",
+        "Security & cyber"
+      ],
+      [
+        "finance",
+        "Finance & regulators"
+      ],
+      [
+        "travel",
+        "Travel & trade"
+      ]
+    ],
+    "candidates": [
+      {
+        "id": "un-news",
+        "name": "UN News — all stories",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "un-peace",
+        "name": "UN News — peace and security",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "wto-news",
+        "name": "WTO news",
+        "publisher": "World Trade Organization",
+        "category": "travel",
+        "home": "https://www.wto.org/"
+      },
+      {
+        "id": "gdacs",
+        "name": "GDACS disaster alerts",
+        "publisher": "GDACS (UN / European Commission)",
+        "category": "hazards",
+        "home": "https://www.gdacs.org/"
+      },
+      {
+        "id": "eonet",
+        "name": "NASA EONET open natural events",
+        "publisher": "NASA Earth Observatory",
+        "category": "hazards",
+        "home": "https://eonet.gsfc.nasa.gov/"
+      },
+      {
+        "id": "usgs-significant",
+        "name": "USGS significant earthquakes — 30 days",
+        "publisher": "U.S. Geological Survey",
+        "category": "hazards",
+        "home": "https://earthquake.usgs.gov/"
+      },
+      {
+        "id": "nhc-atlantic",
+        "name": "NHC Atlantic tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "nhc-epacific",
+        "name": "NHC Eastern Pacific tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "reliefweb-updates",
+        "name": "ReliefWeb humanitarian updates",
+        "publisher": "UN OCHA ReliefWeb",
+        "category": "hazards",
+        "home": "https://reliefweb.int/"
+      },
+      {
+        "id": "reliefweb-disasters",
+        "name": "ReliefWeb disasters",
+        "publisher": "UN OCHA ReliefWeb",
+        "category": "hazards",
+        "home": "https://reliefweb.int/"
+      },
+      {
+        "id": "who-news",
+        "name": "WHO news releases",
+        "publisher": "World Health Organization",
+        "category": "health",
+        "home": "https://www.who.int/"
+      },
+      {
+        "id": "cisa-advisories",
+        "name": "CISA cybersecurity advisories",
+        "publisher": "U.S. CISA",
+        "category": "security",
+        "home": "https://www.cisa.gov/"
+      },
+      {
+        "id": "ncsc-uk",
+        "name": "UK NCSC news and advisories",
+        "publisher": "UK National Cyber Security Centre",
+        "category": "security",
+        "home": "https://www.ncsc.gov.uk/"
+      },
+      {
+        "id": "ecb-press",
+        "name": "ECB press releases",
+        "publisher": "European Central Bank",
+        "category": "finance",
+        "home": "https://www.ecb.europa.eu/"
+      },
+      {
+        "id": "fed-press",
+        "name": "Federal Reserve press releases",
+        "publisher": "U.S. Federal Reserve Board",
+        "category": "finance",
+        "home": "https://www.federalreserve.gov/"
+      },
+      {
+        "id": "sec-press",
+        "name": "SEC press releases",
+        "publisher": "U.S. Securities and Exchange Commission",
+        "category": "finance",
+        "home": "https://www.sec.gov/"
+      },
+      {
+        "id": "boe-news",
+        "name": "Bank of England news",
+        "publisher": "Bank of England",
+        "category": "finance",
+        "home": "https://www.bankofengland.co.uk/"
+      },
+      {
+        "id": "bis-press",
+        "name": "BIS press releases",
+        "publisher": "Bank for International Settlements",
+        "category": "finance",
+        "home": "https://www.bis.org/"
+      },
+      {
+        "id": "imf-news",
+        "name": "IMF news",
+        "publisher": "International Monetary Fund",
+        "category": "finance",
+        "home": "https://www.imf.org/"
+      },
+      {
+        "id": "us-travel",
+        "name": "U.S. travel advisories",
+        "publisher": "U.S. Department of State",
+        "category": "travel",
+        "home": "https://travel.state.gov/"
+      },
+      {
+        "id": "uk-travel",
+        "name": "UK foreign travel advice",
+        "publisher": "UK FCDO (GOV.UK)",
+        "category": "travel",
+        "home": "https://www.gov.uk/foreign-travel-advice"
+      }
+    ],
+    "feeds": [
+      {
+        "id": "un-news",
+        "name": "UN News — all stories",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "un-peace",
+        "name": "UN News — peace and security",
+        "publisher": "United Nations",
+        "category": "world",
+        "home": "https://news.un.org/"
+      },
+      {
+        "id": "wto-news",
+        "name": "WTO news",
+        "publisher": "World Trade Organization",
+        "category": "travel",
+        "home": "https://www.wto.org/"
+      },
+      {
+        "id": "gdacs",
+        "name": "GDACS disaster alerts",
+        "publisher": "GDACS (UN / European Commission)",
+        "category": "hazards",
+        "home": "https://www.gdacs.org/"
+      },
+      {
+        "id": "eonet",
+        "name": "NASA EONET open natural events",
+        "publisher": "NASA Earth Observatory",
+        "category": "hazards",
+        "home": "https://eonet.gsfc.nasa.gov/"
+      },
+      {
+        "id": "usgs-significant",
+        "name": "USGS significant earthquakes — 30 days",
+        "publisher": "U.S. Geological Survey",
+        "category": "hazards",
+        "home": "https://earthquake.usgs.gov/"
+      },
+      {
+        "id": "nhc-atlantic",
+        "name": "NHC Atlantic tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "nhc-epacific",
+        "name": "NHC Eastern Pacific tropical cyclones",
+        "publisher": "NOAA National Hurricane Center",
+        "category": "hazards",
+        "home": "https://www.nhc.noaa.gov/"
+      },
+      {
+        "id": "who-news",
+        "name": "WHO news releases",
+        "publisher": "World Health Organization",
+        "category": "health",
+        "home": "https://www.who.int/"
+      },
+      {
+        "id": "cisa-advisories",
+        "name": "CISA cybersecurity advisories",
+        "publisher": "U.S. CISA",
+        "category": "security",
+        "home": "https://www.cisa.gov/"
+      },
+      {
+        "id": "ncsc-uk",
+        "name": "UK NCSC news and advisories",
+        "publisher": "UK National Cyber Security Centre",
+        "category": "security",
+        "home": "https://www.ncsc.gov.uk/"
+      },
+      {
+        "id": "ecb-press",
+        "name": "ECB press releases",
+        "publisher": "European Central Bank",
+        "category": "finance",
+        "home": "https://www.ecb.europa.eu/"
+      },
+      {
+        "id": "fed-press",
+        "name": "Federal Reserve press releases",
+        "publisher": "U.S. Federal Reserve Board",
+        "category": "finance",
+        "home": "https://www.federalreserve.gov/"
+      },
+      {
+        "id": "sec-press",
+        "name": "SEC press releases",
+        "publisher": "U.S. Securities and Exchange Commission",
+        "category": "finance",
+        "home": "https://www.sec.gov/"
+      },
+      {
+        "id": "boe-news",
+        "name": "Bank of England news",
+        "publisher": "Bank of England",
+        "category": "finance",
+        "home": "https://www.bankofengland.co.uk/"
+      },
+      {
+        "id": "bis-press",
+        "name": "BIS press releases",
+        "publisher": "Bank for International Settlements",
+        "category": "finance",
+        "home": "https://www.bis.org/"
+      },
+      {
+        "id": "us-travel",
+        "name": "U.S. travel advisories",
+        "publisher": "U.S. Department of State",
+        "category": "travel",
+        "home": "https://travel.state.gov/"
+      },
+      {
+        "id": "uk-travel",
+        "name": "UK foreign travel advice",
+        "publisher": "UK FCDO (GOV.UK)",
+        "category": "travel",
+        "home": "https://www.gov.uk/foreign-travel-advice"
+      }
+    ]
+  };
 })(window.JAQAWorkspace);
 
 /* ---- modules/sourceRegistry.js ---- */
@@ -1081,6 +1390,17 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       s.lastVerifiedNote = v
         ? `Verification did not pass (${(v.checks || []).filter((c) => !c.ok).map((c) => c.id + (c.status ? ' → HTTP ' + c.status : '')).join('; ') || 'no passing checks'}). Link-out only until re-verified.`
         : 'Documented API, not yet verified for browser CORS from the JAQA origin. Link-out only.';
+    }
+    if (props.serverBacked) {
+      // Same-origin feeds fetched by the JAQA server (no browser CORS involved):
+      // live only when scripts/verify-monitor.mjs verified at least one feed.
+      const mc = R.config.monitor || { feeds: [] };
+      const n = (mc.feeds || []).length;
+      s.defaultMode = n ? 'live' : 'linkout';
+      s.status = n ? 'live' : 'verify';
+      s.lastVerifiedNote = n
+        ? `${n} official feed(s) verified by server-side fetch on ${(mc.verifiedAt || '').slice(0, 10) || 'unknown date'}. Needs the JAQA server; on static-only hosting this source is unavailable.`
+        : 'No monitor feed verified yet. Link-out to the publishers only.';
     }
     SOURCES.push(s);
     return s;
@@ -1290,6 +1610,14 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     officialSiteUrl: 'https://find-and-update.company-information.service.gov.uk/', officialDocsUrl: 'https://developer.company-information.service.gov.uk/',
     attribution: 'UK company data provided by Companies House where used.', officialSourceAuthoritative: true, insolvencyRegistryLinkOutOnly: true, lienRegistryLinkOutOnly: true,
     coverageGapWarning: 'API requires a key; link-out only in this release (extension point: in-memory browser key).'
+  });
+
+  /* ------------- Server-backed (same-origin JAQA server) ------------- */
+  S('jaqaMonitor', 'JAQA Global Monitor — official public feeds (via the JAQA server)', {
+    tier: 'B', region: 'Global', liveCapable: true, serverBacked: true, apiBase: '/api/jaqa/monitor', endpoints: ['/feed?id={feed}'],
+    officialSiteUrl: 'https://jaqa.life/', attribution: 'Headlines and links from the listed official publishers, fetched by the JAQA server. Content and copyright remain with each publisher.',
+    coverageGapWarning: 'A selected set of official feeds. Headlines are not the full story and are not verified, ranked or summarized by JAQA.',
+    rateLimitPolicy: 'Server-side cache of 10 minutes per feed. Max 4 concurrent.', concurrencyLimit: 4, officialSourceAuthoritative: true
   });
 
   /* ------------------ Tier C (link-out only by policy) ------------------ */
@@ -3086,6 +3414,29 @@ No sanctions clearance. No AML determination. No procurement bid advice.
   };
 
   /* ------------------------------ EPA ECHO ------------------------------ */
+  /* ---------------- JAQA Global Monitor (same-origin JAQA server) ---------------- */
+  C.monitor = {
+    /** Latest headlines of one verified official feed. Fixed feed id; no search terms are sent. */
+    async feed(feed, opts) {
+      const endpoint = '/api/jaqa/monitor/feed?id=' + enc(feed.id);
+      const r = await call('jaqaMonitor', endpoint, Object.assign({ validate: (j) => !!j && j.ok === true && isArr(j.items) }, opts || {}));
+      if (r.error) return r;
+      return {
+        records: r.data.items.map((it) =>
+          rec('jaqaMonitor', 'monitor', {
+            title: it.title,
+            subtitle: feed.publisher + (it.published ? ' · ' + it.published.slice(0, 16).replace('T', ' ') + ' UTC' : ''),
+            fields: [['Publisher', feed.publisher], ['Feed', feed.name], ['Published', it.published ? it.published.replace('T', ' ').slice(0, 19) + ' UTC' : 'not stated'], ['Coordinates', isFinite(it.lat) ? it.lat.toFixed(2) + ', ' + it.lon.toFixed(2) + ' (publisher-supplied)' : undefined]],
+            links: [{ label: 'Read at ' + feed.publisher, href: it.link }],
+            data: { feedId: feed.id, category: feed.category, publisher: feed.publisher, published: it.published || null, lat: isFinite(it.lat) ? it.lat : undefined, lon: isFinite(it.lon) ? it.lon : undefined },
+            url: it.link, recordId: it.link, endpoint, category: 'official-feed-headline', confidence: 'Source-reported'
+          })
+        ),
+        meta: { fetchedAt: r.data.fetchedAt }
+      };
+    }
+  };
+
   C.epa = {
     async facilities(name) {
       const r = await call('epa', `https://echodata.epa.gov/echo/echo_rest_services.get_facility_info?output=JSON&p_fn=${enc(name)}`, { validate: (j) => obj(j) && obj(j.Results) });
@@ -5921,6 +6272,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         else if (r.kind === 'place') add({ kind: 'place', lat: d.lat, lon: d.lon, label: 'Place · ' + r.title, record: r });
         else if (r.kind === 'country' && isFinite(d.lat)) add({ kind: 'place', lat: d.lat, lon: d.lon, label: 'Country reference · ' + r.title + (d.capital ? ' (' + d.capital + ')' : ''), record: r });
         else if (r.kind === 'forecast' && d.flags && d.flags.length) add({ kind: 'signal', lat: d.lat, lon: d.lon, label: 'Forecast threshold signal · ' + d.flags[0], record: r });
+        else if (r.kind === 'monitor' && isFinite(d.lat)) add({ kind: 'signal', lat: d.lat, lon: d.lon, label: 'Global Monitor · ' + r.title, record: r });
       }
     }
     const s = R.state.session;
@@ -6055,6 +6407,9 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       h('div', { class: 'rq-hud-top rq-mono', 'aria-hidden': 'true' }, h('span', null, 'OPTIC ' + (MODES.find((m) => m[0] === st.mode) || MODES[0])[1]), h('span', { class: 'rq-utc' }, R.shell.utcNow())),
       h('div', { class: 'rq-hud-bottom', 'aria-live': 'off' }, readout, vis)
     );
+    // Link into the integrated God's Eye View globe, kept in step with this view.
+    const alt3d = (z) => Math.round(Math.max(150000, 14000000 / Math.max(1, z)));
+    const link3d = R.globe3d ? R.globe3d.link('Open in 3D globe', { lat: view.lat, lon: ((view.lon + 540) % 360) - 180, alt: alt3d(view.zoom), style: st.mode }) : null;
     if (globe) globe.destroy();
     globe = R.globe.create(host, {
       view,
@@ -6063,6 +6418,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       onView: (v) => {
         readout.textContent = `CTR ${Math.abs(v.lat).toFixed(1)}°${v.lat >= 0 ? 'N' : 'S'} ${Math.abs(((v.lon + 540) % 360) - 180).toFixed(1)}°${((v.lon + 540) % 360) - 180 >= 0 ? 'E' : 'W'} · ZOOM ${v.zoom.toFixed(1)}×`;
         vis.textContent = `MARKERS ${v.visible}`;
+        if (link3d) link3d.setAttribute('href', R.util.safeUrl(R.globe3d.url({ lat: v.lat, lon: ((v.lon + 540) % 360) - 180, alt: alt3d(v.zoom), style: st.mode })) || R.globe3d.base);
       }
     });
     globe.setPoints(collectPoints());
@@ -6096,7 +6452,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         s && s.resolved && s.resolved.lat !== undefined && s.resolved.lat !== null ? ui.button('Recenter on subject', () => globe.focus(s.resolved.lat, s.resolved.lon), { cls: 'rq-btn-xs', icon: 'globe' }) : null
       )
     );
-    return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
+    const open3d = h('div', { class: 'rq-row rq-row-tight' }, link3d, link3d ? h('span', { class: 'rq-fineprint' }, 'Photorealistic God’s Eye View globe at this view (coordinates only).') : null);
+    return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, open3d, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
   }
 
   /** Compact globe for other modules (e.g. Climate & Catastrophe). */
@@ -6174,6 +6531,267 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       const out = h('div', { class: 'rq-situation' }, strip, ticker(), grid, h('p', { class: 'rq-fineprint' }, 'Design language inspired by public situational-awareness projects (clean-room implementation; no code, assets or data reused; no affiliation). ', extLink('https://github.com/koala73/worldmonitor', 'WorldMonitor'), ' · ', extLink('https://github.com/bilawalsidhu/gods-eye-view', 'God’s Eye View'), ' — reference links only.'));
       setTimeout(renderMarkerList, 0);
       return out;
+    }
+  });
+})(window.JAQAWorkspace);
+
+/* ---- modules/globe3d.js ---- */
+/*
+ * globe3d.js — 3D Globe: launcher for the integrated God's Eye View app
+ * (apps/globe, MIT, © Bilawal Sidhu), served by the JAQA server at /globe/.
+ *
+ * JAQA only builds a link: God's Eye View reads its camera from the URL hash
+ * (#lat=…&lon=…&alt=…&style=…; see apps/globe/src/sharelink.js). Only
+ * coordinates and a style are placed in it — never a search term.
+ * JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.
+ */
+(function (R) {
+  'use strict';
+  const { h, extLink } = R.util;
+  const ui = R.ui;
+
+  // JAQA optic modes → God's Eye View style names (sharelink.js URL values).
+  const STYLE = { std: 'normal', nvg: 'nvg', flir: 'flir', crt: 'crt' };
+  const num = (v, d) => (Number.isFinite(v) ? Number(v.toFixed(d)) : null);
+
+  R.globe3d = {
+    base: '/globe/',
+    /** Link into the 3D globe at a location. alt in metres above the ground. */
+    url(o) {
+      const p = o || {};
+      const lat = num(p.lat, 4);
+      const lon = num(p.lon, 4);
+      if (lat === null || lon === null || Math.abs(lat) > 90 || Math.abs(lon) > 180) return this.base;
+      const alt = Math.max(300, Math.min(20000000, Math.round(p.alt || 250000)));
+      const parts = ['lat=' + lat, 'lon=' + lon, 'alt=' + alt, 'pitch=' + (alt > 2000000 ? -90 : -45)];
+      if (p.style && STYLE[p.style]) parts.push('style=' + STYLE[p.style]);
+      return this.base + '#' + parts.join('&');
+    },
+    link(label, o, cls) {
+      return h('a', { class: cls || 'rq-btn rq-btn-sm', href: this.url(o) }, R.util.icon('globe', 'rq-icon-sm'), h('span', null, label));
+    }
+  };
+
+  // Facts from God's Eye View's README (apps/globe/README.md), not JAQA claims.
+  const FEATURES = [
+    ['Photorealistic 3D globe', 'CesiumJS with Esri satellite imagery and OpenStreetMap keyless; Google Photorealistic 3D Tiles with a Google Maps key or Cesium ion token.'],
+    ['Live contacts', 'Aircraft, ships and satellites near a target, with click-to-track, trails and a 250 km contacts roster.'],
+    ['Sensor looks', 'CRT, NVG, FLIR/thermal, Noir and Snow shader styles, a detection overlay and a tactical HUD.'],
+    ['Environment', 'Earthquakes, wildfires (NASA FIRMS), weather radar, wind, clouds, lightning and NHC/CPHC cyclone tracks.'],
+    ['Space', 'Satellite orbits (SGP4), pass predictions and a rolling 30 days of launches.'],
+    ['Cameras & infrastructure', 'Public CCTV cameras, mapped ALPR camera locations, datacenters, dams, submarine cables and military installations.'],
+    ['Scene director', 'Cinematic camera tours, shareable scenes and share links.'],
+    ['Voice agent', 'Hands-free control through the OpenAI Realtime API (needs a server-side OpenAI key).']
+  ];
+
+  R.modules.register({
+    id: 'globe3d',
+    group: 'risk',
+    order: 1,
+    icon: 'globe',
+    title: '3D Globe (God’s Eye View)',
+    short: '3D Globe',
+    description: 'Open the photorealistic 3D globe with live aircraft, ships, satellites, hazards and cameras: God’s Eye View, integrated into JAQA.',
+    warnings: [
+      'Opens God’s Eye View at /globe/. It is a separate app with its own layers and requests: its data comes from public providers through the JAQA server, and its voice agent sends audio to OpenAI only if the server has an OpenAI key.',
+      'Live positions, camera feeds and public registries can be delayed, incomplete or wrong. Nothing on the globe is a determination of risk, ownership, intent or exposure.'
+    ],
+    liveRefresh: false,
+    render(ctx) {
+      const s = ctx.session;
+      const r = s && s.resolved;
+      const here = r && Number.isFinite(r.lat) && r.lat !== null ? { lat: r.lat, lon: r.lon, label: (s.primary ? s.primary.title : r.placeLabel || r.countryName || 'current subject') } : null;
+      const styles = [['std', 'Normal'], ['nvg', 'NVG'], ['flir', 'FLIR'], ['crt', 'CRT']];
+      return h(
+        'div',
+        { class: 'rq-stack' },
+        h(
+          'div',
+          { class: 'rq-hero' },
+          h('h3', { class: 'rq-hero-title' }, 'Launch the 3D globe'),
+          h('p', null, 'The full God’s Eye View app opens in this tab. Use your browser’s Back button to return to the JAQA workspace.'),
+          h('div', { class: 'rq-row' }, R.globe3d.link('Open 3D globe', { lat: 20, lon: 10, alt: 18000000 }, 'rq-btn rq-btn-primary'), here ? R.globe3d.link('Fly to ' + here.label, { lat: here.lat, lon: here.lon, alt: 60000 }) : null),
+          h('p', { class: 'rq-fineprint' }, 'Only coordinates and a visual style go into the link, never your search terms.')
+        ),
+        ui.section('Open in a sensor style', { icon: 'layers', desc: here ? 'At ' + here.label + '.' : 'Whole-Earth view. Run a search first to open at a place.' }, h('div', { class: 'rq-row' }, ...styles.map(([k, l]) => R.globe3d.link(l, here ? { lat: here.lat, lon: here.lon, alt: 60000, style: k } : { lat: 20, lon: 10, alt: 18000000, style: k })))),
+        ui.section('What the 3D globe includes', { icon: 'list', desc: 'As described by God’s Eye View’s own README.' }, h('ul', { class: 'rq-list' }, ...FEATURES.map(([t, d]) => h('li', null, h('strong', null, t + ': '), d)))),
+        ui.section('Credits & licence', { icon: 'doc' }, h('p', null, 'God’s Eye View © 2026 Bilawal Sidhu, MIT licence. Integrated into JAQA with self-hosted fonts; otherwise unmodified. '), h('p', null, extLink('https://github.com/bilawalsidhu/gods-eye-view', 'God’s Eye View on GitHub'), ' · ', extLink('https://github.com/JAQA-Life/gods-eye-view', 'JAQA-Life fork')))
+      );
+    }
+  });
+})(window.JAQAWorkspace);
+
+/* ---- modules/globalMonitor.js ---- */
+/*
+ * globalMonitor.js — Global Monitor: a live dashboard of official public
+ * feeds (headlines + links), an event map, "countries in the headlines" and an
+ * FX reference board. Feature set inspired by WorldMonitor's news/intel
+ * dashboard; clean-room JAQA code (no WorldMonitor code, AGPL respected).
+ *
+ * Feeds are fetched by the JAQA server from an allowlist of official
+ * publishers and verified by scripts/verify-monitor.mjs; the browser only calls
+ * the same-origin /api/jaqa/monitor endpoint with a fixed feed id. Loading is
+ * user-initiated; feed tasks survive new searches and Clear Session wipes them.
+ * JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.
+ */
+(function (R) {
+  'use strict';
+  const { h, extLink, fmt } = R.util;
+  const ui = R.ui;
+  const C = R.clients;
+
+  const cfg = () => R.config.monitor || { feeds: [], categories: [] };
+  const st = { category: 'all', active: false };
+  R.events.on('session:cleared', () => {
+    st.active = false;
+    st.category = 'all';
+  });
+
+  const FX = ['USD', 'GBP', 'JPY', 'CHF', 'CNY', 'INR'];
+  const feedDef = (f) => ({ key: 'feed:monitor:' + f.id, sourceId: 'jaqaMonitor', label: f.name + ' · ' + f.publisher, run: () => C.monitor.feed(f, { persistent: true }) });
+  const fxDef = (ccy) => ({ key: 'feed:ecb:' + ccy, sourceId: 'ecb', label: 'EUR/' + ccy + ' reference · ECB', run: () => C.ecb.exr(ccy, 30, { persistent: true }) });
+  const visibleFeeds = () => cfg().feeds.filter((f) => st.category === 'all' || f.category === st.category);
+
+  function activate() {
+    st.active = true;
+    const keys = visibleFeeds().map((f) => R.tasks.ensure(feedDef(f)).key).concat(FX.map((c) => R.tasks.ensure(fxDef(c)).key));
+    R.util.announce('Loading official feeds through the JAQA server. Fixed feeds only; no search terms are sent.');
+    R.tasks.runAll(keys);
+    R.shell.go('monitor');
+  }
+
+  /** All loaded monitor headline records (any category). */
+  function loaded() {
+    const out = [];
+    for (const f of cfg().feeds) {
+      const t = R.tasks.get('feed:monitor:' + f.id);
+      if (t && t.records) out.push(...t.records);
+    }
+    return out;
+  }
+
+  // Countries named in loaded headlines. A mention count, not a risk score.
+  let countryRx = null;
+  function hotspots(records) {
+    if (!countryRx) countryRx = R.geo.countries.filter((c) => c.name.length > 3).map((c) => [c, new RegExp('\\b' + c.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i')]);
+    const counts = new Map();
+    for (const r of records) for (const [c, rx] of countryRx) if (rx.test(r.title)) counts.set(c, (counts.get(c) || 0) + 1);
+    return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15);
+  }
+
+  function headlineList(recs) {
+    return h(
+      'ul',
+      { class: 'rq-wire' },
+      ...recs.slice(0, 12).map((r) =>
+        h(
+          'li',
+          { class: 'rq-wire-row rq-mon-row' },
+          h('span', { class: 'rq-wire-time rq-mono', title: 'Published (UTC)' }, r.data.published ? r.data.published.slice(5, 16).replace('T', ' ') : '—'),
+          h('span', { class: 'rq-mon-title' }, extLink(r.links[0].href, r.title)),
+          Number.isFinite(r.data.lat) ? h('a', { class: 'rq-wire-locate', href: R.globe3d.url({ lat: r.data.lat, lon: r.data.lon, alt: 400000 }), title: 'Open this location in the 3D globe', 'aria-label': 'Open in 3D globe: ' + r.title }, R.util.icon('globe', 'rq-icon-xs')) : h('span')
+        )
+      )
+    );
+  }
+
+  let mapGlobe = null;
+  function eventMap(records) {
+    const pts = records.filter((r) => Number.isFinite(r.data.lat)).map((r) => ({ kind: 'signal', lat: r.data.lat, lon: r.data.lon, label: r.title, record: r }));
+    const host = h('div', { class: 'rq-local-globe' });
+    setTimeout(() => {
+      if (!host.isConnected) return;
+      if (mapGlobe) mapGlobe.destroy();
+      mapGlobe = R.situation.mountGlobe(host, pts, pts[0] ? { lat: pts[0].lat, lon: pts[0].lon } : { lat: 20, lon: 10 });
+    }, 0);
+    return h('div', null, host, h('p', { class: 'rq-fineprint' }, pts.length + ' event(s) with publisher-supplied coordinates. Select a marker for details, or ', R.globe3d.link('open the 3D globe', { lat: 20, lon: 10, alt: 18000000 }, 'rq-link-inline'), '.'));
+  }
+
+  R.modules.register({
+    id: 'monitor',
+    group: 'risk',
+    order: 2,
+    icon: 'chart',
+    title: 'Global Monitor',
+    short: 'Global Monitor',
+    description: 'Live headlines from official publishers (UN, WHO, GDACS, NASA, NOAA, CISA, central banks, travel advisories), an event map, the countries named in the news and an FX board.',
+    warnings: [
+      'Headlines from official publishers, shown as published: not verified, ranked or summarized by JAQA. Read the source before relying on anything. No hit ≠ clear.',
+      '“Countries in the headlines” counts name mentions only. It is not a risk, stability or exposure score.'
+    ],
+    liveRefresh: true,
+    render() {
+      const c = cfg();
+      if (!c.feeds.length) {
+        return h(
+          'div',
+          null,
+          ui.warning('No monitor feed has been verified for this deployment yet, so nothing is loaded live. The official publishers are linked below.', 'info'),
+          ui.section('Official publishers', { icon: 'link', desc: 'A feed is served only after scripts/verify-monitor.mjs has fetched and parsed it successfully.' }, h('ul', { class: 'rq-list' }, ...(c.candidates || []).map((f) => h('li', null, extLink(f.home, f.publisher + ' — ' + f.name)))))
+        );
+      }
+      const live = R.runtime.isLive('jaqaMonitor');
+      const cats = [['all', 'All categories'], ...c.categories.filter(([id]) => c.feeds.some((f) => f.category === id))];
+      const head = h(
+        'div',
+        { class: 'rq-strip', role: 'group', 'aria-label': 'Monitor status' },
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'FEEDS'), String(c.feeds.length)),
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'VERIFIED'), (c.verifiedAt || '').slice(0, 10) || '—'),
+        h('span', { class: 'rq-strip-item rq-mono' }, h('span', { class: 'rq-strip-k' }, 'STATUS'), h('span', { class: st.active ? 'rq-ok' : 'rq-warn-t' }, st.active ? 'ACTIVE' : 'STANDBY')),
+        h('span', { class: 'rq-strip-spacer' }),
+        ui.select('Category', cats, st.category, (v) => {
+          st.category = v;
+          if (st.active) activate();
+          else R.shell.go('monitor');
+        }, { key: 'monitor-category', cls: 'rq-field-inline' }),
+        ui.button(st.active ? 'Refresh' : 'Load monitor feeds', activate, { variant: 'primary', icon: st.active ? 'refresh' : 'download', cls: 'rq-btn-sm' })
+      );
+      if (!live) {
+        return h('div', null, head, ui.warning('The JAQA server is not available here (static-only hosting), so feeds cannot load. Open the publishers directly:', 'amber'), h('ul', { class: 'rq-list' }, ...c.feeds.map((f) => h('li', null, extLink(f.home, f.publisher + ' — ' + f.name)))));
+      }
+      if (!st.active) {
+        return h('div', null, head, h('div', { class: 'rq-hero' }, h('h3', { class: 'rq-hero-title' }, 'Monitor on standby'), h('p', null, 'Loading asks the JAQA server for the latest headlines from ' + visibleFeeds().length + ' official feed(s). Your searches are never sent. The server caches each feed for 10 minutes.'), ui.button('Load monitor feeds', activate, { variant: 'primary', icon: 'download' })));
+      }
+      const recs = loaded();
+      const hs = hotspots(recs);
+      const feedsPanels = visibleFeeds().map((f) =>
+        h('section', { class: 'rq-panel', 'aria-label': f.name }, h('div', { class: 'rq-panel-head' }, h('span', { class: 'rq-panel-title' }, f.name), h('span', { class: 'rq-panel-meta' }, f.publisher)), h('div', { class: 'rq-panel-body' }, ui.taskPanel(feedDef(f), { auto: true, compact: true, noHitWarning: false, render: headlineList, linkout: { href: f.home, label: 'Open ' + f.publisher } })))
+      );
+      return h(
+        'div',
+        { class: 'rq-stack' },
+        head,
+        h(
+          'div',
+          { class: 'rq-mon-grid' },
+          h('section', { class: 'rq-panel rq-mon-map', 'aria-label': 'Event map' }, h('div', { class: 'rq-panel-head' }, h('span', { class: 'rq-panel-title' }, 'Event map'), h('span', { class: 'rq-panel-meta' }, 'publisher coordinates')), h('div', { class: 'rq-panel-body' }, eventMap(recs))),
+          h(
+            'section',
+            { class: 'rq-panel', 'aria-label': 'Countries in the headlines' },
+            h('div', { class: 'rq-panel-head' }, h('span', { class: 'rq-panel-title' }, 'Countries in the headlines'), h('span', { class: 'rq-panel-meta' }, 'mentions, not a score')),
+            h(
+              'div',
+              { class: 'rq-panel-body' },
+              hs.length
+                ? h('ol', { class: 'rq-mon-hot' }, ...hs.map(([co, n]) => h('li', null, h('button', { type: 'button', class: 'rq-link-btn', onclick: () => R.shell.search(co.name), title: 'Investigate ' + co.name + ' in JAQA' }, co.name), h('span', { class: 'rq-mono rq-muted' }, ' ' + n))))
+                : h('p', { class: 'rq-muted' }, 'No country names found in the loaded headlines yet.'),
+              h('p', { class: 'rq-fineprint' }, 'Exact country-name matches in headline text only; abbreviations and demonyms are missed.')
+            )
+          ),
+          h(
+            'section',
+            { class: 'rq-panel', 'aria-label': 'FX reference board' },
+            h('div', { class: 'rq-panel-head' }, h('span', { class: 'rq-panel-title' }, 'FX reference board'), h('span', { class: 'rq-panel-meta' }, 'ECB · EUR base')),
+            h(
+              'div',
+              { class: 'rq-panel-body rq-mon-fx' },
+              ...FX.map((ccy) => ui.taskPanel(fxDef(ccy), { auto: true, compact: true, render: (rs) => h('div', { class: 'rq-fx' }, h('div', { class: 'rq-mono rq-muted' }, 'EUR/' + ccy), h('div', { class: 'rq-fx-val rq-mono' }, (rs[0].fields[0] || [])[1] || '—'), h('button', { type: 'button', class: 'rq-link-btn', onclick: () => R.shell.openDetail(rs[0]) }, 'Details')) })),
+              h('p', { class: 'rq-fineprint' }, 'Reference rates, not tradable prices. Equity, commodity and crypto prices are not included: no keyless official source has been verified.')
+            )
+          ),
+          ...feedsPanels
+        )
+      );
     }
   });
 })(window.JAQAWorkspace);

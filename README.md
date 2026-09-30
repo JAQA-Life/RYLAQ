@@ -10,9 +10,9 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 
 | Path | Purpose |
 |---|---|
-| `dist/index.html` | **Production artifact**: one self-contained HTML file (CSS and JS inlined, inline SVG icons, system fonts). Upload to Hostinger or open locally. |
+| `dist/index.html` + `dist/assets/` | **Production artifact**: small HTML pages plus the app script, stylesheet and startup-diagnostics script as content-hashed files in `assets/` (inline SVG icons, system fonts, no external requests). Upload to Hostinger or open locally. |
 | `.htaccess` (root) | Used only if Hostinger deploys the repository root (`main`). It routes every request into `dist/` and returns 404 for source files. |
-| `dist/.htaccess` | Security headers, HTTPS redirect, no directory listing, gzip, and a strict CSP. `script-src` is pinned to the script's SHA-256 hash and `connect-src` allows only verified API origins. |
+| `dist/.htaccess` | Security headers, HTTPS redirect, no directory listing, gzip, and a strict CSP. `script-src 'self'` (the app runs only from its own files, so hosting-side HTML rewriting cannot break it) and `connect-src` allows only verified API origins. |
 | `dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/` | Optional standalone routes: the same app with route-specific title, meta and canonical, opening on the matching module. |
 | `release/jaqa-web.zip` | **Download-and-upload package**: the `dist/` files, including `.htaccess`, in one ZIP for Hostinger File Manager. Upload it to `public_html/` and extract it there. See [`release/README.md`](release/README.md). |
 | `embed/jaqa-workspace-embed.html` | Fragment for CMS/intranet custom-HTML blocks. It contains no html/head/body, and its styles are scoped to `.jaqa-workspace`. |

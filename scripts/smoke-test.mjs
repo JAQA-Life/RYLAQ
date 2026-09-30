@@ -160,6 +160,8 @@ ok(await page.locator('.rq-privacy-badge').isVisible(), 'privacy badge visible')
 ok((await page.locator('#rq-confidential').innerText()).includes('Do not enter confidential'), 'confidentiality warning visible');
 ok((await page.locator('input[type=file]').count()) === 0, 'no file upload inputs');
 ok(externalHosts.size === 0, 'no external requests on initial load (no auto-probing)');
+ok((await page.locator('#jaqa-boot').count()) === 0, 'startup screen removed once the app has started');
+ok(await page.evaluate(() => [...document.scripts].every((x) => x.src || x.type === 'application/ld+json')), 'no executable inline scripts (CSP script-src self)');
 ok((await page.locator('.rq-situation').count()) === 1, 'lands on the Situation Room');
 ok((await page.locator('.rq-globe-canvas').count()) === 1, 'globe canvas renders without network');
 ok((await page.locator('.rq-strip').innerText()).includes('STANDBY'), 'feeds start on standby');

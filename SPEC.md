@@ -57,7 +57,7 @@ JAQA has zero retention on its side. The browser talks directly to providers. Th
 ## 5–7. Design, stack, repository
 
 - Vanilla HTML/CSS/JS with no runtime dependencies.
-- Option A: a single-file `dist/index.html` (plus optional route pages and an `embed/` fragment).
+- Delivery: `dist/index.html` plus content-hashed `dist/assets/` files (plus optional route pages and an inline-everything `embed/` fragment). See the 2026-09-30 blank-page decision below.
 - Root `<main id="jaqa-workspace" class="jaqa-workspace">`.
 - `window.JAQAWorkspace`, with `.modules` (registry) and `.events` (bus).
 - CSS is scoped, uses tokens, supports light/dark, uses the system font stack and inline SVG only.
@@ -128,7 +128,7 @@ The header legal comment is in `core.js` and in the built script.
 
 | Area | Files |
 |---|---|
-| Hostinger | `.htaccess` (CSP with script hash and verified `connect-src`), `docs/HOSTINGER_DEPLOYMENT.md` (Git deploy of the `hostinger` branch, manual, FTPS, Nginx, rollback, 403 troubleshooting) |
+| Hostinger | `.htaccess` (CSP `script-src 'self'` and verified `connect-src`, explicit JS/CSS MIME types), `docs/HOSTINGER_DEPLOYMENT.md` (Git deploy of the `hostinger` branch, manual, FTPS, Nginx, rollback, 403 troubleshooting) |
 | GitHub Actions | `ci.yml`, `publish-hostinger-branch.yml`, `deploy-hostinger.yml` (optional), `verify-sources.yml` |
 | Scripts | `build.mjs`, `check-static-safety.mjs`, `validate-links.mjs`, `verify-cors.mjs`, `preview.mjs`, `smoke-test.mjs` |
 
@@ -148,6 +148,12 @@ The header legal comment is in `core.js` and in the built script.
   - Feeds are fixed, non-personal, user-activated queries to already-verified sources.
 
 - **2026-09-30 — Hosting path.** The site is served from the domain root, `https://jaqa.life/` (build default `--workspace-path /`), and deployed with Hostinger Git from the generated `hostinger` branch, which contains only the `dist/` contents. This fixes the Hostinger *403 Forbidden* that occurred when the deployed branch root had no `index.html`, and keeps source files off the web server.
+
+- **2026-09-30 — Blank page on Hostinger → external assets.** The single-file build pinned the inline script with a CSP SHA-256 hash in `.htaccess`. A build bug made that hash wrong, so production rendered blank. More fundamentally, the design breaks whenever anything between the build and the browser changes the HTML: a CDN or minifier, a stale cached page, or a leftover `.htaccess`. The workspace therefore now loads its JS and CSS from content-hashed files in `dist/assets/` under `script-src 'self'`, which has no dependency on HTML bytes.
+  - A startup screen (`#jaqa-boot`, `src/assets/jaqa-boot.js`) stays visible with the reason and the fix steps if the app cannot start; the app removes it once it has fully started.
+  - `check-static-safety.mjs` enforces: no executable inline scripts, all referenced assets exist, and `script-src` is exactly `'self'`.
+  - The preview server and smoke test run under the production CSP.
+- **2026-09-30 — Command-center density.** In the situation-room theme on desktop (≥ 1100px), the header, search and Situation Room head are compacted so the evidence globe and live panels fill the first screen. Only spacing and type change; every notice, warning and control stays visible.
 
 ## Open decisions
 

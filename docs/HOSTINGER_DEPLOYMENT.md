@@ -28,7 +28,8 @@ The production artifact is `dist/`. It is built for the **domain root**, `https:
 ```
 dist/                                → public_html/
 ├── .htaccess                        # security headers + CSP (Apache/LiteSpeed)
-├── index.html                       # the whole app (single file)       https://jaqa.life/
+├── index.html                       # the workspace page                https://jaqa.life/
+├── assets/                          # app script, stylesheet, startup diagnostics (content-hashed names)
 ├── global-risk/index.html           # optional standalone routes        https://jaqa.life/global-risk/
 ├── finance-risk/index.html                                              https://jaqa.life/finance-risk/
 ├── insurance-reinsurance/index.html                                     https://jaqa.life/insurance-reinsurance/
@@ -117,12 +118,14 @@ Enable the free SSL certificate in **hPanel → Security → SSL**. The generate
 | `Permissions-Policy` | geolocation, microphone, camera, payment, usb and clipboard-read all disabled |
 | `Cross-Origin-Opener-Policy` / `Cross-Origin-Resource-Policy` | `same-origin` |
 | `Content-Security-Policy` | see below |
-| `Cache-Control` for HTML | `no-cache, no-store, must-revalidate` (every visit gets the current build and hash) |
+| `Cache-Control` for HTML | `no-cache, no-store, must-revalidate` (every visit gets the current page and asset names) |
+| `Cache-Control` for `assets/*.js`, `*.css` | `public, max-age=31536000, immutable` (safe: a changed file always gets a new, content-hashed name) |
+| `AddType` | `.js` → `text/javascript`, `.css` → `text/css`. Required because `nosniff` makes browsers refuse a script served with the wrong type. |
 
 The Content-Security-Policy is built as follows:
 
-- `script-src 'sha256-…'`: only the exact inlined application script can run. No `unsafe-inline` or `unsafe-eval` for scripts. **Rebuild after any JS change.** The hash is regenerated automatically.
-- `style-src 'self' 'unsafe-inline'`: required for the inlined stylesheet.
+- `script-src 'self'`: only the app's own files in `assets/` can run. There is no inline script, no `unsafe-inline` and no `unsafe-eval`. Because nothing is pinned to the HTML bytes, a CDN, minifier or cache that rewrites HTML cannot stop the app (earlier builds pinned an inline script by hash, which rendered a blank page when that broke).
+- `style-src 'self' 'unsafe-inline'`: the stylesheet is in `assets/`; `'unsafe-inline'` covers the small startup-screen style block and style attributes set by the app.
 - `connect-src`: **only** the origins of sources verified for browser CORS in `config/cors-verification.json`. Unverified sources are not reachable in production, even through the Coverage Console.
 - `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `worker-src 'none'`, `upgrade-insecure-requests`.
 
@@ -138,7 +141,7 @@ location / {
   add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), clipboard-read=()" always;
   add_header Cross-Origin-Opener-Policy "same-origin" always;
   add_header Cross-Origin-Resource-Policy "same-origin" always;
-  # Copy the exact CSP value from dist/.htaccess (it contains the current script hash):
+  # Copy the exact CSP value from dist/.htaccess:
   add_header Content-Security-Policy "<paste from dist/.htaccess>" always;
   add_header Cache-Control "no-cache, no-store, must-revalidate" always;
   gzip on; gzip_types text/html text/css application/javascript application/json image/svg+xml;

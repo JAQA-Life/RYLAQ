@@ -677,6 +677,10 @@
     });
     contentEl.addEventListener('focusout', () => refreshPending && scheduleRefresh());
 
+    // Fully started: remove the startup/diagnostics screen (see src/assets/jaqa-boot.js).
+    const bootScreen = document.getElementById('jaqa-boot');
+    if (bootScreen) bootScreen.remove();
+
     document.addEventListener('keydown', (e) => {
       const tag = (e.target && e.target.tagName) || '';
       const typing = /INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable);

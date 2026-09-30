@@ -16,7 +16,6 @@
  * It also asserts that required legal text and privacy architecture exist.
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
-import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -99,7 +98,14 @@ for (const file of files) {
 const distIndex = path.join(root, 'dist', 'index.html');
 if (!existsSync(distIndex)) failures.push('dist/index.html missing — run npm run build');
 else {
-  const d = readFileSync(distIndex, 'utf8');
+  // Assertions run over the page plus the assets it loads.
+  const indexHtml = readFileSync(distIndex, 'utf8');
+  const assetText = [...indexHtml.matchAll(/(?:src|href)="(assets\/[^"]+\.(?:js|css))"/g)]
+    .map((m) => path.join(root, 'dist', m[1]))
+    .filter((f) => existsSync(f))
+    .map((f) => readFileSync(f, 'utf8'))
+    .join('\n');
+  const d = indexHtml + '\n' + assetText;
   const must = [
     [/JAQA™\. All rights reserved\./, 'footer copyright “© {year} JAQA™. All rights reserved.”'],
     [/JAQA™ is a trademark of JAQA\./, 'trademark notice'],
@@ -131,20 +137,30 @@ else {
   const h = readFileSync(ht, 'utf8');
   for (const need of ['Options -Indexes', 'X-Content-Type-Options', 'X-Frame-Options "DENY"', 'Referrer-Policy "no-referrer"', 'Permissions-Policy', 'Cross-Origin-Opener-Policy', 'Cross-Origin-Resource-Policy', 'Content-Security-Policy', "frame-ancestors 'none'", "object-src 'none'"])
     if (!h.includes(need)) failures.push('dist/.htaccess missing: ' + need);
-  // Every inline <script> in every page must match a CSP script-src hash exactly,
-  // or browsers refuse to run it and the page renders blank in production.
+  // The app must run from same-origin files under a script-src 'self' policy:
+  // no executable inline scripts, and every referenced asset must exist. (An
+  // inline script pinned by hash broke in production when the HTML changed.)
   const cspValue = (h.match(/Header always set Content-Security-Policy "([^"]+)"/) || ['', ''])[1];
-  const allowed = new Set([...(cspValue.match(/script-src ([^;]+)/) || ['', ''])[1].matchAll(/'(sha256-[A-Za-z0-9+/=]+)'/g)].map((m) => m[1]));
+  const scriptSrc = ((cspValue.match(/(?:^|;\s*)script-src ([^;]+)/) || ['', ''])[1] || '').trim();
+  if (scriptSrc !== "'self'") failures.push(`dist/.htaccess CSP script-src must be exactly 'self' (found: ${scriptSrc || 'none'})`);
+  for (const need of ['AddType text/javascript .js', 'AddType text/css .css']) if (!h.includes(need)) failures.push('dist/.htaccess missing: ' + need);
   const pages = walk(path.join(root, 'dist')).filter((f) => f.endsWith('.html'));
+  if (!pages.length) failures.push('dist/ has no HTML pages');
   for (const f of pages) {
-    const scripts = [...readFileSync(f, 'utf8').matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script>/g)]
-      .filter((m) => !/type="application\/(ld\+)?json"/.test(m[1] || '')) // data blocks are not executed
-      .map((m) => m[2])
-      .filter((c) => c.length);
-    if (!scripts.length) failures.push(`${path.relative(root, f)} has no inline script`);
-    for (const c of scripts) {
-      const hash = 'sha256-' + createHash('sha256').update(c, 'utf8').digest('base64');
-      if (!allowed.has(hash)) failures.push(`${path.relative(root, f)}: inline script hash ${hash} is not allowed by the CSP in dist/.htaccess (page would render blank)`);
+    const page = readFileSync(f, 'utf8');
+    const rp = path.relative(root, f);
+    for (const m of page.matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script>/g)) {
+      const attrs = m[1] || '';
+      if (/type="application\/(ld\+)?json"/.test(attrs)) continue; // data block, never executed
+      if (m[2].trim()) failures.push(`${rp}: executable inline <script> is not allowed (CSP script-src 'self')`);
+      if (!/\ssrc="/.test(attrs)) failures.push(`${rp}: <script> without src`);
+    }
+    const refs = [...page.matchAll(/<(?:script|link)\s[^>]*(?:src|href)="([^"]+\.(?:js|css))"/g)].map((m) => m[1]);
+    if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.js$/.test(r))) failures.push(`${rp}: does not load the app script`);
+    if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.css$/.test(r))) failures.push(`${rp}: does not load the stylesheet`);
+    for (const r of refs) {
+      if (/^(https?:)?\/\//.test(r)) failures.push(`${rp}: external asset not allowed: ${r}`);
+      else if (!existsSync(path.resolve(path.dirname(f), r))) failures.push(`${rp}: references missing asset ${r}`);
     }
   }
 }

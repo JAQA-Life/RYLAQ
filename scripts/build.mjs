@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 /*
  * JAQA build (dev-only). Produces the static production artifact:
- *   dist/index.html                     single self-contained page (CSS + JS inlined)
- *   dist/.htaccess                      security headers incl. CSP with script hash
+ *   dist/index.html                     the workspace page (small HTML; loads assets/)
+ *   dist/assets/jaqa-*.<hash>.{js,css}  app script, startup diagnostics and stylesheet;
+ *                                       file names carry a content hash (safe to cache)
+ *   dist/.htaccess                      security headers incl. CSP (script-src 'self')
  *   dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/index.html
  *   embed/jaqa-workspace-embed.html    fragment for CMS / intranet custom-HTML blocks
- *   release/jaqa-web.zip                the dist/ files as one download for Hostinger File Manager upload
+ *   release/jaqa-web.zip                all dist/ files as one download for Hostinger File Manager upload
  *   src/modules/corsConfig.js           compiled from config/cors-verification.json
  *
  * Output is deterministic (no timestamps) so CI can verify dist/ is up to date.
  * Options: --site https://jaqa.life  --workspace-path /   (site served from the domain root)
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import vm from 'node:vm';
 import path from 'node:path';
@@ -94,24 +96,40 @@ if (missing.length) {
   process.exit(1);
 }
 
-/* 3. Inline CSS and JS in the order declared in src/index.html. */
+/* 3. Bundle CSS and JS (in the order declared in src/index.html) into
+ * content-hashed files under dist/assets/. The pages load them with
+ * <script src> / <link href>, so the CSP is simply script-src 'self': nothing
+ * depends on the HTML staying byte-identical (a host, cache or CDN that
+ * rewrites HTML can no longer block the app). */
 const html = read('src/index.html');
 const jsBlock = html.match(/<!-- JAQA:JS:BEGIN -->([\s\S]*?)<!-- JAQA:JS:END -->/);
 const cssBlock = html.match(/<!-- JAQA:CSS:BEGIN -->([\s\S]*?)<!-- JAQA:CSS:END -->/);
-if (!jsBlock || !cssBlock) throw new Error('Build markers missing in src/index.html');
+const bootBlock = html.match(/<!-- JAQA:BOOT:BEGIN -->([\s\S]*?)<!-- JAQA:BOOT:END -->/);
+if (!jsBlock || !cssBlock || !bootBlock) throw new Error('Build markers missing in src/index.html');
 const scripts = [...jsBlock[1].matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
 const css = read('src/assets/jaqa-workspace.css').trim();
 const js = scripts.map((s) => `/* ---- ${s} ---- */\n` + read('src/' + s).trim()).join('\n\n') + '\n';
+const bootJs = read('src/assets/jaqa-boot.js').trim() + '\n';
+// The embed fragment (for CMS blocks) still inlines everything.
 if (/<\/script/i.test(js)) throw new Error('Inline JS must not contain a closing script tag');
 if (/<\/style/i.test(css)) throw new Error('Inline CSS must not contain a closing style tag');
-// The CSP hash must cover the EXACT text between <script> and </script> in the
-// page, including the leading newline — otherwise browsers block the app (blank page).
-const inlineJs = '\n' + js;
-const scriptHash = 'sha256-' + createHash('sha256').update(inlineJs, 'utf8').digest('base64');
+const contentHash = (s) => createHash('sha256').update(s, 'utf8').digest('hex').slice(0, 10);
+const ASSET = {
+  js: `assets/jaqa-workspace.${contentHash(js)}.js`,
+  css: `assets/jaqa-workspace.${contentHash(css)}.css`,
+  boot: `assets/jaqa-boot.${contentHash(bootJs)}.js`
+};
+// Start from an empty dist/ so no stale hashed asset or page survives a rebuild.
+rmSync(rel('dist'), { recursive: true, force: true });
+write('dist/' + ASSET.js, js);
+write('dist/' + ASSET.css, css + '\n');
+write('dist/' + ASSET.boot, bootJs);
 
-const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Single self-contained static file: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
+const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Static files only: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
 
-function page({ title, description, canonical, initialModule }) {
+function page({ file, title, description, canonical, initialModule }) {
+  // Relative asset paths, so the site also works from a sub-folder or file://.
+  const up = '../'.repeat(file.split('/').length - 2);
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   let out = stripDevComment(html);
   out = out.replace(/<!-- JAQA:META:BEGIN -->[\s\S]*?<!-- JAQA:META:END -->/, () => [
@@ -126,8 +144,9 @@ function page({ title, description, canonical, initialModule }) {
   out = out.replace(/"@type":"WebApplication",(.*?)"url":"[^"]*"/, (m, mid) => `"@type":"WebApplication",${mid}"url":"${canonical}"`);
   // Function replacements: the inlined code contains `$&`-style sequences that
   // String.prototype.replace would otherwise interpret.
-  out = out.replace(cssBlock[0], () => `<style>\n${css}\n</style>`);
-  out = out.replace(jsBlock[0], () => `<script>${inlineJs}</script>`);
+  out = out.replace(cssBlock[0], () => `<link rel="stylesheet" href="${up}${ASSET.css}">`);
+  out = out.replace(bootBlock[0], () => `<script src="${up}${ASSET.boot}"></script>`);
+  out = out.replace(jsBlock[0], () => `<script src="${up}${ASSET.js}"></script>`);
   out = out.replace('data-initial-module="situation"', `data-initial-module="${initialModule}"`);
   return out;
 }
@@ -157,7 +176,7 @@ write('embed/jaqa-workspace-embed.html', embed);
 /* 5. .htaccess with strict security headers and CSP (Apache / LiteSpeed on Hostinger). */
 const csp = [
   "default-src 'self'",
-  `script-src '${scriptHash}'`,
+  "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
@@ -177,7 +196,8 @@ const htaccess = `# JAQA Workspace — static hosting security configuration (ge
 #
 # CSP connect-src lists ONLY sources verified for browser CORS from ${cors.origin || 'the production origin'}
 # (config/cors-verification.json, ${cors.verifiedAt || 'not verified'}). Unverified sources are link-out only.
-# script-src pins the SHA-256 hash of the inlined application script: rebuild after any JS change.
+# script-src 'self': the app runs from files in assets/ on this site. No inline script, eval or
+# third-party script is allowed, and nothing depends on the HTML staying byte-identical.
 
 Options -Indexes
 ServerSignature Off
@@ -198,16 +218,20 @@ DirectoryIndex index.html
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "DENY"
   Header always set Referrer-Policy "no-referrer"
-  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), clipboard-read=(), interest-cohort=()"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), clipboard-read=()"
   Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set Cross-Origin-Resource-Policy "same-origin"
   Header always set Content-Security-Policy "${csp}"
   Header unset X-Powered-By
 
-  # HTML: never cache (always pick up the latest build and CSP hash)
+  # HTML: never cache, so every visit gets the current page and asset names.
   <FilesMatch "\\.(html)$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
     Header set Pragma "no-cache"
+  </FilesMatch>
+  # assets/: file names contain a content hash, so a changed file always has a new name.
+  <FilesMatch "\\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>
 
@@ -216,7 +240,12 @@ DirectoryIndex index.html
 </IfModule>
 
 AddDefaultCharset utf-8
+# Explicit types: with X-Content-Type-Options nosniff, a script served with the
+# wrong type would be refused by the browser.
 AddType text/html .html
+AddType text/javascript .js
+AddType text/css .css
+AddCharset utf-8 .html .js .css
 `;
 write('dist/.htaccess', htaccess);
 
@@ -235,7 +264,9 @@ write('dist/.htaccess', htaccess);
     for (const b of buf) c = CRC[(c ^ b) & 0xff] ^ (c >>> 8);
     return (c ^ 0xffffffff) >>> 0;
   };
-  const files = ['.htaccess', ...PAGES.map((p) => p.file.replace(/^dist\//, ''))].sort();
+  const listDist = (dir) =>
+    readdirSync(rel(dir)).flatMap((f) => (statSync(rel(dir + '/' + f)).isDirectory() ? listDist(dir + '/' + f) : [dir + '/' + f]));
+  const files = listDist('dist').map((f) => f.slice('dist/'.length)).sort();
   const DOS_DATE = (0 << 9) | (1 << 5) | 1; // 1980-01-01
   const locals = [];
   const centrals = [];
@@ -316,4 +347,4 @@ write('dist/.htaccess', htaccess);
 
 console.log(`\nVerified live sources (${verified.length}): ${verified.join(', ')}`);
 console.log('CSP connect-src:', connect.join(' '));
-console.log('Script hash:', scriptHash);
+console.log('Assets:', Object.values(ASSET).join(', '));

@@ -22,7 +22,7 @@
  *   node scripts/verify-cors.mjs [--origin https://rylaq.com] [--write] [--out report.json] [--only gleif,ted]
  */
 import https from 'node:https';
-import { writeFileSync, readFileSync, existsSync } from 'node:fs';
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -50,7 +50,8 @@ const CHECKS = [
   { source: 'gleif', id: 'gleif-fulltext', url: 'https://api.gleif.org/api/v1/lei-records?filter%5Bfulltext%5D=Allianz&page%5Bsize%5D=2', shape: (j) => isArr(j.data) },
   { source: 'gleif', id: 'gleif-record', url: 'https://api.gleif.org/api/v1/lei-records/529900K9B0N5BT694847', shape: (j) => obj(j.data) && obj(j.data.attributes) },
   { source: 'gleif', id: 'gleif-children', url: 'https://api.gleif.org/api/v1/lei-records/529900K9B0N5BT694847/direct-children?page%5Bsize%5D=2', shape: (j) => isArr(j.data), required: false },
-  { source: 'gleif', id: 'gleif-ultimate-parent', url: 'https://api.gleif.org/api/v1/lei-records/529900K9B0N5BT694847/ultimate-parent', shape: (j) => obj(j), required: false },
+  { source: 'gleif', id: 'gleif-direct-parent', url: 'https://api.gleif.org/api/v1/lei-records/5299003CAAQ96ZRJ7689/direct-parent', shape: (j) => obj(j.data), required: false },
+  { source: 'gleif', id: 'gleif-ultimate-parent', url: 'https://api.gleif.org/api/v1/lei-records/5299003CAAQ96ZRJ7689/ultimate-parent', shape: (j) => obj(j.data), required: false },
   { source: 'gleif', id: 'gleif-fuzzy', url: 'https://api.gleif.org/api/v1/fuzzycompletions?field=entity.legalName&q=munich%20re', shape: (j) => isArr(j.data), required: false },
 
   // World Bank
@@ -84,8 +85,11 @@ const CHECKS = [
 
   // NVD
   { source: 'nvd', id: 'nvd-cve', url: 'https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2024-3094', shape: (j) => isArr(j.vulnerabilities) },
+  { source: 'nvd', id: 'nvd-keyword', url: 'https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=xz%20utils&resultsPerPage=2', shape: (j) => isArr(j.vulnerabilities), required: false },
+  { source: 'nvd', id: 'nvd-apikey-preflight', preflightOnly: true, headers: { apiKey: 'x' }, url: 'https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2024-3094', shape: () => true, required: false },
 
   // CPSC
+  { source: 'cpsc', id: 'cpsc-recall-number', url: 'https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallNumber=26639', shape: (j) => isArr(j), required: false },
   { source: 'cpsc', id: 'cpsc-recall', url: 'https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallTitle=stroller', shape: (j) => isArr(j) },
 
   // NHTSA
@@ -95,16 +99,19 @@ const CHECKS = [
   // USAspending (POST JSON -> preflight)
   { source: 'usaspending', id: 'usa-autocomplete-recipient', method: 'POST', url: 'https://api.usaspending.gov/api/v2/autocomplete/recipient/', body: { search_text: 'lockheed', limit: 2 }, shape: (j) => obj(j), required: false },
   { source: 'usaspending', id: 'usa-awards', method: 'POST', url: 'https://api.usaspending.gov/api/v2/search/spending_by_award/', body: { filters: { keywords: ['reinsurance'], award_type_codes: ['A', 'B', 'C', 'D'] }, fields: ['Award ID', 'Recipient Name', 'Start Date', 'End Date', 'Award Amount', 'Awarding Agency', 'Description'], limit: 2, page: 1, sort: 'Award Amount', order: 'desc' }, shape: (j) => isArr(j.results) },
+  { source: 'usaspending', id: 'usa-award-detail', url: 'https://api.usaspending.gov/api/v2/awards/CONT_AWD_HSFE6016C0201_7022_-NONE-_-NONE-/', shape: (j) => obj(j), required: false },
   { source: 'usaspending', id: 'usa-grants', method: 'POST', url: 'https://api.usaspending.gov/api/v2/search/spending_by_award/', body: { filters: { keywords: ['resilience'], award_type_codes: ['02', '03', '04', '05'] }, fields: ['Award ID', 'Recipient Name', 'Start Date', 'End Date', 'Award Amount', 'Awarding Agency', 'Description'], limit: 2, page: 1, sort: 'Award Amount', order: 'desc' }, shape: (j) => isArr(j.results), required: false },
 
   // Federal Register
+  { source: 'federalRegister', id: 'fr-agency', url: 'https://www.federalregister.gov/api/v1/documents.json?conditions%5Bterm%5D=sanctions&conditions%5Btype%5D%5B%5D=RULE&per_page=1&fields%5B%5D=title&fields%5B%5D=document_number&fields%5B%5D=html_url&fields%5B%5D=agencies&fields%5B%5D=publication_date', shape: (j) => isArr(j.results), required: false },
   { source: 'federalRegister', id: 'fr-search', url: 'https://www.federalregister.gov/api/v1/documents.json?conditions%5Bterm%5D=reinsurance&per_page=2&order=newest', shape: (j) => isArr(j.results) },
 
   // SEC EDGAR
   { source: 'sec', id: 'sec-submissions', url: 'https://data.sec.gov/submissions/CIK0000320193.json', shape: (j) => obj(j.filings) },
-  { source: 'sec', id: 'sec-companyfacts', url: 'https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json', shape: (j) => obj(j.facts) },
-  { source: 'sec', id: 'sec-tickers', url: 'https://www.sec.gov/files/company_tickers.json', shape: (j) => obj(j), required: false },
-  { source: 'sec', id: 'sec-efts', url: 'https://efts.sec.gov/LATEST/search-index?q=%22going%20concern%22&forms=10-K', shape: (j) => obj(j), required: false },
+  { source: 'secXbrl', id: 'sec-companyfacts', url: 'https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json', shape: (j) => obj(j.facts) },
+  { source: 'secXbrl', id: 'sec-companyconcept', url: 'https://data.sec.gov/api/xbrl/companyconcept/CIK0000320193/us-gaap/AssetsCurrent.json', shape: (j) => obj(j.units), required: false },
+  { source: 'secTickers', id: 'sec-tickers', url: 'https://www.sec.gov/files/company_tickers.json', shape: (j) => obj(j) },
+  { source: 'secFullText', id: 'sec-efts', url: 'https://efts.sec.gov/LATEST/search-index?q=%22going%20concern%22&forms=10-K', shape: (j) => obj(j) },
 
   // TED (POST JSON -> preflight)
   { source: 'ted', id: 'ted-search', method: 'POST', url: 'https://api.ted.europa.eu/v3/notices/search', body: { query: 'FT ~ "insurance"', fields: ['publication-number', 'notice-title', 'buyer-name', 'buyer-country', 'publication-date', 'notice-type', 'deadline-receipt-tender-date-lot', 'classification-cpv', 'procedure-type', 'links'], limit: 2 }, shape: (j) => isArr(j.notices) },
@@ -119,7 +126,7 @@ const CHECKS = [
   { source: 'wikipedia', id: 'wp-summary', url: 'https://en.wikipedia.org/api/rest_v1/page/summary/Munich_Re', shape: (j) => typeof j.title === 'string' },
 
   // Overpass (OpenStreetMap)
-  { source: 'overpass', id: 'overpass-around', url: 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent('[out:json][timeout:10];nwr["industrial"="port"](around:5000,51.95,4.14);out center 2;'), shape: (j) => isArr(j.elements) },
+  { source: 'overpass', id: 'overpass-around', url: 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent('[out:json][timeout:20];nwr["landuse"="port"](around:3000,51.95,4.14);out center 2;'), shape: (j) => isArr(j.elements) },
 
   // ECB Data Portal
   { source: 'ecb', id: 'ecb-exr', url: 'https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?format=jsondata&lastNObservations=2', shape: (j) => obj(j) && (isArr(j.dataSets) || obj(j.data)) },
@@ -252,6 +259,7 @@ for (const [id, s] of Object.entries(sources)) {
   if (!s.checks.some((c) => c.required)) s.verified = false;
   s.passingEndpoints = s.checks.filter((c) => c.ok).map((c) => c.id);
   if (id === 'fred' || id === 'companiesHouse' || id === 'opencorporates') {
+    s.preflightVerified = s.checks.some((c) => c.ok);
     s.keyGated = true;
     s.verified = false; // key-gated sources are never promoted automatically
   }
@@ -268,10 +276,11 @@ const report = {
 console.log('\n=== SOURCE SUMMARY ===');
 for (const [id, s] of Object.entries(sources)) console.log(`${s.verified ? 'VERIFIED ' : 'LINK-OUT '} ${id}  passing: ${s.passingEndpoints.join(', ') || 'none'}`);
 console.log('\n=== SNIPPETS ===');
-for (const r of results) console.log(`--- ${r.id} [${r.status}] ${r.snippet ? r.snippet.slice(0, 700) : r.error || ''}`);
+for (const r of results) console.log(`--- ${r.id} [${r.status}] ${r.snippet ? r.snippet.slice(0, 900) : r.error || ''}`);
 
 if (OUT) writeFileSync(OUT, JSON.stringify({ report, results }, null, 2));
 if (WRITE) {
+  mkdirSync(path.join(root, 'config'), { recursive: true });
   const file = path.join(root, 'config', 'cors-verification.json');
   const prev = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : null;
   writeFileSync(file, JSON.stringify(report, null, 2) + '\n');

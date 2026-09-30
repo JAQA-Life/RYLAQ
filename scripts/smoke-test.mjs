@@ -179,7 +179,9 @@ const canvas = page.locator('.rq-globe-canvas');
 await canvas.focus();
 await page.keyboard.press('ArrowRight');
 await page.keyboard.press('+');
-ok((await page.locator('.rq-hud-bottom').innerText()).includes('ZOOM 1.2'), 'globe responds to keyboard zoom');
+// The HUD readout is written on the next animation frame; wait for it rather than racing it.
+const zoomed = await page.waitForFunction(() => /ZOOM 1\.2/.test(document.querySelector('.rq-hud-bottom').textContent), null, { timeout: 3000 }).then(() => true, () => false);
+ok(zoomed, 'globe responds to keyboard zoom');
 await page.click('.rq-seg-btn:has-text("NVG")');
 ok((await page.locator('.rq-optic-nvg').count()) === 1, 'optic mode switches (NVG)');
 await shot('02-situation-active');

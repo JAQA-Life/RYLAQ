@@ -69,7 +69,7 @@ The Source Capability Registry carries every field listed in §8. The modes are 
 
 → `src/modules/sourceRegistry.js`, `config/cors-verification.json`, `docs/SOURCE_REGISTRY.md`
 
-**Verification result (2026-09-30, origin `https://jaqa.life`):** 18 sources are live: GLEIF, World Bank, USGS, Open-Meteo, NWS, CISA KEV (cisagov mirror), NVD, CPSC, NHTSA, USAspending, Federal Register, SEC submissions, CourtListener, Wikidata, Wikipedia, ECB, GDELT and EPA ECHO. TED, SEC XBRL, ReliefWeb, IMF, Overpass, Comtrade, FRED, OpenCorporates, Companies House, SAM and others are link-out.
+**Verification result (2026-09-30, origin `https://jaqa.life`):** 19 sources are live: GLEIF, World Bank, USGS, Open-Meteo, NWS, CISA KEV (cisagov mirror), NVD, CPSC, NHTSA, USAspending, Federal Register, SEC submissions, CourtListener, Wikidata, Wikipedia, Overpass, ECB, GDELT and EPA ECHO. TED, SEC XBRL, ReliefWeb, IMF, Comtrade, FRED, OpenCorporates, Companies House, SAM and others are link-out.
 
 ## 10. Third-party / external dashboard policy
 
@@ -138,6 +138,7 @@ The header legal comment is in `core.js` and in the built script.
 
 ## Decision log
 
+- **2026-09-30 — Rename.** The product brand is **JAQA** (formerly RYLAQ) and the production domain is **jaqa.life**. CORS was re-verified from `https://jaqa.life`: 19 sources are live, and Overpass passed this run.
 - **2026-09-30 — Design direction.** At the product owner's request, the UI/UX takes its design language from WorldMonitor (dense intelligence grid, wire, status strip) and God's Eye View (HUD globe, reticle, optic modes). The outcome:
   - The Situation Room is the landing module.
   - The situation-room HUD theme is the default. Dark and light remain available; the original §5 white/slate palette is now the "light" theme.

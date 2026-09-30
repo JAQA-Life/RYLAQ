@@ -127,6 +127,6 @@ Status as of this build: all SMOKE, STATIC and VERIFY items pass. MANUAL items a
 - **Open tender discovery is link-out only.** TED's API did not return CORS headers for browser POSTs, and SAM.gov needs a key. Live procurement data is limited to US federal awards (USAspending).
 - **ReliefWeb** v2 requires an approved appname. Request one at apidoc.reliefweb.int, add a check, and re-verify.
 - **SEC XBRL** (companyfacts) lacks CORS. Derived metrics only appear if a future verification passes. The filing index and 8-K signals are live.
-- **Overpass** was flaky during verification (504), so it is link-out. It can be re-verified.
+- **Overpass** is a shared community server and intermittently returns 504. It passed the jaqa.life verification and is live, but it is user-triggered only, and a failure falls back to the OpenStreetMap link-out.
 - **GDELT** omits CORS headers on 429 responses. A throttled request marks GDELT unavailable for the session.
 - CORS verification was done from a server with the production `Origin` header. Re-confirm in the Coverage Console from the deployed site.

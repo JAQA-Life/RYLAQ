@@ -1,7 +1,7 @@
 {
-  "origin": "https://rylaq.com",
-  "verifiedAt": "2026-09-30T09:11:31.145Z",
-  "runner": "github-actions:36694308369",
+  "origin": "https://jaqa.life",
+  "verifiedAt": "2026-09-30T10:35:10.089Z",
+  "runner": "github-actions:36703177628",
   "method": "Server-side request with Origin header + CORS preflight emulation + response-shape validation. Confirm from the deployed origin with the Coverage Console.",
   "sources": {
     "gleif": {
@@ -333,7 +333,7 @@
           "ok": true,
           "required": true,
           "status": 200,
-          "acao": "https://rylaq.com",
+          "acao": "https://jaqa.life",
           "preflightOk": null,
           "shapeOk": true
         },
@@ -342,7 +342,7 @@
           "ok": true,
           "required": false,
           "status": 200,
-          "acao": "https://rylaq.com",
+          "acao": "https://jaqa.life",
           "preflightOk": null,
           "shapeOk": true
         }
@@ -520,7 +520,7 @@
           "ok": true,
           "required": true,
           "status": 200,
-          "acao": "https://rylaq.com",
+          "acao": "https://jaqa.life",
           "preflightOk": null,
           "shapeOk": true
         },
@@ -529,7 +529,7 @@
           "ok": true,
           "required": false,
           "status": 200,
-          "acao": "https://rylaq.com",
+          "acao": "https://jaqa.life",
           "preflightOk": null,
           "shapeOk": true
         }
@@ -584,19 +584,21 @@
       ]
     },
     "overpass": {
-      "verified": false,
+      "verified": true,
       "checks": [
         {
           "id": "overpass-around",
-          "ok": false,
+          "ok": true,
           "required": true,
-          "status": 504,
+          "status": 200,
           "acao": "*",
           "preflightOk": null,
-          "shapeOk": false
+          "shapeOk": true
         }
       ],
-      "passingEndpoints": []
+      "passingEndpoints": [
+        "overpass-around"
+      ]
     },
     "ecb": {
       "verified": true,
@@ -640,7 +642,7 @@
           "ok": true,
           "required": true,
           "status": 200,
-          "acao": "https://rylaq.com",
+          "acao": "https://jaqa.life",
           "preflightOk": null,
           "shapeOk": true
         }

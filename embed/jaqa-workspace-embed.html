@@ -1125,9 +1125,9 @@ No sanctions clearance. No AML determination. No procurement bid advice.
   'use strict';
   R.config = R.config || {};
   R.config.corsVerification = {
-    "origin": "https://rylaq.com",
-    "verifiedAt": "2026-09-30T09:11:31.145Z",
-    "runner": "github-actions:36694308369",
+    "origin": "https://jaqa.life",
+    "verifiedAt": "2026-09-30T10:35:10.089Z",
+    "runner": "github-actions:36703177628",
     "method": "Server-side request with Origin header + CORS preflight emulation + response-shape validation. Confirm from the deployed origin with the Coverage Console.",
     "sources": {
       "gleif": {
@@ -1530,13 +1530,15 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         ]
       },
       "overpass": {
-        "verified": false,
-        "passingEndpoints": [],
+        "verified": true,
+        "passingEndpoints": [
+          "overpass-around"
+        ],
         "checks": [
           {
             "id": "overpass-around",
-            "ok": false,
-            "status": 504
+            "ok": true,
+            "status": 200
           }
         ]
       },

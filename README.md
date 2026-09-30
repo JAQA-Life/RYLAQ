@@ -35,7 +35,7 @@ Opening `dist/index.html` directly from disk also works (`file://`). Live reques
 
 ## Live sources (verified 2026-09-30 for `https://jaqa.life`)
 
-Live: GLEIF, World Bank, USGS, Open-Meteo, NOAA/NWS, CISA KEV (official `cisagov` GitHub mirror), NVD, CPSC, NHTSA, USAspending, Federal Register, SEC EDGAR submissions, CourtListener, Wikidata, Wikipedia, ECB, GDELT and EPA ECHO.
+Live (19): GLEIF, World Bank, USGS, Open-Meteo, NOAA/NWS, CISA KEV (official `cisagov` GitHub mirror), NVD, CPSC, NHTSA, USAspending, Federal Register, SEC EDGAR submissions, CourtListener, Wikidata, Wikipedia, OpenStreetMap Overpass, ECB, GDELT and EPA ECHO.
 
 Link-out only (verification failed or a key/login is required):
 
@@ -45,7 +45,6 @@ Link-out only (verification failed or a key/login is required):
 | SEC XBRL, EDGAR full-text search, SEC tickers | No CORS header returned. |
 | ReliefWeb | API v1 is decommissioned; v2 needs an approved appname. |
 | IMF | Returned 403. |
-| Overpass | Server timeouts during verification (504). |
 | UN Comtrade | No CORS header. |
 | FRED, OpenCorporates, Companies House, SAM.gov, ACLED, NASA FIRMS | Need a key or registration. |
 | Insurance regulators, rating agencies, market reports, procurement portals, sanctions lists, insolvency and lien registries, paid data providers | Link-out only by policy. |

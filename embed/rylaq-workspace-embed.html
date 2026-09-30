@@ -235,7 +235,10 @@
 .rylaq-workspace .rq-table tr.is-match { background: color-mix(in srgb, var(--rq-teal) 9%, transparent); }
 .rylaq-workspace .rq-table tr.is-selected { outline: 2px solid var(--rq-teal-ink); outline-offset: -2px; }
 .rylaq-workspace .rq-gap-cell { color: var(--t-warn); }
+.rylaq-workspace .rq-console { min-width: 1180px; }
+.rylaq-workspace .rq-console th[scope='row'] { min-width: 200px; }
 .rylaq-workspace .rq-console td { min-width: 120px; }
+.rylaq-workspace .rq-console td:nth-child(6) { min-width: 260px; }
 .rylaq-workspace .rq-flags { max-width: 260px; }
 .rylaq-workspace .rq-flags .rq-badge { margin: 0 4px 4px 0; }
 
@@ -335,7 +338,9 @@
 .rylaq-workspace .rq-tree-leaf { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 4px 0; font-size: 13.5px; border-bottom: 1px dotted var(--rq-border); }
 .rylaq-workspace .rq-tree-leaf-title { font-weight: 600; overflow-wrap: anywhere; }
 .rylaq-workspace .rq-flow-steps { margin-bottom: 10px; }
-.rylaq-workspace .rq-flow-steps ol { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13.5px; }
+.rylaq-workspace .rq-flow-steps ol { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; list-style: none; padding: 0; counter-reset: rq-step; }
+.rylaq-workspace .rq-flow-steps li { counter-increment: rq-step; display: inline-flex; gap: 4px; align-items: baseline; }
+.rylaq-workspace .rq-flow-steps li::before { content: counter(rq-step) '.'; color: var(--rq-faint); font-variant-numeric: tabular-nums; }
 .rylaq-workspace .rq-pin-wrap { display: grid; gap: 6px; }
 .rylaq-workspace .rq-adv .rq-field { max-width: 300px; }
 .rylaq-workspace .rq-export-bar { margin-top: 8px; }
@@ -5846,7 +5851,11 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       return h(
         'div',
         null,
-        ui.section('Reference point', { icon: 'globe' }, hasPoint ? h('p', null, ui.badge('Reference point', 'neutral'), ' ', r.placeLabel || `${r.lat}, ${r.lon}`, h('span', { class: 'rq-muted' }, ` (${Number(r.lat).toFixed(3)}, ${Number(r.lon).toFixed(3)})`)) : ui.warning('No reference point yet. Search a port, place or country, or resolve a place below.', 'info'), placePicker(ctx)),
+        ui.section('Reference point', { icon: 'globe' }, hasPoint ? h('p', null, ui.badge('Reference point', 'neutral'), ' ', r.placeLabel || `${r.lat}, ${r.lon}`, h('span', { class: 'rq-muted' }, ` (${Number(r.lat).toFixed(3)}, ${Number(r.lon).toFixed(3)})`)) : ui.warning('No reference point yet. Search a port, place or country, or resolve a place below.', 'info'), !hasPoint && iso3 ? ui.button('Use jurisdiction capital (' + iso3 + ') as approximate reference point', () => {
+          const d = T.wbCountry(iso3);
+          R.tasks.ensure(d);
+          R.tasks.start(d.key);
+        }, { icon: 'globe', cls: 'rq-btn-sm' }) : null, placePicker(ctx)),
         hasPoint
           ? h(
               'div',
@@ -6583,6 +6592,16 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         null,
         inputs,
         h('div', { class: 'rq-band' }, h('div', null, h('div', { class: 'rq-stat-label' }, 'Qualitative exposure band'), h('div', { class: 'rq-band-value rq-tone-' + tone }, band)), h('div', null, h('p', null, `${DISRUPTIONS[st.disruption]} · ${st.role} · ${subject}`), h('p', { class: 'rq-muted' }, `${signals} signal(s) across ${loaded} loaded check(s) of ${checks.length}. Rule: fewer than 2 checks loaded → Unknown; 0 signals → Low; 1 → Medium; 2+ → High. Duration does not change the band; it informs review priority.`))),
+        !(ctx.resolved.lat !== undefined && ctx.resolved.lat !== null) && R.countryFromCtx(ctx)
+          ? ui.warning('No geographic reference point. You can use the capital of the resolved jurisdiction (' + R.countryFromCtx(ctx) + ') as an approximate reference point — facility locations may differ.', 'info')
+          : null,
+        !(ctx.resolved.lat !== undefined && ctx.resolved.lat !== null) && R.countryFromCtx(ctx)
+          ? ui.button('Use jurisdiction capital as reference point', () => {
+              const d = T.wbCountry(R.countryFromCtx(ctx));
+              R.tasks.ensure(d);
+              R.tasks.start(d.key);
+            }, { icon: 'globe', cls: 'rq-btn-sm' })
+          : null,
         ui.section('Public evidence checks', { icon: 'list' }, checks.length ? h('div', { class: 'rq-table-wrap', tabindex: '0', role: 'region', 'aria-label': 'Evidence checks' }, h('table', { class: 'rq-table' }, h('thead', null, h('tr', null, ...['Check', 'Rule', 'Result', 'Action'].map((c) => h('th', { scope: 'col' }, c)))), h('tbody', null, ...rows.map(({ c, t, res }) => h('tr', null, h('th', { scope: 'row' }, c.label), h('td', null, c.rule), h('td', null, res), h('td', null, t && (t.status === 'idle' || (t.status === 'error' && t.errorKind !== 'cors_or_network')) && R.runtime.isLive(c.def.sourceId) ? ui.button('Load', () => {
           t.status = 'idle';
           R.tasks.start(c.def.key);

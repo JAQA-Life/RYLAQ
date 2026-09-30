@@ -250,6 +250,10 @@ for (const btn of await page.locator('.rq-rail-item').all()) {
   await page.waitForTimeout(250);
   const t = await bodyText();
   ok(!t.includes('could not be displayed'), 'module renders: ' + label);
+  if (screens && args.includes('--tour')) {
+    await page.waitForTimeout(400);
+    await page.locator('#rq-content').screenshot({ path: path.join(screens, 'mod-' + label.split('\n')[0].replace(/[^a-z0-9]+/gi, '-').toLowerCase() + '.png') }).catch(() => {});
+  }
 }
 
 console.log('Export');

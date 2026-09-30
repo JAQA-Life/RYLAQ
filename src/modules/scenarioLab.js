@@ -106,6 +106,16 @@
         null,
         inputs,
         h('div', { class: 'rq-band' }, h('div', null, h('div', { class: 'rq-stat-label' }, 'Qualitative exposure band'), h('div', { class: 'rq-band-value rq-tone-' + tone }, band)), h('div', null, h('p', null, `${DISRUPTIONS[st.disruption]} · ${st.role} · ${subject}`), h('p', { class: 'rq-muted' }, `${signals} signal(s) across ${loaded} loaded check(s) of ${checks.length}. Rule: fewer than 2 checks loaded → Unknown; 0 signals → Low; 1 → Medium; 2+ → High. Duration does not change the band; it informs review priority.`))),
+        !(ctx.resolved.lat !== undefined && ctx.resolved.lat !== null) && R.countryFromCtx(ctx)
+          ? ui.warning('No geographic reference point. You can use the capital of the resolved jurisdiction (' + R.countryFromCtx(ctx) + ') as an approximate reference point — facility locations may differ.', 'info')
+          : null,
+        !(ctx.resolved.lat !== undefined && ctx.resolved.lat !== null) && R.countryFromCtx(ctx)
+          ? ui.button('Use jurisdiction capital as reference point', () => {
+              const d = T.wbCountry(R.countryFromCtx(ctx));
+              R.tasks.ensure(d);
+              R.tasks.start(d.key);
+            }, { icon: 'globe', cls: 'rq-btn-sm' })
+          : null,
         ui.section('Public evidence checks', { icon: 'list' }, checks.length ? h('div', { class: 'rq-table-wrap', tabindex: '0', role: 'region', 'aria-label': 'Evidence checks' }, h('table', { class: 'rq-table' }, h('thead', null, h('tr', null, ...['Check', 'Rule', 'Result', 'Action'].map((c) => h('th', { scope: 'col' }, c)))), h('tbody', null, ...rows.map(({ c, t, res }) => h('tr', null, h('th', { scope: 'row' }, c.label), h('td', null, c.rule), h('td', null, res), h('td', null, t && (t.status === 'idle' || (t.status === 'error' && t.errorKind !== 'cors_or_network')) && R.runtime.isLive(c.def.sourceId) ? ui.button('Load', () => {
           t.status = 'idle';
           R.tasks.start(c.def.key);

@@ -58,7 +58,11 @@
       return h(
         'div',
         null,
-        ui.section('Reference point', { icon: 'globe' }, hasPoint ? h('p', null, ui.badge('Reference point', 'neutral'), ' ', r.placeLabel || `${r.lat}, ${r.lon}`, h('span', { class: 'rq-muted' }, ` (${Number(r.lat).toFixed(3)}, ${Number(r.lon).toFixed(3)})`)) : ui.warning('No reference point yet. Search a port, place or country, or resolve a place below.', 'info'), placePicker(ctx)),
+        ui.section('Reference point', { icon: 'globe' }, hasPoint ? h('p', null, ui.badge('Reference point', 'neutral'), ' ', r.placeLabel || `${r.lat}, ${r.lon}`, h('span', { class: 'rq-muted' }, ` (${Number(r.lat).toFixed(3)}, ${Number(r.lon).toFixed(3)})`)) : ui.warning('No reference point yet. Search a port, place or country, or resolve a place below.', 'info'), !hasPoint && iso3 ? ui.button('Use jurisdiction capital (' + iso3 + ') as approximate reference point', () => {
+          const d = T.wbCountry(iso3);
+          R.tasks.ensure(d);
+          R.tasks.start(d.key);
+        }, { icon: 'globe', cls: 'rq-btn-sm' }) : null, placePicker(ctx)),
         hasPoint
           ? h(
               'div',

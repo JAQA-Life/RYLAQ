@@ -233,7 +233,10 @@
 .rylaq-workspace .rq-table tr.is-match { background: color-mix(in srgb, var(--rq-teal) 9%, transparent); }
 .rylaq-workspace .rq-table tr.is-selected { outline: 2px solid var(--rq-teal-ink); outline-offset: -2px; }
 .rylaq-workspace .rq-gap-cell { color: var(--t-warn); }
+.rylaq-workspace .rq-console { min-width: 1180px; }
+.rylaq-workspace .rq-console th[scope='row'] { min-width: 200px; }
 .rylaq-workspace .rq-console td { min-width: 120px; }
+.rylaq-workspace .rq-console td:nth-child(6) { min-width: 260px; }
 .rylaq-workspace .rq-flags { max-width: 260px; }
 .rylaq-workspace .rq-flags .rq-badge { margin: 0 4px 4px 0; }
 
@@ -333,7 +336,9 @@
 .rylaq-workspace .rq-tree-leaf { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 4px 0; font-size: 13.5px; border-bottom: 1px dotted var(--rq-border); }
 .rylaq-workspace .rq-tree-leaf-title { font-weight: 600; overflow-wrap: anywhere; }
 .rylaq-workspace .rq-flow-steps { margin-bottom: 10px; }
-.rylaq-workspace .rq-flow-steps ol { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13.5px; }
+.rylaq-workspace .rq-flow-steps ol { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; list-style: none; padding: 0; counter-reset: rq-step; }
+.rylaq-workspace .rq-flow-steps li { counter-increment: rq-step; display: inline-flex; gap: 4px; align-items: baseline; }
+.rylaq-workspace .rq-flow-steps li::before { content: counter(rq-step) '.'; color: var(--rq-faint); font-variant-numeric: tabular-nums; }
 .rylaq-workspace .rq-pin-wrap { display: grid; gap: 6px; }
 .rylaq-workspace .rq-adv .rq-field { max-width: 300px; }
 .rylaq-workspace .rq-export-bar { margin-top: 8px; }

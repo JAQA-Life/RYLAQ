@@ -1,21 +1,40 @@
-MIT License
+JAQA Proprietary License
 
-Copyright (c) 2026 JAQA-Life
+Copyright (c) 2026 JAQA. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+JAQA™ is a trademark of JAQA.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This repository and everything in it — including source code, compiled
+artifacts (dist/, embed/), documentation, designs, data compilations,
+taxonomies and configuration (together, the "Software") — is proprietary and
+confidential to JAQA.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+1. No licence is granted. Except as expressly permitted in writing by JAQA,
+   no person may use, copy, modify, merge, publish, distribute, sublicense,
+   sell, host, deploy, reverse engineer or create derivative works of the
+   Software, in whole or in part.
+
+2. Authorised personnel. Employees and contractors of JAQA, and others
+   expressly authorised in writing by JAQA, may use and modify the Software
+   solely to develop, operate and maintain JAQA's own products and services.
+   This permission ends automatically when the authorisation ends.
+
+3. Third-party components. Material identified in THIRD_PARTY_NOTICES.md
+   (for example Natural Earth outline data redistributed under the ISC
+   licence) remains subject to its own licence terms, which prevail for that
+   material. Public data retrieved at runtime from external providers is
+   subject to those providers' terms and is not licensed by JAQA.
+
+4. No warranty. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+   KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN
+   NO EVENT SHALL JAQA BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+   ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+5. Not advice. The Software is provided for educational, research and
+   enterprise information-discovery purposes only and does not provide legal,
+   compliance, credit, investment, treasury, insurance, reinsurance,
+   underwriting, claims, sanctions, AML, procurement, bid, award, tax, or
+   supply-chain assurance advice.
+
+For licensing enquiries, contact JAQA.

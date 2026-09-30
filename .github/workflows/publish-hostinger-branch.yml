@@ -1,0 +1,81 @@
+# Publishes ONLY the built static site (the contents of dist/) to the `hostinger`
+# branch, so Hostinger Git deploy can clone that branch straight into public_html/.
+# index.html then sits at the branch root (fixing "403 Forbidden" caused by a
+# document root without index.html), and no source, scripts, docs or workflows
+# are ever exposed on the web server.
+#
+# Hostinger hPanel → Websites → Manage → Advanced → Git:
+#   Repository  git@github.com:<owner>/<repo>.git  (private repo: add hPanel's SSH key as a read-only deploy key)
+#   Branch      hostinger
+#   Directory   (leave empty → public_html)
+# Enable Auto Deployment and add the webhook URL hPanel shows under GitHub → Settings → Webhooks.
+#
+# The branch is only ever fast-forwarded with a new commit (no force push), so
+# every published version stays in history for rollback.
+name: Publish static site to hostinger branch
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - dist/**
+      - .github/workflows/publish-hostinger-branch.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-hostinger-branch
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.repository.fork == false && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify dist/ is current and passes safety checks
+        run: |
+          node scripts/build.mjs
+          git diff --exit-code -- dist || (echo "::error::dist/ is stale; refusing to publish." && exit 1)
+          node scripts/check-static-safety.mjs
+          test -f dist/index.html && test -f dist/.htaccess
+
+      - name: Publish dist/ contents to the hostinger branch
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          SITE_DIR="$RUNNER_TEMP/site"
+          if git ls-remote --exit-code --heads origin hostinger >/dev/null 2>&1; then
+            git fetch --no-tags --depth=1 origin hostinger:refs/remotes/origin/hostinger
+            git worktree add -B hostinger "$SITE_DIR" origin/hostinger
+          else
+            git worktree add --detach "$SITE_DIR" HEAD
+            git -C "$SITE_DIR" checkout --orphan hostinger
+          fi
+          # Replace the branch contents with exactly what is in dist/ (dotfiles included).
+          find "$SITE_DIR" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a dist/. "$SITE_DIR"/
+          git -C "$SITE_DIR" add -A
+          if git -C "$SITE_DIR" diff --cached --quiet; then
+            echo "hostinger branch already matches dist/ — nothing to publish."
+            exit 0
+          fi
+          git -C "$SITE_DIR" commit -q -m "Publish static site from ${SOURCE_SHA}"
+          git -C "$SITE_DIR" push origin hostinger
+          echo "::notice::Published dist/ from ${SOURCE_SHA} to the hostinger branch."

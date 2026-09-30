@@ -1,0 +1,48 @@
+# JAQA source verification (optional, dev-only).
+# Runs scripts/verify-cors.mjs from a GitHub-hosted runner, which sends real
+# requests with `Origin: https://jaqa.life`, emulates CORS preflights and
+# validates response shapes. The report is uploaded as a workflow artifact.
+# A maintainer reviews it and commits config/cors-verification.json, then
+# rebuilds dist/. Nothing here is deployed and no secrets are used.
+name: Verify public sources (CORS + shape)
+
+on:
+  workflow_dispatch:
+    inputs:
+      origin:
+        description: Origin to test (the real JAQA production origin)
+        required: false
+        default: https://jaqa.life
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - scripts/verify-cors.mjs
+      - .github/workflows/verify-sources.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run source verification
+        run: node scripts/verify-cors.mjs --origin "${{ github.event.inputs.origin || 'https://jaqa.life' }}" --out verification-report.json --write
+      - name: Print verification config (single line, for review)
+        run: node -e "console.log('JAQA_CORS_CONFIG=' + JSON.stringify(require('./config/cors-verification.json')))"
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jaqa-source-verification
+          path: |
+            verification-report.json
+            config/cors-verification.json
+          retention-days: 14

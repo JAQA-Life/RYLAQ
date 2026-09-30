@@ -1,0 +1,82 @@
+# OPTIONAL: deploy dist/ to Hostinger over FTPS when main changes.
+# The recommended route is Hostinger Git deploy of the `hostinger` branch
+# (publish-hostinger-branch.yml); manual upload through File Manager also works
+# (see docs/HOSTINGER_DEPLOYMENT.md). This workflow is skipped (not failed)
+# until the FTP secrets below exist. Only the static dist/ folder is uploaded:
+# no Node.js, PHP, database or build step runs on Hostinger.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   HOSTINGER_FTP_SERVER     e.g. ftp.jaqa.life (from hPanel → Files → FTP Accounts)
+#   HOSTINGER_FTP_USERNAME
+#   HOSTINGER_FTP_PASSWORD
+#   HOSTINGER_REMOTE_DIR     optional, default public_html/  (must end with /)
+# Optional repository variable:
+#   HOSTINGER_FTP_PROTOCOL   ftps (default) | ftp
+name: Deploy JAQA to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - dist/**
+      - .github/workflows/deploy-hostinger.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-hostinger
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Never deploy from forks; protect the environment with required reviewers if desired.
+    if: github.event.repository.fork == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify dist/ is current and passes safety checks
+        run: |
+          node scripts/build.mjs
+          git diff --exit-code -- dist || (echo "::error::dist/ is stale; refusing to deploy." && exit 1)
+          node scripts/check-static-safety.mjs
+
+      - name: Check deployment secrets are configured
+        id: secrets
+        env:
+          SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
+          USERNAME: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+          PASSWORD: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+        run: |
+          if [ -n "$SERVER" ] && [ -n "$USERNAME" ] && [ -n "$PASSWORD" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::FTP secrets not set; skipping FTP deploy. Hostinger Git deploy of the 'hostinger' branch is the default route."
+          fi
+
+      # Pin to a full commit SHA for maximum supply-chain safety once you have
+      # reviewed the release (see docs/GITHUB_CLAUDE_CODE_WORKFLOW.md).
+      - name: Deploy dist folder to Hostinger
+        if: steps.secrets.outputs.configured == 'true'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.HOSTINGER_FTP_SERVER }}
+          username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
+          protocol: ${{ vars.HOSTINGER_FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./dist/
+          server-dir: ${{ secrets.HOSTINGER_REMOTE_DIR || 'public_html/' }}
+          dangerous-clean-slate: false
+          log-level: minimal

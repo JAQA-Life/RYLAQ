@@ -1,0 +1,46 @@
+# JAQA — repository-root .htaccess (Apache / LiteSpeed on Hostinger).
+#
+# Hostinger Git deploy copies the ROOT of the chosen branch into public_html/.
+# The app lives in dist/, so without this file a deploy of `main` has no
+# index.html at the web root and Hostinger answers "403 Forbidden".
+#
+# This file maps every request into dist/ so https://jaqa.life/ serves
+# dist/index.html (with the CSP and security headers from dist/.htaccess),
+# and nothing else in the repository (src/, scripts/, docs/, .git/, …) is
+# reachable over HTTP. Preferred setup: deploy the `hostinger` branch, which
+# contains only dist/ contents (see docs/HOSTINGER_DEPLOYMENT.md).
+
+Options -Indexes
+ServerSignature Off
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Enforce HTTPS
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Route folders without a trailing slash: /global-risk → /global-risk/
+  # (avoids mod_dir redirecting to the internal /dist/… path)
+  RewriteCond %{REQUEST_URI} !^/dist/
+  RewriteCond %{DOCUMENT_ROOT}/dist/$1 -d
+  RewriteRule ^(.*[^/])$ /$1/ [L,R=301]
+
+  # Serve everything from dist/. dist/.htaccess then applies its own headers,
+  # CSP and dotfile block; requests for repository files resolve to
+  # dist/<path>, which does not exist → 404.
+  RewriteCond %{REQUEST_URI} !^/dist/
+  RewriteRule ^(.*)$ dist/$1 [L]
+</IfModule>
+
+# Without mod_rewrite, refuse everything except the fallback page below.
+<IfModule !mod_rewrite.c>
+  <FilesMatch ".*">
+    Require all denied
+  </FilesMatch>
+  <FilesMatch "^(index\.html)?$">
+    Require all granted
+  </FilesMatch>
+</IfModule>

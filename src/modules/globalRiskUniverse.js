@@ -116,7 +116,7 @@
       null,
       ui.warning(cfg.notAdvice, 'info'),
       filters,
-      h('div', { class: 'rq-two-col' }, ui.section('Coverage summary', { icon: 'chart' }, summary), ui.section('Export', { icon: 'download' }, h('div', { class: 'rq-row' }, ui.button('Coverage matrix JSON', () => exportMatrix(cfg, filtered, 'json'), { icon: 'download', cls: 'rq-btn-sm' }), ui.button('Coverage matrix CSV', () => exportMatrix(cfg, filtered, 'csv'), { icon: 'download', cls: 'rq-btn-sm' })), h('p', { class: 'rq-fineprint' }, 'Exports include coverage-gap warnings and RYLAQ™ legal metadata.'))),
+      h('div', { class: 'rq-two-col' }, ui.section('Coverage summary', { icon: 'chart' }, summary), ui.section('Export', { icon: 'download' }, h('div', { class: 'rq-row' }, ui.button('Coverage matrix JSON', () => exportMatrix(cfg, filtered, 'json'), { icon: 'download', cls: 'rq-btn-sm' }), ui.button('Coverage matrix CSV', () => exportMatrix(cfg, filtered, 'csv'), { icon: 'download', cls: 'rq-btn-sm' })), h('p', { class: 'rq-fineprint' }, 'Exports include coverage-gap warnings and JAQA™ legal metadata.'))),
       sel ? domainDetail(sel, cfg, ctx) : null,
       ui.section('Coverage matrix', { icon: 'grid', desc: `${filtered.length} of ${cfg.list.length} domains. Select a domain for definitions, mappings, live lookups and official links.` }, table)
     );
@@ -171,7 +171,7 @@
       standards: d.std || []
     }));
     if (fmtType === 'json') {
-      const payload = Object.assign(R.legal.exportBlock(['RYLAQ Source Capability Registry']), { warnings: [cfg.notAdvice, R.exporters.DOMAIN_WARNINGS.globalRisk], coverageMatrix: rows });
+      const payload = Object.assign(R.legal.exportBlock(['JAQA Source Capability Registry']), { warnings: [cfg.notAdvice, R.exporters.DOMAIN_WARNINGS.globalRisk], coverageMatrix: rows });
       R.exporters.download(cfg.jsonName, JSON.stringify(payload, null, 2), 'application/json');
     } else {
       const head = ['Domain', 'Group', 'Evidence available now', 'Live sources', 'Link-out directories', 'Data gaps', 'Insurance lines', 'Procurement categories', 'Regulators', 'Standards'];
@@ -193,7 +193,7 @@
     title: 'Global Risk Universe',
     short: 'Global Risk Universe',
     description: `${R.taxonomy.global.length} risk domains mapped to live public sources, official link-outs, regulators, standards, insurance lines and procurement categories.`,
-    warnings: ['Global Risk Universe is a public-source map, not a risk measurement system. RYLAQ organizes public evidence about each risk; it does not measure it.'],
-    render: (ctx) => R.taxonomyView({ list: R.taxonomy.global, state, kind: 'global', notAdvice: 'Coverage is incomplete by region, sector, language and source. No output here states that anything is safe, clear, covered, insured, approved or low/high risk.', jsonName: 'RYLAQ-Global-Risk-results.json', csvName: 'RYLAQ-Global-Risk-results.csv' }, ctx)
+    warnings: ['Global Risk Universe is a public-source map, not a risk measurement system. JAQA organizes public evidence about each risk; it does not measure it.'],
+    render: (ctx) => R.taxonomyView({ list: R.taxonomy.global, state, kind: 'global', notAdvice: 'Coverage is incomplete by region, sector, language and source. No output here states that anything is safe, clear, covered, insured, approved or low/high risk.', jsonName: 'JAQA-Global-Risk-results.json', csvName: 'JAQA-Global-Risk-results.csv' }, ctx)
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

@@ -1,13 +1,13 @@
-# Deploying RYLAQ to Hostinger (static files only)
+# Deploying JAQA to Hostinger (static files only)
 
-RYLAQ is a static web app. Hostinger only needs to **serve files**. There is no Node.js app, no PHP, no Python, no database and no build step on the server.
+JAQA is a static web app. Hostinger only needs to **serve files**. There is no Node.js app, no PHP, no Python, no database and no build step on the server.
 
 ```
 GitHub (private repo) ──► dist/ (committed, reproducible) ──► Hostinger public_html/… (static files)
                                                                      │
 User's browser ◄──────── static HTML/CSS/JS ─────────────────────────┘
 User's browser ────────► verified public APIs (GLEIF, USGS, …) ────► User's browser
-                         (no RYLAQ server in the middle)
+                         (no JAQA server in the middle)
 ```
 
 ## 1. Directory layout
@@ -26,10 +26,10 @@ dist/
 
 | Target URL | Upload the *contents* of `dist/` to | Canonical |
 |---|---|---|
-| `https://rylaq.com/workspace/` (default) | `public_html/workspace/` | `https://rylaq.com/workspace/` |
-| `https://rylaq.com/` | `public_html/` | rebuild with `node scripts/build.mjs --workspace-path /` |
+| `https://jaqa.life/workspace/` (default) | `public_html/workspace/` | `https://jaqa.life/workspace/` |
+| `https://jaqa.life/` | `public_html/` | rebuild with `node scripts/build.mjs --workspace-path /` |
 
-The optional route pages declare canonicals `https://rylaq.com/global-risk` and so on. To serve them at those exact URLs, upload each route folder to `public_html/<route>/`. Otherwise they work fine under `/workspace/<route>/` too. Every page is self-contained, so any location works.
+The optional route pages declare canonicals `https://jaqa.life/global-risk` and so on. To serve them at those exact URLs, upload each route folder to `public_html/<route>/`. Otherwise they work fine under `/workspace/<route>/` too. Every page is self-contained, so any location works.
 
 If you change the domain or path, rebuild with `node scripts/build.mjs --site https://your-domain --workspace-path /path/` and commit.
 
@@ -38,7 +38,7 @@ If you change the domain or path, rebuild with `node scripts/build.mjs --site ht
 1. Run `npm run build && npm run check` locally (or rely on CI) and make sure `dist/` is committed.
 2. In **hPanel → Websites → Manage → Files → File Manager**, open `public_html/` and create `workspace/`.
 3. Upload **all files inside `dist/`**, including the hidden `.htaccess`. In File Manager, enable *Show hidden files* to confirm it is there.
-4. Visit `https://rylaq.com/workspace/`. The page should load with no console errors.
+4. Visit `https://jaqa.life/workspace/`. The page should load with no console errors.
 
 ## 3. Git deployment (hPanel)
 
@@ -55,7 +55,7 @@ Never expose the full repository (`src/`, `scripts/`, `.github/`) as the web roo
 
 1. In hPanel, go to **Files → FTP Accounts** and create a dedicated FTP account scoped to `public_html/workspace/`.
 2. In GitHub, open **Settings → Secrets and variables → Actions** and add:
-   - `HOSTINGER_FTP_SERVER`: the FTP host, for example `ftp.rylaq.com` or the server IP.
+   - `HOSTINGER_FTP_SERVER`: the FTP host, for example `ftp.jaqa.life` or the server IP.
    - `HOSTINGER_FTP_USERNAME`
    - `HOSTINGER_FTP_PASSWORD`
    - `HOSTINGER_REMOTE_DIR`: the target directory, for example `public_html/workspace/` (must end with `/`).
@@ -117,9 +117,9 @@ location /workspace/ {
 
 ## 7. Privacy nuance: hosting logs
 
-RYLAQ never writes search terms into URLs, so the requests Hostinger sees are only for static files: `/workspace/`, `/workspace/index.html`, and so on. Hostinger may still keep standard access logs under its own policy: IP address, user agent, requested path, timestamp and status code. The published privacy statement says exactly this:
+JAQA never writes search terms into URLs, so the requests Hostinger sees are only for static files: `/workspace/`, `/workspace/index.html`, and so on. Hostinger may still keep standard access logs under its own policy: IP address, user agent, requested path, timestamp and status code. The published privacy statement says exactly this:
 
-> RYLAQ does not store, proxy, log, persist, or analyze user searches. Searches are sent directly from the user's browser to selected public data providers. Hosting providers and data providers may maintain their own infrastructure logs according to their own policies.
+> JAQA does not store, proxy, log, persist, or analyze user searches. Searches are sent directly from the user's browser to selected public data providers. Hosting providers and data providers may maintain their own infrastructure logs according to their own policies.
 
 Do not enable Hostinger analytics or CDN features that inject scripts into pages.
 
@@ -131,9 +131,9 @@ Do not enable Hostinger analytics or CDN features that inject scripts into pages
 
 ## 9. Verify that no backend is required
 
-1. Open `https://rylaq.com/workspace/`, then DevTools → **Network**. Reload. The only same-origin request should be `index.html`.
-2. Run a search. The only new requests should go to public API hosts listed in the CSP `connect-src`. There should be no requests to `rylaq.com`.
+1. Open `https://jaqa.life/workspace/`, then DevTools → **Network**. Reload. The only same-origin request should be `index.html`.
+2. Run a search. The only new requests should go to public API hosts listed in the CSP `connect-src`. There should be no requests to `jaqa.life`.
 3. **Application** tab: no cookies, no Local/Session Storage entries, no IndexedDB databases, no service workers.
 4. The URL never changes when you search.
 5. Open the **Coverage Console** and click *Check availability of all live-capable sources* to confirm live access from the production origin.
-6. Visit `https://rylaq.com/workspace/.htaccess`. It should return 403 or 404, not the file.
+6. Visit `https://jaqa.life/workspace/.htaccess`. It should return 403 or 404, not the file.

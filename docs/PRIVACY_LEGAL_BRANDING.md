@@ -1,6 +1,6 @@
 # Privacy, legal & branding rules
 
-## Privacy architecture (zero retention from RYLAQ's side)
+## Privacy architecture (zero retention from JAQA's side)
 
 | Guarantee | How it is enforced |
 |---|---|
@@ -19,11 +19,11 @@
 
 **Published privacy statement:**
 
-> RYLAQ does not store, proxy, log, persist, or analyze user searches. Searches are sent directly from the user's browser to selected public data providers. Hosting providers and data providers may maintain their own infrastructure logs according to their own policies.
+> JAQA does not store, proxy, log, persist, or analyze user searches. Searches are sent directly from the user's browser to selected public data providers. Hosting providers and data providers may maintain their own infrastructure logs according to their own policies.
 
 **Visible badge:**
 
-> RYLAQ Privacy: Your searches are sent directly from your browser to selected public data providers and are not stored by RYLAQ.
+> JAQA Privacy: Your searches are sent directly from your browser to selected public data providers and are not stored by JAQA.
 
 ## Commercial confidentiality & sensitive-data guard
 
@@ -48,27 +48,27 @@ Known public identifiers are always allowed: LEI (checksum-validated), CVE, CWE,
 
 | Context | Use |
 |---|---|
-| Page title, H1, tabs, buttons, placeholders, pills, status/error/loading messages, filenames, CSS classes, IDs, URLs, marketing copy | **RYLAQ** (no ™) |
-| Footer copyright, legal notices, privacy legal section, disclaimers, source-code header comment, export JSON metadata, trademark notices, ownership statements | **RYLAQ™** |
+| Page title, H1, tabs, buttons, placeholders, pills, status/error/loading messages, filenames, CSS classes, IDs, URLs, marketing copy | **JAQA** (no ™) |
+| Footer copyright, legal notices, privacy legal section, disclaimers, source-code header comment, export JSON metadata, trademark notices, ownership statements | **JAQA™** |
 
-The safety checker enforces this. Any line containing `RYLAQ™` must be in a legal context, and `™` is rejected in `<title>`, H1 and export filenames.
+The safety checker enforces this. Any line containing `JAQA™` must be in a legal context, and `™` is rejected in `<title>`, H1 and export filenames.
 
 Required legal strings:
 
-- `© {current year} RYLAQ™. All rights reserved.` (the year is computed at runtime)
-- `RYLAQ™ is a trademark of RYLAQ.`
-- `RYLAQ™ is an independent interface and is not affiliated with or endorsed by these providers unless expressly stated.`
+- `© {current year} JAQA™. All rights reserved.` (the year is computed at runtime)
+- `JAQA™ is a trademark of JAQA.`
+- `JAQA™ is an independent interface and is not affiliated with or endorsed by these providers unless expressly stated.`
 
 Export metadata block:
 
 ```json
 {
-  "generatedBy": "RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace",
-  "host": "rylaq.com",
+  "generatedBy": "JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace",
+  "host": "jaqa.life",
   "dataSources": ["…"],
   "legal": {
-    "trademark": "RYLAQ™",
-    "copyright": "© 2026 RYLAQ™. All rights reserved.",
+    "trademark": "JAQA™",
+    "copyright": "© 2026 JAQA™. All rights reserved.",
     "disclaimer": "Educational and enterprise information-discovery use only. Not legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice."
   }
 }
@@ -78,6 +78,6 @@ The product carries no legacy workspace branding. The safety check fails on lega
 
 ## Visual brand
 
-- Default **situation-room (HUD) theme**: near-black `#05080F`, cyan `#22D3EE`, teal `#5EEAD4`, monospace telemetry. Light theme uses RYLAQ navy `#0B2545` and teal `#14B8A6`. All colours are CSS custom properties (`--rq-*`, `--t-*`) scoped under `.rylaq-workspace`, so global RYLAQ CSS can override them.
+- Default **situation-room (HUD) theme**: near-black `#05080F`, cyan `#22D3EE`, teal `#5EEAD4`, monospace telemetry. Light theme uses JAQA navy `#0B2545` and teal `#14B8A6`. All colours are CSS custom properties (`--rq-*`, `--t-*`) scoped under `.jaqa-workspace`, so global JAQA CSS can override them.
 - System font stack only, inline SVG icons only, no external images.
-- The logo slot is an inline SVG monogram next to the "RYLAQ" wordmark in `src/assets/rylaq-workspace.js` (`logo()`). Replace it there with the official mark as inline SVG.
+- The logo slot is an inline SVG monogram next to the "JAQA" wordmark in `src/assets/jaqa-workspace.js` (`logo()`). Replace it there with the official mark as inline SVG.

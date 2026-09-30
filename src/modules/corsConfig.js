@@ -509,4 +509,4 @@
       }
     }
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

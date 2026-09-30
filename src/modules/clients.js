@@ -283,7 +283,7 @@
         ['Time (UTC)', new Date(p.time).toISOString()],
         ['Depth (km)', fmt.num(depth, 1)],
         ['Coordinates', isFinite(la) ? `${Number(la).toFixed(3)}, ${Number(lo).toFixed(3)}` : null],
-        ref ? ['Distance from reference point (km, derived by RYLAQ)', dist !== null ? fmt.num(dist, 0) : null] : null,
+        ref ? ['Distance from reference point (km, derived by JAQA)', dist !== null ? fmt.num(dist, 0) : null] : null,
         ['Review status', p.status],
         ['Significance (USGS sig)', p.sig]
       ].filter(Boolean),
@@ -367,7 +367,7 @@
               ['Max wind gust (km/h)', fmt.num(max(d.wind_gusts_10m_max), 0)],
               ['Total precipitation (mm)', fmt.num(sum(d.precipitation_sum), 1)],
               ['Max temperature (°C)', fmt.num(max(d.temperature_2m_max), 1)],
-              ['Threshold signals (derived by RYLAQ)', flags.length ? flags.join('; ') : 'None at the displayed thresholds'],
+              ['Threshold signals (derived by JAQA)', flags.length ? flags.join('; ') : 'None at the displayed thresholds'],
               ['Thresholds used', `gust ≥ ${T.gust} km/h, daily precipitation ≥ ${T.rain} mm, max temperature ≥ ${T.heat} °C`]
             ],
             data: { flags, lat, lon }
@@ -971,7 +971,7 @@
               ['Operator (as mapped)', t.operator],
               ['Tag', t.landuse ? 'landuse=' + t.landuse : t.industrial ? 'industrial=' + t.industrial : 'harbour=yes'],
               ['Coordinates', la && lo ? `${Number(la).toFixed(4)}, ${Number(lo).toFixed(4)}` : null],
-              ['Distance from reference (km, derived by RYLAQ)', la && lo ? fmt.num(haversineKm(lat, lon, la, lo), 1) : null]
+              ['Distance from reference (km, derived by JAQA)', la && lo ? fmt.num(haversineKm(lat, lon, la, lo), 1) : null]
             ]
           });
         })
@@ -1012,7 +1012,7 @@
               ['Latest (units of ' + ccy + ' per EUR)', fmt.num(last[1], 4)],
               ['Observation date', last[0]],
               ['Observations shown', `${pts.length} business days (${first[0]} → ${last[0]})`],
-              ['Change over window (%, derived by RYLAQ)', chg !== null ? fmt.num(chg, 2) : null],
+              ['Change over window (%, derived by JAQA)', chg !== null ? fmt.num(chg, 2) : null],
               ['Formula', '(latest − first) ÷ first × 100 over the displayed window'],
               ['Frequency / latency', 'Daily reference rate, published ~16:00 CET on TARGET business days']
             ],
@@ -1103,4 +1103,4 @@
     else if (res.errorKind === 'cors_or_network') R.runtime.markUnavailable(id, 'Availability check failed from this browser (CORS, network, or site security policy).');
     return res;
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

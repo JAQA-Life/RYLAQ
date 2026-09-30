@@ -41,7 +41,7 @@
     icon: 'gauge',
     title: 'Coverage Console',
     short: 'Coverage Console',
-    description: 'Every source RYLAQ knows about: live, verify, link-out or unavailable — with verification notes, counters, rate-limit events and policy flags.',
+    description: 'Every source JAQA knows about: live, verify, link-out or unavailable — with verification notes, counters, rate-limit events and policy flags.',
     warnings: ['Console data remains in memory only and is not sent anywhere. Availability checks run only when you click them.'],
     render() {
       const cfg = R.config.corsVerification || {};
@@ -86,8 +86,8 @@
         h('details', { class: 'rq-tech' }, h('summary', null, 'Developer panel (technical, no payloads)'), h('pre', { class: 'rq-pre' }, JSON.stringify({ queue: R.net.stats(), tasks: tasks.map((t) => ({ source: t.sourceId, status: t.status, errorKind: t.errorKind || undefined, records: (t.records || []).length })) }, null, 2))),
         ui.section('Third-party projects & platforms (reference / link-out only)', { icon: 'link', desc: 'Not integrated. No iframes, no runtime code, no API calls. No affiliation; nothing here is a clearance or authoritative determination.' }, h('ul', { class: 'rq-linklist' }, ...R.directories.thirdPartyRepos.map((e) => h('li', null, extLink(e.url, e.name), ui.badge(e.mode, 'neutral'), h('span', { class: 'rq-link-meta' }, 'Licence: ' + e.license), h('span', { class: 'rq-link-note' }, e.note))))),
         ui.section('Paid / commercial providers (link-out only)', { icon: 'coin' }, ui.dir('paid', null, { compact: true })),
-        ui.section('Internal systems', { icon: 'lock' }, h('p', null, 'ERP, vendor master, spend cube, contracts, purchase orders, invoices, questionnaires, credit bureau reports, internal risk scores, audit findings, bid documents, underwriting and claims files, policy administration, treasury, hedging, payments and KYC repositories are unavailable by design. RYLAQ never accepts internal data.'))
+        ui.section('Internal systems', { icon: 'lock' }, h('p', null, 'ERP, vendor master, spend cube, contracts, purchase orders, invoices, questionnaires, credit bureau reports, internal risk scores, audit findings, bid documents, underwriting and claims files, policy administration, treasury, hedging, payments and KYC repositories are unavailable by design. JAQA never accepts internal data.'))
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

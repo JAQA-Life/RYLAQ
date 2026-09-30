@@ -1,7 +1,7 @@
 /*
-RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace
-Built for rylaq.com or enterprise intranet deployment.
-RYLAQ™ is a trademark of RYLAQ.
+JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace
+Built for jaqa.life or enterprise intranet deployment.
+JAQA™ is a trademark of JAQA.
 Educational and enterprise information-discovery use only.
 Not legal, compliance, credit, investment, treasury, insurance, reinsurance,
 underwriting, claims, sanctions, AML, procurement, bid, award, tax, or
@@ -26,7 +26,7 @@ where available and CORS-verified.
 No stored searches. No backend. No proxy. No scraping of paid/confidential sources.
 No credit rating. No investment advice. No treasury advice. No insurance advice.
 No sanctions clearance. No AML determination. No procurement bid advice.
-© {current year} RYLAQ™. All rights reserved.
+© {current year} JAQA™. All rights reserved.
 */
 
 /*
@@ -44,17 +44,17 @@ No sanctions clearance. No AML determination. No procurement bid advice.
  *    cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer", and
  *    refuses to contact a source unless it is live (verified) for this session.
  *
- * LEGAL / TRADEMARK TEXT lives in R.legal below. RYLAQ™ must only appear in
+ * LEGAL / TRADEMARK TEXT lives in R.legal below. JAQA™ must only appear in
  * legal, copyright, privacy, disclaimer, ownership, and export-metadata text.
- * Normal UI branding is "RYLAQ" without the symbol.
+ * Normal UI branding is "JAQA" without the symbol.
  */
 (function (global) {
   'use strict';
 
-  const R = (global.RYLAQWorkspace = global.RYLAQWorkspace || {});
+  const R = (global.JAQAWorkspace = global.JAQAWorkspace || {});
   R.version = '1.0.0';
-  R.productName = 'RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace';
-  R.host = 'rylaq.com';
+  R.productName = 'JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace';
+  R.host = 'jaqa.life';
   R.config = R.config || {};
 
   /* ------------------------------------------------------------------ *
@@ -65,39 +65,39 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     'legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice';
   R.legal = {
     year: YEAR,
-    trademark: 'RYLAQ™',
-    copyright: `© ${YEAR} RYLAQ™. All rights reserved.`,
-    trademarkNotice: 'RYLAQ™ is a trademark of RYLAQ.',
+    trademark: 'JAQA™',
+    copyright: `© ${YEAR} JAQA™. All rights reserved.`,
+    trademarkNotice: 'JAQA™ is a trademark of JAQA.',
     shortDisclaimer: `Educational and enterprise information-discovery use only. Not ${ADVICE_LIST}.`,
-    privacyLegalSentence: `RYLAQ™ is a trademark of RYLAQ. This tool is provided for educational, research, and enterprise information-discovery purposes only. It does not provide ${ADVICE_LIST}.`,
+    privacyLegalSentence: `JAQA™ is a trademark of JAQA. This tool is provided for educational, research, and enterprise information-discovery purposes only. It does not provide ${ADVICE_LIST}.`,
     longDisclaimer: [
       'This tool is provided for educational, research, and enterprise information-discovery purposes only.',
       'Do not use for supplier approval, insurer/reinsurer/broker selection, underwriting, claims, coverage determinations, sanctions clearance, credit decisions, legal determinations, procurement bid/no-bid decisions, award decisions, grant applications, investment decisions, treasury hedging, tax decisions, or supply-chain assurance without qualified professional review.',
       'Public records may be incomplete, delayed, ambiguous, mistranslated, restated, or incorrectly matched.',
       'No public match found does not mean cleared, safe, authorized, solvent, eligible, insured, covered, or low risk.',
-      'RYLAQ is not a sanctions screening system of record.',
-      'RYLAQ is not a credit rating agency.',
-      'RYLAQ is not an insurance broker, underwriter, actuary, claims adjuster, or coverage interpreter.',
-      'RYLAQ is not a procurement advisor, bid manager, contract evaluator, or award authority.',
-      'RYLAQ is not a real-time supply chain control tower.',
-      'RYLAQ does not scan live systems or access private asset inventories.',
-      'RYLAQ does not reproduce paid data or scrape paywalled sources.',
-      'RYLAQ does not assist bid rigging, collusion, market allocation, corruption, sanctions evasion, export-control evasion, tax evasion, or anti-competitive conduct.',
-      `RYLAQ™ does not provide ${ADVICE_LIST}.`,
-      'RYLAQ™ is not responsible for decisions made using this interface.',
-      'RYLAQ™ is an independent interface and is not affiliated with or endorsed by these providers unless expressly stated.',
-      `© ${YEAR} RYLAQ™. All rights reserved.`
+      'JAQA is not a sanctions screening system of record.',
+      'JAQA is not a credit rating agency.',
+      'JAQA is not an insurance broker, underwriter, actuary, claims adjuster, or coverage interpreter.',
+      'JAQA is not a procurement advisor, bid manager, contract evaluator, or award authority.',
+      'JAQA is not a real-time supply chain control tower.',
+      'JAQA does not scan live systems or access private asset inventories.',
+      'JAQA does not reproduce paid data or scrape paywalled sources.',
+      'JAQA does not assist bid rigging, collusion, market allocation, corruption, sanctions evasion, export-control evasion, tax evasion, or anti-competitive conduct.',
+      `JAQA™ does not provide ${ADVICE_LIST}.`,
+      'JAQA™ is not responsible for decisions made using this interface.',
+      'JAQA™ is an independent interface and is not affiliated with or endorsed by these providers unless expressly stated.',
+      `© ${YEAR} JAQA™. All rights reserved.`
     ],
     privacyStatement:
-      'RYLAQ does not store, proxy, log, persist, or analyze user searches. Searches are sent directly from the user’s browser to selected public data providers. Hosting providers and data providers may maintain their own infrastructure logs according to their own policies.',
+      'JAQA does not store, proxy, log, persist, or analyze user searches. Searches are sent directly from the user’s browser to selected public data providers. Hosting providers and data providers may maintain their own infrastructure logs according to their own policies.',
     privacyBadge:
-      'RYLAQ Privacy: Your searches are sent directly from your browser to selected public data providers and are not stored by RYLAQ.',
+      'JAQA Privacy: Your searches are sent directly from your browser to selected public data providers and are not stored by JAQA.',
     commercialWarning:
       'Do not enter confidential contract terms, pricing, bid documents, underwriting files, claims files, policy numbers, insured names, claimant names, bank details, payment card data, loan applications, KYC documents, internal risk ratings, hedge positions, trading positions, invoice-level customer data, personal financial data, personal health data, M&A information, or protected commercial information.',
     sensitiveWarning:
       'Do not enter confidential commercial, financial, insurance, claims, procurement, personal, health, bank, payment, or protected information. This tool is not for PHI or protected commercial data.',
     noHitNotClear: 'No public match found does not mean cleared, safe, authorized, solvent, eligible, insured, covered, or low risk.',
-    determinations: 'RYLAQ does not provide clearance, coverage, credit, bid, award, or legal determinations.'
+    determinations: 'JAQA does not provide clearance, coverage, credit, bid, award, or legal determinations.'
   };
 
   /** Legal metadata block attached to every JSON export. */
@@ -108,13 +108,13 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       generatedAt: new Date().toISOString(),
       dataSources: dataSources || [],
       legal: {
-        trademark: 'RYLAQ™',
+        trademark: 'JAQA™',
         copyright: R.legal.copyright,
         trademarkNotice: R.legal.trademarkNotice,
         disclaimer: R.legal.shortDisclaimer,
         noHitNotClear: R.legal.noHitNotClear,
         privacy: R.legal.privacyStatement,
-        affiliation: 'RYLAQ™ is an independent interface and is not affiliated with or endorsed by these providers unless expressly stated.'
+        affiliation: 'JAQA™ is an independent interface and is not affiliated with or endorsed by these providers unless expressly stated.'
       }
     };
   };
@@ -137,7 +137,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
           fn(payload);
         } catch (e) {
           // Never log payloads (they may contain search terms); log only the event name.
-          console.error('[RYLAQ] handler error for event', name);
+          console.error('[JAQA] handler error for event', name);
         }
       }
     }

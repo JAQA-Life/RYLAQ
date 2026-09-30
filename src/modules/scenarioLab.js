@@ -126,4 +126,4 @@
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

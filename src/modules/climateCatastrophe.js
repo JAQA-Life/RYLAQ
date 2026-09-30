@@ -3,7 +3,7 @@
  * Disruption.
  *
  * Event context is anchored to a reference point (a resolved place, port or
- * a country capital). No map tiles are loaded. Proximity is computed by RYLAQ
+ * a country capital). No map tiles are loaded. Proximity is computed by JAQA
  * (haversine) and labeled as derived.
  */
 (function (R) {
@@ -100,8 +100,8 @@
           : null,
         ui.section('Humanitarian & disaster reports (link-out)', { icon: 'link', desc: 'ReliefWeb API requires an approved appname; link-out until verified.' }, iso3 ? extLink('https://reliefweb.int/country/' + iso3.toLowerCase(), 'ReliefWeb country page') : null),
         ui.section('Climate vulnerability & catastrophe resources (link-out)', { icon: 'link' }, ui.dir('climate', null, { compact: true })),
-        ui.exportBar('RYLAQ-Climate-Catastrophe-signals.json', 'RYLAQ-Climate-Catastrophe-signals.csv', 'globalRisk')
+        ui.exportBar('JAQA-Climate-Catastrophe-signals.json', 'JAQA-Climate-Catastrophe-signals.csv', 'globalRisk')
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

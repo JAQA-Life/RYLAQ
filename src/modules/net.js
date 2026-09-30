@@ -314,7 +314,7 @@
         if (gen !== genOf(key)) return t;
         t.status = 'error';
         t.errorKind = 'bad_shape';
-        console.error('[RYLAQ] task failed:', t.sourceId); // no query / payload in logs
+        console.error('[JAQA] task failed:', t.sourceId); // no query / payload in logs
       }
       R.events.emit('task:update', t);
       return t;
@@ -348,4 +348,4 @@
       return this.all().flatMap((t) => t.records || []);
     }
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

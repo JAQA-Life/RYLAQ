@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 /*
- * RYLAQ build (dev-only). Produces the static production artifact:
+ * JAQA build (dev-only). Produces the static production artifact:
  *   dist/index.html                     single self-contained page (CSS + JS inlined)
  *   dist/.htaccess                      security headers incl. CSP with script hash
  *   dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/index.html
- *   embed/rylaq-workspace-embed.html    fragment for CMS / intranet custom-HTML blocks
+ *   embed/jaqa-workspace-embed.html    fragment for CMS / intranet custom-HTML blocks
  *   src/modules/corsConfig.js           compiled from config/cors-verification.json
  *
  * Output is deterministic (no timestamps) so CI can verify dist/ is up to date.
- * Options: --site https://rylaq.com  --workspace-path /workspace/
+ * Options: --site https://jaqa.life  --workspace-path /workspace/
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -22,7 +22,7 @@ const arg = (n, d) => {
   const i = args.indexOf(n);
   return i >= 0 && args[i + 1] ? args[i + 1] : d;
 };
-const SITE = arg('--site', 'https://rylaq.com').replace(/\/$/, '');
+const SITE = arg('--site', 'https://jaqa.life').replace(/\/$/, '');
 const WS_PATH = arg('--workspace-path', '/workspace/');
 const rel = (p) => path.join(root, p);
 const read = (p) => readFileSync(rel(p), 'utf8');
@@ -53,7 +53,7 @@ const corsJs = `/*
     null,
     2
   ).replace(/\n/g, '\n  ')};
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);
 `;
 write('src/modules/corsConfig.js', corsJs);
 
@@ -95,22 +95,22 @@ if (missing.length) {
 
 /* 3. Inline CSS and JS in the order declared in src/index.html. */
 const html = read('src/index.html');
-const jsBlock = html.match(/<!-- RYLAQ:JS:BEGIN -->([\s\S]*?)<!-- RYLAQ:JS:END -->/);
-const cssBlock = html.match(/<!-- RYLAQ:CSS:BEGIN -->([\s\S]*?)<!-- RYLAQ:CSS:END -->/);
+const jsBlock = html.match(/<!-- JAQA:JS:BEGIN -->([\s\S]*?)<!-- JAQA:JS:END -->/);
+const cssBlock = html.match(/<!-- JAQA:CSS:BEGIN -->([\s\S]*?)<!-- JAQA:CSS:END -->/);
 if (!jsBlock || !cssBlock) throw new Error('Build markers missing in src/index.html');
 const scripts = [...jsBlock[1].matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
-const css = read('src/assets/rylaq-workspace.css').trim();
+const css = read('src/assets/jaqa-workspace.css').trim();
 const js = scripts.map((s) => `/* ---- ${s} ---- */\n` + read('src/' + s).trim()).join('\n\n') + '\n';
 if (/<\/script/i.test(js)) throw new Error('Inline JS must not contain a closing script tag');
 if (/<\/style/i.test(css)) throw new Error('Inline CSS must not contain a closing style tag');
 const scriptHash = 'sha256-' + createHash('sha256').update(js, 'utf8').digest('base64');
 
-const stripDevComment = (s) => s.replace(/<!--\s*\n\s*RYLAQ Global Risk[\s\S]*?-->\n/, '<!--\n  RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Single self-contained static file: no backend, no proxy, no storage, no analytics.\n  RYLAQ™ is a trademark of RYLAQ. © RYLAQ™. All rights reserved.\n-->\n');
+const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Single self-contained static file: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
 
 function page({ title, description, canonical, initialModule }) {
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   let out = stripDevComment(html);
-  out = out.replace(/<!-- RYLAQ:META:BEGIN -->[\s\S]*?<!-- RYLAQ:META:END -->/, () => [
+  out = out.replace(/<!-- JAQA:META:BEGIN -->[\s\S]*?<!-- JAQA:META:END -->/, () => [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}">`,
     `<link rel="canonical" href="${canonical}">`,
@@ -119,7 +119,7 @@ function page({ title, description, canonical, initialModule }) {
     `<meta property="og:type" content="website">`,
     `<meta property="og:url" content="${canonical}">`
   ].join('\n'));
-  out = out.replace(/"url":"https:\/\/rylaq\.com\/workspace\/"/, `"url":"${canonical}"`);
+  out = out.replace(/"url":"https:\/\/jaqa\.com\/workspace\/"/, `"url":"${canonical}"`);
   // Function replacements: the inlined code contains `$&`-style sequences that
   // String.prototype.replace would otherwise interpret.
   out = out.replace(cssBlock[0], () => `<style>\n${css}\n</style>`);
@@ -130,25 +130,25 @@ function page({ title, description, canonical, initialModule }) {
 
 const WORKSPACE_URL = SITE + WS_PATH;
 const PAGES = [
-  { file: 'dist/index.html', initialModule: 'situation', canonical: WORKSPACE_URL, title: 'RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace', description: 'Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first RYLAQ workspace powered by selected public APIs and official link-outs.' },
-  { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: SITE + '/global-risk', title: 'RYLAQ Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first RYLAQ workspace powered by selected public APIs and official link-outs.' },
-  { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: SITE + '/finance-risk', title: 'RYLAQ Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first RYLAQ workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
-  { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: SITE + '/insurance-reinsurance', title: 'RYLAQ Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first RYLAQ workspace. Not insurance, underwriting, claims, or coverage advice.' },
-  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: SITE + '/procurement-bids', title: 'RYLAQ Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first RYLAQ workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' }
+  { file: 'dist/index.html', initialModule: 'situation', canonical: WORKSPACE_URL, title: 'JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace', description: 'Explore public-source evidence across global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, grants, PPPs, regulations, events, cyber, climate, ESG, trade, sanctions, and supply-chain exposure. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
+  { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: SITE + '/global-risk', title: 'JAQA Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
+  { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: SITE + '/finance-risk', title: 'JAQA Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first JAQA workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
+  { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: SITE + '/insurance-reinsurance', title: 'JAQA Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first JAQA workspace. Not insurance, underwriting, claims, or coverage advice.' },
+  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: SITE + '/procurement-bids', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' }
 ];
-console.log('Building RYLAQ static artifact');
+console.log('Building JAQA static artifact');
 for (const p of PAGES) write(p.file, page(p));
 
 /* 4. Embed fragment (no html/head/body) for CMS custom-HTML blocks. */
-const embed = `<!-- RYLAQ Workspace embed fragment. Paste into a custom HTML block. Styles are scoped to .rylaq-workspace. RYLAQ™ is a trademark of RYLAQ. -->
+const embed = `<!-- JAQA Workspace embed fragment. Paste into a custom HTML block. Styles are scoped to .jaqa-workspace. JAQA™ is a trademark of JAQA. -->
 <style>
 ${css}
 </style>
-<main id="rylaq-workspace" class="rylaq-workspace" data-initial-module="situation"><noscript>This workspace needs JavaScript.</noscript></main>
+<main id="jaqa-workspace" class="jaqa-workspace" data-initial-module="situation"><noscript>This workspace needs JavaScript.</noscript></main>
 <script>
 ${js}</script>
 `;
-write('embed/rylaq-workspace-embed.html', embed);
+write('embed/jaqa-workspace-embed.html', embed);
 
 /* 5. .htaccess with strict security headers and CSP (Apache / LiteSpeed on Hostinger). */
 const csp = [
@@ -167,7 +167,7 @@ const csp = [
   "manifest-src 'none'",
   'upgrade-insecure-requests'
 ].join('; ');
-const htaccess = `# RYLAQ Workspace — static hosting security configuration (generated by scripts/build.mjs).
+const htaccess = `# JAQA Workspace — static hosting security configuration (generated by scripts/build.mjs).
 # Works on Apache and LiteSpeed (Hostinger shared/cloud hosting). See docs/HOSTINGER_DEPLOYMENT.md
 # for the equivalent Nginx configuration.
 #
@@ -221,12 +221,12 @@ write('dist/.htaccess', htaccess);
   const sandbox = { window: {}, console };
   vm.createContext(sandbox);
   for (const f of ['src/modules/core.js', 'src/modules/corsConfig.js', 'src/modules/sourceRegistry.js']) vm.runInContext(read(f), sandbox, { filename: f });
-  const R = sandbox.window.RYLAQWorkspace;
+  const R = sandbox.window.JAQAWorkspace;
   const yes = (b) => (b ? 'yes' : '');
   const md = [];
-  md.push('# RYLAQ Source Registry', '', '> Generated by `scripts/build.mjs` from `src/modules/sourceRegistry.js` and `config/cors-verification.json`. Do not edit by hand.', '');
+  md.push('# JAQA Source Registry', '', '> Generated by `scripts/build.mjs` from `src/modules/sourceRegistry.js` and `config/cors-verification.json`. Do not edit by hand.', '');
   md.push(`Verification origin: \`${cors.origin || 'n/a'}\` · verified at: ${cors.verifiedAt || 'n/a'} · runner: ${cors.runner || 'n/a'}`, '');
-  md.push('A source is **live** only when every required endpoint check passed (HTTP 2xx, `Access-Control-Allow-Origin` = `*` or the RYLAQ origin, CORS preflight where needed, and the expected JSON shape). Everything else is **link-out**. Re-confirm from the deployed origin in the Coverage Console.', '');
+  md.push('A source is **live** only when every required endpoint check passed (HTTP 2xx, `Access-Control-Allow-Origin` = `*` or the JAQA origin, CORS preflight where needed, and the expected JSON shape). Everything else is **link-out**. Re-confirm from the deployed origin in the Coverage Console.', '');
   md.push('## Capability registry', '', '| Source | Tier | Region | Default mode | Status | CORS verified | Passing endpoints | Authoritative | False-negative risk | Legal review | Notes |', '|---|---|---|---|---|---|---|---|---|---|---|');
   for (const x of R.sources.list) {
     const v = x.verificationDetail;

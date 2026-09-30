@@ -40,4 +40,4 @@
     });
     return cache;
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

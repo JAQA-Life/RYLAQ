@@ -1,6 +1,6 @@
 # Third-party notices
 
-RYLAQ ships no third-party runtime code. The only bundled third-party material is map data.
+JAQA ships no third-party runtime code. The only bundled third-party material is map data.
 
 ## Natural Earth land outlines (via world-atlas)
 
@@ -31,4 +31,4 @@ The Situation Room layout and HUD styling are inspired by these public projects:
 - **WorldMonitor** — https://github.com/koala73/worldmonitor (AGPL-3.0-only)
 - **God's Eye View** — https://github.com/bilawalsidhu/gods-eye-view (licence not verified)
 
-The implementation is clean-room. No source code, stylesheets, images, fonts, data or configuration from either project was copied, adapted or bundled, and neither project is embedded, iframed or called at runtime. RYLAQ is not affiliated with or endorsed by either project. See `docs/THIRD_PARTY_SOURCE_POLICY.md`.
+The implementation is clean-room. No source code, stylesheets, images, fonts, data or configuration from either project was copied, adapted or bundled, and neither project is embedded, iframed or called at runtime. JAQA is not affiliated with or endorsed by either project. See `docs/THIRD_PARTY_SOURCE_POLICY.md`.

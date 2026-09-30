@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * RYLAQ static safety checker (dev/CI only).
+ * JAQA static safety checker (dev/CI only).
  * Scans dist/, embed/ and src/ and FAILS on anything that would break the
  * privacy, legal, branding or static-hosting guarantees:
  *   - browser storage / cookies / service workers
@@ -12,7 +12,7 @@
  *   - proxy / backend endpoints
  *   - target="_blank" without rel="noopener noreferrer"
  *   - legacy brand names or oncology branding
- *   - RYLAQ™ outside legal/copyright/disclaimer/export-metadata contexts
+ *   - JAQA™ outside legal/copyright/disclaimer/export-metadata contexts
  * It also asserts that required legal text and privacy architecture exist.
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
@@ -69,7 +69,7 @@ const RULES = [
   [/[?&](api_key|apikey|token)=[A-Za-z0-9_\-]{16,}/i, 'API key in URL']
 ];
 
-const LEGAL_CONTEXT = /(©|trademark|legal|disclaim|advice|responsible|independent|affiliat|All rights reserved|RYLAQ™ does not|notice)/i;
+const LEGAL_CONTEXT = /(©|trademark|legal|disclaim|advice|responsible|independent|affiliat|All rights reserved|JAQA™ does not|notice)/i;
 
 const failures = [];
 const fail = (file, line, msg, text) => failures.push(`${path.relative(root, file)}:${line}  ${msg}${text ? '  →  ' + text.trim().slice(0, 140) : ''}`);
@@ -86,9 +86,9 @@ for (const file of files) {
     // target=_blank must always travel with rel="noopener noreferrer"
     if (/_blank/.test(ln) && !/noopener noreferrer/.test(ln)) fail(file, i + 1, 'target _blank without rel="noopener noreferrer"', ln);
     if (/<a\s[^>]*target=["']_blank["'][^>]*>/i.test(ln) && !/rel=["'][^"']*noopener[^"']*noreferrer/i.test(ln)) fail(file, i + 1, 'anchor _blank without rel', ln);
-    // RYLAQ™ only in legal/copyright/privacy/disclaimer/export metadata contexts
-    if (/RYLAQ™/.test(ln) && !LEGAL_CONTEXT.test(ln)) fail(file, i + 1, 'RYLAQ™ outside a legal context', ln);
-    if (/RYLAQ™[\w-]*\.(json|csv)/.test(ln)) fail(file, i + 1, 'RYLAQ™ in an export filename', ln);
+    // JAQA™ only in legal/copyright/privacy/disclaimer/export metadata contexts
+    if (/JAQA™/.test(ln) && !LEGAL_CONTEXT.test(ln)) fail(file, i + 1, 'JAQA™ outside a legal context', ln);
+    if (/JAQA™[\w-]*\.(json|csv)/.test(ln)) fail(file, i + 1, 'JAQA™ in an export filename', ln);
     if (/<title>[^<]*™/.test(ln)) fail(file, i + 1, 'Trademark symbol in page title', ln);
     if (/<h1[^>]*>[^<]*™/.test(ln) || /'h1',[^)]*™/.test(ln)) fail(file, i + 1, 'Trademark symbol in main heading', ln);
   });
@@ -100,19 +100,19 @@ if (!existsSync(distIndex)) failures.push('dist/index.html missing — run npm r
 else {
   const d = readFileSync(distIndex, 'utf8');
   const must = [
-    [/RYLAQ™\. All rights reserved\./, 'footer copyright “© {year} RYLAQ™. All rights reserved.”'],
-    [/RYLAQ™ is a trademark of RYLAQ\./, 'trademark notice'],
+    [/JAQA™\. All rights reserved\./, 'footer copyright “© {year} JAQA™. All rights reserved.”'],
+    [/JAQA™ is a trademark of JAQA\./, 'trademark notice'],
     [/does not store, proxy, log, persist, or analyze user searches/, 'privacy statement'],
     [/Do not enter confidential contract terms/, 'commercial confidentiality warning'],
     [/No public match found does not mean cleared/, 'no-hit ≠ clear warning'],
-    [/"trademark": 'RYLAQ™'|trademark: 'RYLAQ™'/, 'export legal metadata block'],
+    [/"trademark": 'JAQA™'|trademark: 'JAQA™'/, 'export legal metadata block'],
     [/cache: 'no-store'/, 'fetch cache: no-store'],
     [/credentials: 'omit'/, 'fetch credentials: omit'],
     [/AbortController/, 'AbortController'],
     [/Promise\.allSettled/, 'Promise.allSettled'],
-    [/id="rylaq-workspace" class="rylaq-workspace"/, 'root container'],
-    [/window\.RYLAQWorkspace|global\.RYLAQWorkspace/, 'global namespace'],
-    [/<title>RYLAQ Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace<\/title>/, 'page title'],
+    [/id="jaqa-workspace" class="jaqa-workspace"/, 'root container'],
+    [/window\.JAQAWorkspace|global\.JAQAWorkspace/, 'global namespace'],
+    [/<title>JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace<\/title>/, 'page title'],
     [/type="file"/, null] // must NOT exist (checked below)
   ];
   for (const [re, label] of must) {

@@ -405,4 +405,4 @@
   }
 
   R.globe = { create, reduceMotion };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

@@ -18,7 +18,7 @@
     title: 'Watchlist / Evidence Board',
     short: 'Evidence Board',
     description: 'A temporary, in-memory board of pinned public-source records, exportable as an evidence pack with provenance and legal metadata.',
-    warnings: ['The watchlist is temporary and is not stored by RYLAQ. Do not add confidential bid, pricing, underwriting, claims, contract, personal, health, bank, payment, internal risk rating, or protected commercial information.'],
+    warnings: ['The watchlist is temporary and is not stored by JAQA. Do not add confidential bid, pricing, underwriting, claims, contract, personal, health, bank, payment, internal risk rating, or protected commercial information.'],
     render() {
       const list = R.state.watchlist;
       const bySource = {};
@@ -54,4 +54,4 @@
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

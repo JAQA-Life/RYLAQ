@@ -21,9 +21,9 @@
   const ui = R.ui;
   const T = R.T;
 
-  const PROC_WARN = 'RYLAQ organizes public procurement notices, awards, grants, and related evidence. It does not provide bid/no-bid advice, procurement legal advice, eligibility determinations, award predictions, or contract management advice. Always verify deadlines, eligibility, language, thresholds, lots, amendments, and official source requirements.';
-  const DEADLINE_WARN = 'Tender deadlines may be jurisdiction-specific, timezone-specific, subject to amendment, translation-dependent, and controlled by official procurement portals. RYLAQ displays published metadata only and does not guarantee timeliness or eligibility.';
-  const COLLUSION_WARN = 'RYLAQ must not be used to coordinate bids, share confidential pricing, allocate markets, manipulate procurement, evade sanctions, evade export controls, or engage in corrupt or anti-competitive conduct.';
+  const PROC_WARN = 'JAQA organizes public procurement notices, awards, grants, and related evidence. It does not provide bid/no-bid advice, procurement legal advice, eligibility determinations, award predictions, or contract management advice. Always verify deadlines, eligibility, language, thresholds, lots, amendments, and official source requirements.';
+  const DEADLINE_WARN = 'Tender deadlines may be jurisdiction-specific, timezone-specific, subject to amendment, translation-dependent, and controlled by official procurement portals. JAQA displays published metadata only and does not guarantee timeliness or eligibility.';
+  const COLLUSION_WARN = 'JAQA must not be used to coordinate bids, share confidential pricing, allocate markets, manipulate procurement, evade sanctions, evade export controls, or engage in corrupt or anti-competitive conduct.';
 
   const st = { keyword: '', region: '', sort: 'amount', view: 'cards', page: 1, kind: 'contracts', run: 0, from: '', to: '' };
   R.events.on('session:cleared', () => Object.assign(st, { keyword: '', region: '', sort: 'amount', view: 'cards', page: 1, kind: 'contracts', run: 0, from: '', to: '' }));
@@ -147,8 +147,8 @@
           ? ui.section('US federal awards (live, USAspending)', { icon: 'chart', desc: 'Past awards — useful for buyer, category and incumbent context. Not open opportunities and not a prediction of future awards.' }, searchForm(ctx, { keyword: kw }, true), kw.length >= 3 ? ui.taskPanel(T.usaAwards({ keyword: kw, kind: st.kind, from: st.from || undefined, to: st.to || undefined, page: st.page }), { auto: st.run > 0 || ['procurement', 'tender'].includes(ctx.type), render: awardsResults }) : ui.warning('Enter at least 3 characters to search awards.', 'info'))
           : ui.needSession('award search'),
         ui.section('Procurement types & categories', { icon: 'layers' }, h('div', { class: 'rq-row' }, ...R.taxonomy.procurementTypes.map((t) => ui.badge(t, 'proc'))), h('div', { class: 'rq-row' }, ...R.taxonomy.procurementCategories.map((c) => ui.badge(c.name, 'neutral')))),
-        ui.section('Deadline radar (in-memory)', { icon: 'calendar' }, h('p', { class: 'rq-muted' }, 'Deadline tracking populates only from sources that publish submission deadlines through a verified API. None do today, so deadlines must be read on the official notice. RYLAQ never stores alerts.'), ui.warning(DEADLINE_WARN, 'amber')),
-        ui.exportBar('RYLAQ-Procurement-Bids-results.json', 'RYLAQ-Procurement-Bids-results.csv', 'procurement')
+        ui.section('Deadline radar (in-memory)', { icon: 'calendar' }, h('p', { class: 'rq-muted' }, 'Deadline tracking populates only from sources that publish submission deadlines through a verified API. None do today, so deadlines must be read on the official notice. JAQA never stores alerts.'), ui.warning(DEADLINE_WARN, 'amber')),
+        ui.exportBar('JAQA-Procurement-Bids-results.json', 'JAQA-Procurement-Bids-results.csv', 'procurement')
       );
     }
   });
@@ -176,7 +176,7 @@
         ui.section(byRecipient ? 'Awards to this recipient (name match)' : 'Awards matching the query', { icon: 'chart', desc: byRecipient ? 'Recipient-name search. Includes affiliates with similar names — verify UEI.' : 'Keyword search across award descriptions.' }, ui.taskPanel(byRecipient ? T.usaAwards({ recipient: name, kind: 'contracts', page: st.page }) : T.usaAwards({ keyword: c.piid || (c.concept ? 'services' : ctx.q), kind: 'contracts', page: st.page }), { auto: true, render: awardsResults, after: detailAfter, emptyText: 'No US federal contract awards matched.' })),
         ui.section('EU and other award notices (link-out)', { icon: 'link' }, ui.linkouts(R.directories.procurement.filter((e) => /TED|Contracts Finder|Find a Tender|AusTender|CanadaBuys/.test(e.name)), null, { compact: true })),
         ui.section('Related checks', { icon: 'shield' }, h('div', { class: 'rq-row' }, ui.button('Sanctions & debarment', () => R.shell.go('sanctions', { focus: true }), { cls: 'rq-btn-sm' }), ui.button('Litigation', () => R.shell.go('credit', { focus: true }), { cls: 'rq-btn-sm' }), ui.button('Financial filings', () => R.shell.go('filings', { focus: true }), { cls: 'rq-btn-sm' }), ui.button('Recalls & cyber', () => R.shell.go('supplyChain', { focus: true }), { cls: 'rq-btn-sm' }))),
-        ui.exportBar('RYLAQ-Awards-Past-Performance.json', 'RYLAQ-Awards-Past-Performance.csv', 'procurement')
+        ui.exportBar('JAQA-Awards-Past-Performance.json', 'JAQA-Awards-Past-Performance.csv', 'procurement')
       );
     }
   });
@@ -190,7 +190,7 @@
     title: 'Grants, Development & Public Funding',
     short: 'Grants & Public Funding',
     description: 'US federal assistance awards (live) and official development-finance, EU and national funding portals (link-out).',
-    warnings: ['Grant eligibility and funding decisions are controlled by official funders. RYLAQ does not provide grant application advice.'],
+    warnings: ['Grant eligibility and funding decisions are controlled by official funders. JAQA does not provide grant application advice.'],
     render(ctx) {
       const kw = ctx.session ? (ctx.chosen.concept ? 'infrastructure' : ctx.primary ? (ctx.primary.data && ctx.primary.data.name) || ctx.primary.title : ctx.q) : '';
       const byRecipient = ctx.session && !!ctx.primary;
@@ -199,7 +199,7 @@
         null,
         ctx.session ? ui.section('US federal grants & assistance (live, USAspending)', { icon: 'chart', desc: 'Past assistance awards; call deadlines are published by funders, not here.' }, ui.taskPanel(T.usaAwards(byRecipient ? { recipient: kw, kind: 'grants' } : { keyword: kw, kind: 'grants' }), { auto: ctx.type === 'grant', render: awardsResults })) : ui.needSession('grant records'),
         ui.section('EU, development-bank & bilateral funding (link-out)', { icon: 'globe' }, ui.linkouts([...R.directories.procurement.filter((e) => e.grant), ...R.directories.devBanks.filter((e) => e.grant)], null, { compact: true })),
-        ui.exportBar('RYLAQ-Grants-PPP-results.json', 'RYLAQ-Grants-PPP-results.csv', 'procurement')
+        ui.exportBar('JAQA-Grants-PPP-results.json', 'JAQA-Grants-PPP-results.csv', 'procurement')
       );
     }
   });
@@ -213,7 +213,7 @@
     title: 'PPP, Concessions & Infrastructure Projects',
     short: 'PPP & Concessions',
     description: 'Public PPP, concession and infrastructure-project resources with the risk domains typically allocated in these structures.',
-    warnings: ['PPP/concession structures are legally complex. RYLAQ does not advise on project bankability, concession terms, or risk allocation.'],
+    warnings: ['PPP/concession structures are legally complex. JAQA does not advise on project bankability, concession terms, or risk allocation.'],
     render(ctx) {
       const domains = ['construction', 'political', 'regulatory', 'infrastructure', 'catastrophe', 'esg', 'currency-control', 'expropriation'].map((id) => R.taxonomy.global.find((d) => d.id === id)).filter(Boolean);
       return h(
@@ -223,8 +223,8 @@
         ui.section('Risk domains commonly allocated in PPPs', { icon: 'layers', desc: 'Construction, political, regulatory, availability, demand, force majeure and ESG risks. Opens the Global Risk Universe for public evidence.' }, h('div', { class: 'rq-row' }, ...domains.map((d) => ui.button(d.name, () => R.shell.search(d.name), { cls: 'rq-btn-sm' })))),
         ctx.session ? ui.section('US regulatory documents on PPPs (live)', { icon: 'search' }, ui.taskPanel(T.frSearch('public-private partnership', { perPage: 6 }), { auto: ctx.type === 'ppp', limit: 6 })) : null,
         ctx.session ? ui.section('US federal awards mentioning concessions/PPPs (live)', { icon: 'chart' }, ui.taskPanel(T.usaAwards({ keyword: ctx.type === 'ppp' && ctx.chosen.concept ? 'public-private partnership' : ctx.q, kind: 'contracts' }), { auto: ctx.type === 'ppp', render: awardsResults })) : null,
-        ui.exportBar('RYLAQ-Grants-PPP-results.json', 'RYLAQ-Grants-PPP-results.csv', 'procurement')
+        ui.exportBar('JAQA-Grants-PPP-results.json', 'JAQA-Grants-PPP-results.csv', 'procurement')
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

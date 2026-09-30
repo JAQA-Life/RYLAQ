@@ -85,7 +85,7 @@
     } else if (s.liveCapable) {
       s.lastVerifiedNote = v
         ? `Verification did not pass (${(v.checks || []).filter((c) => !c.ok).map((c) => c.id + (c.status ? ' → HTTP ' + c.status : '')).join('; ') || 'no passing checks'}). Link-out only until re-verified.`
-        : 'Documented API, not yet verified for browser CORS from the RYLAQ origin. Link-out only.';
+        : 'Documented API, not yet verified for browser CORS from the JAQA origin. Link-out only.';
     }
     SOURCES.push(s);
     return s;
@@ -136,7 +136,7 @@
     linkoutSearchUrlTemplate: 'https://reliefweb.int/updates?search={q}', linkoutDetailUrlTemplate: 'https://reliefweb.int/country/{id}',
     officialDocsUrl: 'https://apidoc.reliefweb.int/', officialSiteUrl: 'https://reliefweb.int/',
     attribution: 'Humanitarian event data provided by ReliefWeb / OCHA.',
-    coverageGapWarning: 'API v2 requires a ReliefWeb-approved appname. Until RYLAQ’s appname is approved and verified, ReliefWeb is link-out only.'
+    coverageGapWarning: 'API v2 requires a ReliefWeb-approved appname. Until JAQA’s appname is approved and verified, ReliefWeb is link-out only.'
   });
   S('cisaKev', 'CISA Known Exploited Vulnerabilities', {
     tier: 'A', region: 'Global (US agency)', liveCapable: true,
@@ -144,7 +144,7 @@
     endpoints: ['/known_exploited_vulnerabilities.json (official cisagov GitHub mirror of https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json)'],
     linkoutSearchUrlTemplate: 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog', officialDocsUrl: 'https://www.cisa.gov/known-exploited-vulnerabilities-catalog', officialSiteUrl: 'https://www.cisa.gov/',
     attribution: 'KEV data provided by CISA (official cisagov/kev-data repository).', concurrencyLimit: 1, timeoutMs: 20000,
-    coverageGapWarning: 'The cisa.gov feed does not send CORS headers; RYLAQ uses CISA’s official GitHub mirror. A KEV entry does not prove any supplier uses the affected product/version.',
+    coverageGapWarning: 'The cisa.gov feed does not send CORS headers; JAQA uses CISA’s official GitHub mirror. A KEV entry does not prove any supplier uses the affected product/version.',
     rateLimitPolicy: 'Catalog (~1–2 MB) downloaded at most once per session, only when a cyber lookup is triggered.',
     probe: 'https://raw.githubusercontent.com/cisagov/kev-data/develop/known_exploited_vulnerabilities.json'
   });
@@ -180,7 +180,7 @@
     linkoutSearchUrlTemplate: 'https://www.sec.gov/cgi-bin/browse-edgar?company={q}&owner=exclude&action=getcompany', linkoutDetailUrlTemplate: 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={id}&owner=exclude',
     officialDocsUrl: 'https://www.sec.gov/search-filings/edgar-application-programming-interfaces', officialSiteUrl: 'https://www.sec.gov/edgar/search/',
     attribution: 'Public company filings provided by U.S. SEC EDGAR.', financeSensitive: true, officialSourceAuthoritative: true, concurrencyLimit: 1,
-    rateLimitPolicy: 'SEC fair access: max 10 requests/second; RYLAQ sends at most 1 at a time, user-triggered.',
+    rateLimitPolicy: 'SEC fair access: max 10 requests/second; JAQA sends at most 1 at a time, user-triggered.',
     coverageGapWarning: 'SEC registrants only. Private companies and most non-US insurers are not covered.',
     probe: 'https://data.sec.gov/submissions/CIK0000320193.json'
   });
@@ -219,7 +219,7 @@
     linkoutSearchUrlTemplate: 'https://echo.epa.gov/facilities/facility-search', officialDocsUrl: 'https://echo.epa.gov/tools/web-services', officialSiteUrl: 'https://echo.epa.gov/',
     attribution: 'Environmental compliance data provided by U.S. EPA ECHO.', timeoutMs: 20000, concurrencyLimit: 1, mayLagOfficialDb: true,
     coverageGapWarning: 'US regulated facilities only. Facility-name matches are not legal-entity matches.',
-    probe: 'https://echodata.epa.gov/echo/echo_rest_services.get_facility_info?output=JSON&p_fn=ZZZZRYLAQPROBE'
+    probe: 'https://echodata.epa.gov/echo/echo_rest_services.get_facility_info?output=JSON&p_fn=ZZZZJAQAPROBE'
   });
   S('courtlistener', 'CourtListener (Free Law Project)', {
     tier: 'A', region: 'United States', liveCapable: true, apiBase: 'https://www.courtlistener.com/api/rest/v4', endpoints: ['/search/?type=r', '/search/?type=o'],
@@ -254,7 +254,7 @@
     tier: 'B', liveCapable: true, apiBase: 'https://services.nvd.nist.gov/rest/json/cves/2.0', endpoints: ['?cveId=', '?keywordSearch='],
     linkoutDetailUrlTemplate: 'https://nvd.nist.gov/vuln/detail/{id}', officialDocsUrl: 'https://nvd.nist.gov/developers/vulnerabilities', officialSiteUrl: 'https://nvd.nist.gov/',
     attribution: 'CVE data provided by NVD. This product uses the NVD API but is not endorsed or certified by the NVD.',
-    rateLimitPolicy: 'Without a key: 5 requests per rolling 30 seconds. RYLAQ sends one at a time, user-triggered.', concurrencyLimit: 1, timeoutMs: 20000,
+    rateLimitPolicy: 'Without a key: 5 requests per rolling 30 seconds. JAQA sends one at a time, user-triggered.', concurrencyLimit: 1, timeoutMs: 20000,
     coverageGapWarning: 'CVE records do not prove a supplier uses the affected product/version.',
     probe: 'https://services.nvd.nist.gov/rest/json/cves/2.0?cveId=CVE-2021-44228'
   });
@@ -285,7 +285,7 @@
     tier: 'B', liveCapable: true, apiBase: 'https://api.gdeltproject.org/api/v2', endpoints: ['/doc/doc?mode=artlist&format=json'],
     officialDocsUrl: 'https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/', officialSiteUrl: 'https://www.gdeltproject.org/',
     attribution: 'Media event data provided by the GDELT Project where used.', concurrencyLimit: 1, timeoutMs: 15000,
-    rateLimitPolicy: 'GDELT asks for at most one request every 5 seconds; RYLAQ sends user-triggered requests only.',
+    rateLimitPolicy: 'GDELT asks for at most one request every 5 seconds; JAQA sends user-triggered requests only.',
     coverageGapWarning: 'Noisy media signals, not truth, and not adverse-media screening. Rate-limit responses omit CORS headers, so a throttled request appears as unavailable for the session.',
     probe: 'https://api.gdeltproject.org/api/v2/doc/doc?query=%22port%20congestion%22&mode=artlist&format=json&maxrecords=1'
   });
@@ -307,7 +307,7 @@
   S('lienRegistries', 'Lien, UCC, charges & judgment registries', { kind: 'directory', lienRegistryLinkOutOnly: true, falseNegativeRisk: true, legalReviewRequired: true, financeSensitive: true });
   S('standards', 'Standards & frameworks publishers', { kind: 'directory', guidelineLinkOutOnly: true, safetyNote: 'References, not certifications.' });
   S('paidCommercial', 'Paid / commercial data providers', { kind: 'directory', paidSourceLinkOutOnly: true, publicDataOnly: false, safetyNote: 'Never scraped, reproduced or bypassed. Listed for orientation only; no affiliation.' });
-  S('internalSystems', 'Internal enterprise systems (ERP, vendor master, claims, treasury…)', { kind: 'unavailable', publicDataOnly: false, commercialConfidentialitySensitive: true, personalDataSensitive: true, safetyNote: 'Unavailable by design. RYLAQ never accepts internal or confidential data.' });
+  S('internalSystems', 'Internal enterprise systems (ERP, vendor master, claims, treasury…)', { kind: 'unavailable', publicDataOnly: false, commercialConfidentialitySensitive: true, personalDataSensitive: true, safetyNote: 'Unavailable by design. JAQA never accepts internal or confidential data.' });
   // Internal systems are unavailable by design (never link-out, never live).
   SOURCES[SOURCES.length - 1].defaultMode = 'unavailable';
   SOURCES[SOURCES.length - 1].status = 'unavailable';
@@ -329,7 +329,7 @@
 
   /* ------------------------------------------------------------------ *
    * Official link-out directories. Every entry is opened by the USER’S
-   * browser in a new tab; nothing is fetched or scraped by RYLAQ.
+   * browser in a new tab; nothing is fetched or scraped by JAQA.
    * `search` templates carry the query only when the user has not enabled
    * “official-link-only mode”.
    * ------------------------------------------------------------------ */
@@ -519,8 +519,8 @@
       L('NIST AI Risk Management Framework', 'https://www.nist.gov/itl/ai-risk-management-framework', { region: 'Global', kind: 'standard' })
     ],
     scannersLinkOutOnly: [
-      L('Shodan', 'https://www.shodan.io/', { kind: 'reference', note: 'Link-out only. No live scanning from RYLAQ.' }),
-      L('Censys', 'https://search.censys.io/', { kind: 'reference', note: 'Link-out only. No live scanning from RYLAQ.' }),
+      L('Shodan', 'https://www.shodan.io/', { kind: 'reference', note: 'Link-out only. No live scanning from JAQA.' }),
+      L('Censys', 'https://search.censys.io/', { kind: 'reference', note: 'Link-out only. No live scanning from JAQA.' }),
       L('VirusTotal', 'https://www.virustotal.com/', { kind: 'reference', note: 'Link-out only. Do not upload confidential files.' }),
       L('urlscan.io', 'https://urlscan.io/', { kind: 'reference', note: 'Link-out only. Submissions may be public.' })
     ],
@@ -583,7 +583,7 @@
       L('UN Convention against Corruption', 'https://www.unodc.org/unodc/en/corruption/uncac.html', { publisher: 'UNODC' }),
       L('FATF Recommendations', 'https://www.fatf-gafi.org/en/topics/fatf-recommendations.html', { publisher: 'FATF' }),
       L('CMMC (US DoD)', 'https://dodcio.defense.gov/CMMC/', { publisher: 'US DoD CIO' }),
-      L('ISO certificate check (IAF CertSearch)', 'https://www.iafcertsearch.org/', { publisher: 'IAF', note: 'Certification register; verify certificates there, not in RYLAQ.', kind: 'certification-register' })
+      L('ISO certificate check (IAF CertSearch)', 'https://www.iafcertsearch.org/', { publisher: 'IAF', note: 'Certification register; verify certificates there, not in JAQA.', kind: 'certification-register' })
     ],
     digitalAssets: [
       L('ESMA MiCA resources', 'https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica', { region: 'European Union' }),
@@ -608,7 +608,7 @@
       ['Dow Jones Risk & Compliance', 'https://www.dowjones.com/professional/risk/'], ['Accuity (LexisNexis Risk)', 'https://risk.lexisnexis.com/'], ['MarineTraffic', 'https://www.marinetraffic.com/'], ['Spire Maritime', 'https://spire.com/maritime/']
     ].map(([n, u]) => L(n, u, { kind: 'paid', note: 'Paid/commercial. Link-out only; never scraped or reproduced. No affiliation.' })),
     thirdPartyRepos: [
-      L('WorldMonitor', 'https://github.com/koala73/worldmonitor', { kind: 'third-party-repo', license: 'AGPL-3.0-only', mode: 'reference / link-out only', note: 'Not integrated: AGPL licence requires legal review; heavy backend/relay/service-worker stack conflicts with RYLAQ’s static, no-storage model. Outputs are not RYLAQ evidence.' }),
+      L('WorldMonitor', 'https://github.com/koala73/worldmonitor', { kind: 'third-party-repo', license: 'AGPL-3.0-only', mode: 'reference / link-out only', note: 'Not integrated: AGPL licence requires legal review; heavy backend/relay/service-worker stack conflicts with JAQA’s static, no-storage model. Outputs are not JAQA evidence.' }),
       L('God’s Eye View', 'https://github.com/bilawalsidhu/gods-eye-view', { kind: 'third-party-repo', license: 'Unverified — audit required', mode: 'reference / link-out only', note: 'Not integrated pending a strict audit (licence, no backend, no storage, no tiles/CDNs, no personal-data OSINT, no active scanning).' }),
       L('OWASP Dependency-Track', 'https://github.com/DependencyTrack/dependency-track', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Software supply-chain platform reference; not a backend fork.' }),
       L('Trivy', 'https://github.com/aquasecurity/trivy', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Scanner/SBOM reference; not integrated.' }),
@@ -679,4 +679,4 @@
     },
     ECB_CCY: Object.values(ECB_CCY)
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

@@ -21,7 +21,7 @@
     title: 'ESG, Conduct, Human Rights & Nature',
     short: 'ESG & Human Rights',
     description: 'Environmental compliance records, governance indicators and official due-diligence resources for human rights, modern slavery, conflict minerals and nature.',
-    warnings: ['ESG signals are not certifications. Public records do not prove or disprove forced labour, environmental misconduct, governance failures, or human-rights abuses.', 'RYLAQ does not rank suppliers, insurers, countries, or projects as ethical/unethical, and never scrapes paid ESG ratings.'],
+    warnings: ['ESG signals are not certifications. Public records do not prove or disprove forced labour, environmental misconduct, governance failures, or human-rights abuses.', 'JAQA does not rank suppliers, insurers, countries, or projects as ethical/unethical, and never scrapes paid ESG ratings.'],
     render(ctx) {
       if (!ctx.session) return h('div', null, ui.needSession('ESG evidence'), ui.dir('esg', null, { title: 'Official ESG & human-rights resources' }));
       const iso3 = R.countryFromCtx(ctx);
@@ -35,7 +35,7 @@
         ui.section('Conflict minerals, nature & biodiversity (link-out)', { icon: 'leaf' }, ui.linkouts(R.directories.esg.filter((e) => /minerals|Minerals|TNFD/.test(e.name)), null, { compact: true })),
         ui.section('Integrity & governance indexes (link-out)', { icon: 'chart' }, ui.linkouts(R.directories.esg.filter((e) => /Governance|Transparency/.test(e.name)), null, { compact: true })),
         ui.section('Regulatory & litigation cross-links', { icon: 'gavel' }, ui.button('Open Regulatory Change Radar', () => R.shell.go('regulatory', { focus: true }), { cls: 'rq-btn-sm' }), ui.button('Open Credit, Insolvency & Litigation', () => R.shell.go('credit', { focus: true }), { cls: 'rq-btn-sm' })),
-        ui.exportBar('RYLAQ-ESG-results.json', 'RYLAQ-ESG-results.csv', 'globalRisk')
+        ui.exportBar('JAQA-ESG-results.json', 'JAQA-ESG-results.csv', 'globalRisk')
       );
     }
   });
@@ -69,7 +69,7 @@
         c.type === 'category' ? ui.section('Product-safety signals for this category (CPSC, live)', { icon: 'warn' }, ui.taskPanel(T.cpscSearch(ctx.q), { auto: true, limit: 6 })) : null,
         ui.section('Trade flows & tariffs (link-out)', { icon: 'link', desc: 'UN Comtrade requires an API key and is link-out only.' }, ui.dir('trade', null, { compact: true })),
         ui.section('Export controls & payment restrictions (link-out)', { icon: 'shield' }, ui.linkouts(R.directories.sanctions.filter((e) => e.kind === 'export-control' || /OFAC/.test(e.name)), null, { compact: true })),
-        ui.exportBar('RYLAQ-Trade-Category-results.json', 'RYLAQ-Trade-Category-results.csv', 'globalRisk')
+        ui.exportBar('JAQA-Trade-Category-results.json', 'JAQA-Trade-Category-results.csv', 'globalRisk')
       );
     }
   });
@@ -104,10 +104,10 @@
       return h(
         'div',
         null,
-        ui.section('Evidence checklist', { icon: 'list', desc: 'Where each type of evidence lives in RYLAQ. Status reflects this session only.' }, h('div', { class: 'rq-table-wrap', tabindex: '0', role: 'region', 'aria-label': 'Evidence checklist' }, h('table', { class: 'rq-table' }, h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'Evidence area'), h('th', { scope: 'col' }, 'Session status'), h('th', { scope: 'col' }, 'Open'))), h('tbody', null, ...rows.map(([a, st, m]) => h('tr', null, h('th', { scope: 'row' }, a), h('td', null, st), h('td', null, ui.button('Open', () => R.shell.go(m, { focus: true }), { cls: 'rq-btn-xs' })))))))),
+        ui.section('Evidence checklist', { icon: 'list', desc: 'Where each type of evidence lives in JAQA. Status reflects this session only.' }, h('div', { class: 'rq-table-wrap', tabindex: '0', role: 'region', 'aria-label': 'Evidence checklist' }, h('table', { class: 'rq-table' }, h('thead', null, h('tr', null, h('th', { scope: 'col' }, 'Evidence area'), h('th', { scope: 'col' }, 'Session status'), h('th', { scope: 'col' }, 'Open'))), h('tbody', null, ...rows.map(([a, st, m]) => h('tr', null, h('th', { scope: 'row' }, a), h('td', null, st), h('td', null, ui.button('Open', () => R.shell.go(m, { focus: true }), { cls: 'rq-btn-xs' })))))))),
         ui.section('Quick public checks (user-triggered)', { icon: 'download' }, h('div', { class: 'rq-two-col' }, ui.taskPanel(T.cpscSearch(name), { limit: 5 }), ui.taskPanel(T.kevMentions(name.split(/\s+/)[0]), { limit: 5 }), ui.taskPanel(T.usaAwards({ recipient: name, kind: 'contracts' }), { limit: 5 }), iso3 ? ui.taskPanel(T.wbInd(iso3, 'lpi'), { compact: true }) : null)),
         ui.warning('Parent/subsidiary ambiguity: signals may belong to a related entity with a similar name. Confirm legal entity identifiers before acting.', 'amber'),
-        ui.exportBar('RYLAQ-Counterparty-Evidence-Pack.json', 'RYLAQ-Counterparty-Evidence-Pack.csv', 'globalRisk')
+        ui.exportBar('JAQA-Counterparty-Evidence-Pack.json', 'JAQA-Counterparty-Evidence-Pack.csv', 'globalRisk')
       );
     }
   });
@@ -152,7 +152,7 @@
         ui.section('US Federal Register', { icon: 'doc', desc: 'Comment deadlines and effective dates as published; verify on the official document.' }, ui.taskPanel(def, { auto: true, limit: 15 })),
         ui.section('EU, UK and other jurisdictions (link-out)', { icon: 'link' }, ui.dir('regulatory', ctx.q, { compact: true })),
         ui.section('Sector regulators (link-out)', { icon: 'umbrella' }, ui.linkouts(R.directories.insuranceRegulators.slice(0, 8), null, { compact: true }), ui.linkouts(R.directories.cyber.filter((e) => /EDPB|ICO/.test(e.name)), null, { compact: true })),
-        ui.exportBar('RYLAQ-Regulatory-Radar.json', 'RYLAQ-Regulatory-Radar.csv', 'globalRisk')
+        ui.exportBar('JAQA-Regulatory-Radar.json', 'JAQA-Regulatory-Radar.csv', 'globalRisk')
       );
     }
   });
@@ -166,7 +166,7 @@
     title: 'Standards, Certifications & Frameworks Link-Outs',
     short: 'Standards & Frameworks',
     description: 'Official references for risk, continuity, security, AI, due diligence, procurement, insurance-supervision and anti-corruption frameworks.',
-    warnings: ['Standards link-outs are references, not certifications. RYLAQ does not verify certification status unless an official public register/API is verified. Certification status is never implied.'],
+    warnings: ['Standards link-outs are references, not certifications. JAQA does not verify certification status unless an official public register/API is verified. Certification status is never implied.'],
     render(ctx) {
       const q = ctx.session ? ctx.q.toLowerCase().replace(/[^a-z0-9 ]/g, ' ') : '';
       const list = R.directories.standards;
@@ -189,7 +189,7 @@
                 h('th', { scope: 'row' }, e.name, isMatch(e) ? ui.badge('Matches query', 'org') : null),
                 h('td', null, e.publisher || '—'),
                 h('td', null, /ISO 31000|Risk/.test(e.name) ? 'Enterprise risk' : /22301|27031|continuity/i.test(e.name) ? 'Continuity / resilience' : /27001|27035|SOC|NIST|CMMC/.test(e.name) ? 'Security & cyber' : /AI/.test(e.name) ? 'AI governance' : /OECD|Guiding|ILO/.test(e.name) ? 'Due diligence / human rights' : /FIDIC|NEC|Procurement|GPA/.test(e.name) ? 'Procurement & contracts' : /IAIS|Solvency/.test(e.name) ? 'Insurance supervision' : /UNCAC|FATF/.test(e.name) ? 'Integrity / AML' : 'Certification register'),
-                h('td', null, e.kind === 'certification-register' ? 'Register for verifying certificates (link-out)' : 'Standard text may be paid; RYLAQ does not reproduce it. Certification status not implied.'),
+                h('td', null, e.kind === 'certification-register' ? 'Register for verifying certificates (link-out)' : 'Standard text may be paid; JAQA does not reproduce it. Certification status not implied.'),
                 h('td', null, extLink(e.url, 'Open'))
               )
             )
@@ -198,4 +198,4 @@
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

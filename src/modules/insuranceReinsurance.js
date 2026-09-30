@@ -19,8 +19,8 @@
   const ui = R.ui;
   const T = R.T;
 
-  const INS_WARN = 'RYLAQ does not provide insurance, reinsurance, underwriting, claims, coverage, broker-selection, or capacity advice. Insurance and reinsurance decisions require qualified brokers, insurers, reinsurers, actuaries, legal counsel, regulators, and risk professionals as appropriate.';
-  const RE_WARN = 'Reinsurance capacity, treaty terms, recoverables, retrocession chains, and collateral arrangements are often confidential. RYLAQ only organizes public-source signals and official link-outs.';
+  const INS_WARN = 'JAQA does not provide insurance, reinsurance, underwriting, claims, coverage, broker-selection, or capacity advice. Insurance and reinsurance decisions require qualified brokers, insurers, reinsurers, actuaries, legal counsel, regulators, and risk professionals as appropriate.';
+  const RE_WARN = 'Reinsurance capacity, treaty terms, recoverables, retrocession chains, and collateral arrangements are often confidential. JAQA only organizes public-source signals and official link-outs.';
   const ILS_WARN = 'Catastrophe bonds and insurance-linked securities involve complex legal, credit, market, and trigger risks. Public records do not constitute investment advice or risk transfer confirmation.';
   const NOHIT = 'No public record found does not mean an insurer, reinsurer, broker, captive, or ILS vehicle is clear, solvent, authorized, or suitable.';
 
@@ -52,7 +52,7 @@
     title: 'Insurance & Reinsurance Intelligence',
     short: 'Insurance & Reinsurance',
     description: 'Public evidence on insurers, reinsurers, brokers, MGAs, captives, Lloyd’s syndicates, ILS/cat bond vehicles and TPAs — regulators, filings, lines, catastrophe context and insurance-related procurement.',
-    warnings: [INS_WARN, 'RYLAQ does not determine coverage, capacity, solvency, claims outcome, broker suitability, reinsurance recoverability, or insurance market conditions.', NOHIT],
+    warnings: [INS_WARN, 'JAQA does not determine coverage, capacity, solvency, claims outcome, broker suitability, reinsurance recoverability, or insurance market conditions.', NOHIT],
     render(ctx) {
       const isEntity = ctx.session && ENTITY_TYPES.includes(ctx.type);
       const name = ctx.primary ? (ctx.primary.data && ctx.primary.data.name) || ctx.primary.title : ctx.q;
@@ -69,7 +69,7 @@
         ui.section('7. Broker / MGA / TPA context', { icon: 'link', desc: 'Intermediaries and delegated-authority holders are authorized via regulator registers (e.g. FCA register, NAIC/state DOIs).' }, ui.linkouts(R.directories.insuranceRegulators.filter((e) => /FCA|NAIC|Lloyd|EIOPA/.test(e.name)), null, { compact: true })),
         ui.section('8. Procurement intersection', { icon: 'doc', desc: 'Publicly tendered broker panels, claims platforms, actuarial services and captive management. US federal awards are live; other portals are link-out.' }, ctx.session ? ui.taskPanel(T.usaAwards({ keyword: isEntity ? name : /insur|broker|claims|actuar|captive|reinsur/i.test(q) ? q : 'insurance brokerage', kind: 'contracts' }), { limit: 6, auto: ctx.type === 'insuranceLine' }) : null, ui.button('Open Procurement & Bid Radar', () => R.shell.go('procurement', { focus: true }), { cls: 'rq-btn-sm' })),
         ctx.session ? ui.section('Regulatory documents (Federal Register, live)', { icon: 'search' }, ui.taskPanel(T.frSearch(ctx.type === 'insuranceLine' ? q : 'insurance', { perPage: 6 }), { auto: ctx.type === 'insuranceLine', limit: 6 })) : null,
-        ui.exportBar('RYLAQ-Insurance-Reinsurance-evidence.json', 'RYLAQ-Insurance-Reinsurance-evidence.csv', 'insurance')
+        ui.exportBar('JAQA-Insurance-Reinsurance-evidence.json', 'JAQA-Insurance-Reinsurance-evidence.csv', 'insurance')
       );
     }
   });
@@ -82,7 +82,7 @@
     title: 'Insurance & Reinsurance Financial Strength',
     short: 'Financial Strength',
     description: 'Public filings, solvency disclosures, regulator links and rating-agency link-outs for insurers, reinsurers, brokers, captives, MGAs, TPAs and ILS entities.',
-    warnings: ['RYLAQ does not determine solvency, capacity, recoverability, or financial strength. Rating agencies and regulators are authoritative sources.', NOHIT, 'No coverage determination, claims advice, underwriting advice, capacity estimate, recoverable estimate or paid rating reproduction.'],
+    warnings: ['JAQA does not determine solvency, capacity, recoverability, or financial strength. Rating agencies and regulators are authoritative sources.', NOHIT, 'No coverage determination, claims advice, underwriting advice, capacity estimate, recoverable estimate or paid rating reproduction.'],
     render(ctx) {
       const gate = ctx.session && !ctx.primary ? R.entityGate(ctx, 'financial strength evidence') : null;
       const cik = ctx.resolved && ctx.resolved.cik;
@@ -98,12 +98,12 @@
         ]) : null,
         cik ? ui.section('Public filings for listed insurers/reinsurers', { icon: 'doc' }, ui.taskPanel(T.secSubs(cik), { auto: true, render: R.secSignalsView })) : null,
         ui.section('Solvency & capital disclosures (regulator link-outs)', { icon: 'gavel', desc: 'Solvency II SFCRs are published by EEA insurers; NAIC/state DOIs, PRA/FCA, BaFin, APRA, OSFI, NFRA and IRDAI hold local returns.' }, ui.dir('insuranceRegulators', null, { compact: true })),
-        ui.section('Rating agencies (link-out only)', { icon: 'chart' }, ui.warning('Financial strength ratings are licensed. RYLAQ never scrapes, reproduces or derives a rating.', 'info'), ui.dir('ratingAgencies', null, { compact: true })),
+        ui.section('Rating agencies (link-out only)', { icon: 'chart' }, ui.warning('Financial strength ratings are licensed. JAQA never scrapes, reproduces or derives a rating.', 'info'), ui.dir('ratingAgencies', null, { compact: true })),
         ctx.session && ctx.type !== 'insuranceLine' ? ui.section('Litigation signals (live, user-triggered)', { icon: 'gavel' }, ui.taskPanel(T.courts(name, 'o'), { limit: 6 })) : null,
         ui.section('Sanctions & debarment (link-out)', { icon: 'shield' }, ui.linkouts(R.directories.sanctions.slice(0, 7), null, { compact: true })),
         ui.section('ILS / cat bond & captive public resources (link-out)', { icon: 'layers' }, ui.warning(ILS_WARN, 'amber'), ui.linkouts(R.directories.insuranceRegulators.filter((e) => /Bermuda|Cayman|Guernsey|Vermont/.test(e.name)).concat(R.directories.marketReports.filter((e) => /Artemis|Lloyd/.test(e.name))), null, { compact: true }), h('p', { class: 'rq-muted' }, 'Captive cell/member data and ILS investor data are confidential and never requested.')),
-        ui.exportBar('RYLAQ-Insurance-Financial-Strength-evidence.json', 'RYLAQ-Insurance-Financial-Strength-evidence.csv', 'insurance')
+        ui.exportBar('JAQA-Insurance-Financial-Strength-evidence.json', 'JAQA-Insurance-Financial-Strength-evidence.csv', 'insurance')
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

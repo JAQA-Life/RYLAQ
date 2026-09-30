@@ -277,7 +277,7 @@
         )
       );
     });
-    return h('div', { class: 'rq-linkouts' }, o.title ? h('h4', { class: 'rq-h4' }, o.title) : null, list, h('p', { class: 'rq-fineprint' }, 'Link-outs are opened directly by your browser in a new tab. RYLAQ does not fetch, scrape or store these pages.'));
+    return h('div', { class: 'rq-linkouts' }, o.title ? h('h4', { class: 'rq-h4' }, o.title) : null, list, h('p', { class: 'rq-fineprint' }, 'Link-outs are opened directly by your browser in a new tab. JAQA does not fetch, scrape or store these pages.'));
   };
   ui.dir = (key, q, opts) => ui.linkouts(R.directories[key] || [], q, opts);
 
@@ -303,7 +303,7 @@
       { class: 'rq-conflict', role: 'group', 'aria-label': 'Source discrepancy: ' + label },
       h('div', { class: 'rq-conflict-head' }, ui.badge('Source discrepancy', 'warn'), h('strong', null, label)),
       h('div', { class: 'rq-conflict-grid' }, ...items.map((it) => h('div', { class: 'rq-conflict-cell' }, h('div', { class: 'rq-muted' }, it.source), h('div', null, fmt.val(it.value)), it.url ? extLink(it.url, 'Open ' + it.source) : null))),
-      h('p', { class: 'rq-fineprint' }, 'RYLAQ does not adjudicate legal, compliance, credit, sanctions, insurance, reinsurance, procurement, bid, award, claims, coverage, or financial decisions. Verify with each source.')
+      h('p', { class: 'rq-fineprint' }, 'JAQA does not adjudicate legal, compliance, credit, sanctions, insurance, reinsurance, procurement, bid, award, claims, coverage, or financial decisions. Verify with each source.')
     );
 
   ui.moduleWarnings = (list) => h('div', { class: 'rq-module-warnings' }, ...list.map((w) => ui.warning(w, 'amber')));
@@ -337,4 +337,4 @@
 
   /** Standard "context required" block when a module needs a session. */
   ui.needSession = (what) => ui.emptyModule(what ? `Run a search to populate ${what}.` : null);
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

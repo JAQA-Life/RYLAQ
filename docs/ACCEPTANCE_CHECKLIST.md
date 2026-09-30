@@ -17,9 +17,9 @@ Status as of this build: all SMOKE, STATIC and VERIFY items pass. MANUAL items a
 | # | Test | Verified by |
 |---|---|---|
 | 1 | Works locally without backend | SMOKE (served statically); `file://` MANUAL |
-| 2 | Embeds without breaking host styles | DESIGN (all CSS scoped to `.rylaq-workspace`; `embed/` fragment); MANUAL in CMS |
+| 2 | Embeds without breaking host styles | DESIGN (all CSS scoped to `.jaqa-workspace`; `embed/` fragment); MANUAL in CMS |
 | 3 | No console errors on load | SMOKE |
-| 4 | No requests to RYLAQ servers besides static assets | SMOKE (only verified public hosts contacted; zero on load) |
+| 4 | No requests to JAQA servers besides static assets | SMOKE (only verified public hosts contacted; zero on load) |
 | 5–9 | No cookies, local/session storage, IndexedDB, service workers | SMOKE + STATIC |
 | 10–11 | Refresh and Clear Session wipe state | SMOKE (Clear Session); DESIGN (memory only) |
 | 12 | No search term in URL | SMOKE + STATIC |
@@ -60,7 +60,7 @@ Status as of this build: all SMOKE, STATIC and VERIFY items pass. MANUAL items a
 | 43–46 | Privacy badge, provider list, confidentiality and personal-data warnings | SMOKE + DESIGN |
 | 47–49 | No file upload, geolocation or clipboard read | STATIC + SMOKE |
 | 50 | No console logging of search terms | STATIC (`console.log` banned; error logs carry ids only) |
-| 51–52 | Export filenames have no search terms; JSON has RYLAQ™ metadata | SMOKE |
+| 51–52 | Export filenames have no search terms; JSON has JAQA™ metadata | SMOKE |
 | 53 | Link-outs labeled as opened by the user's browser | DESIGN (labels + fine print) |
 | 54–56 | No proxy, no scraping, no confidential data accepted | STATIC + SMOKE (input guard) |
 | 57 | Hostinger log nuance documented | DESIGN (privacy statement, docs) |
@@ -80,7 +80,7 @@ Status as of this build: all SMOKE, STATIC and VERIFY items pass. MANUAL items a
 
 | # | Test | Verified by |
 |---|---|---|
-| 71–76 | RYLAQ vs RYLAQ™ placement, footer, header comment, export metadata, privacy legal section | STATIC + SMOKE |
+| 71–76 | JAQA vs JAQA™ placement, footer, header comment, export metadata, privacy legal section | STATIC + SMOKE |
 | 77–80 | No legacy or oncology branding | STATIC |
 
 ## Safety / legal

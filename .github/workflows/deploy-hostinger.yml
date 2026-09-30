@@ -4,13 +4,13 @@
 # no Node.js, PHP, database or build step runs on Hostinger.
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
-#   HOSTINGER_FTP_SERVER     e.g. ftp.rylaq.com (from hPanel → Files → FTP Accounts)
+#   HOSTINGER_FTP_SERVER     e.g. ftp.jaqa.life (from hPanel → Files → FTP Accounts)
 #   HOSTINGER_FTP_USERNAME
 #   HOSTINGER_FTP_PASSWORD
 #   HOSTINGER_REMOTE_DIR     e.g. public_html/workspace/  (must end with /)
 # Optional repository variable:
 #   HOSTINGER_FTP_PROTOCOL   ftps (default) | ftp
-name: Deploy RYLAQ to Hostinger
+name: Deploy JAQA to Hostinger
 
 on:
   push:

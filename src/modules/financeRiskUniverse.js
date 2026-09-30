@@ -36,7 +36,7 @@
     short: 'Finance Risk Universe',
     description: `${R.taxonomy.finance.length} finance-risk domains mapped to public filings, macro indicators, registries, regulators and official link-outs.`,
     warnings: ['Finance Risk Universe is a public-source map, not a financial risk measurement system. No credit score, rating, solvency opinion, investment or treasury advice is produced.'],
-    render: (ctx) => R.taxonomyView({ list: R.taxonomy.finance, state, kind: 'finance', notAdvice: 'Not credit, investment, treasury, insurance, legal, tax, AML or sanctions advice. Public records may be delayed, restated or incomplete.', jsonName: 'RYLAQ-Finance-Risk-results.json', csvName: 'RYLAQ-Finance-Risk-results.csv' }, ctx)
+    render: (ctx) => R.taxonomyView({ list: R.taxonomy.finance, state, kind: 'finance', notAdvice: 'Not credit, investment, treasury, insurance, legal, tax, AML or sanctions advice. Public records may be delayed, restated or incomplete.', jsonName: 'JAQA-Finance-Risk-results.json', csvName: 'JAQA-Finance-Risk-results.csv' }, ctx)
   });
 
   /* ---------------------- country resolution helper ---------------------- */
@@ -67,7 +67,7 @@
     title: 'Market, Macro & Sovereign Risk',
     short: 'Market, Macro & Sovereign',
     description: 'Public macro-financial and sovereign context: growth, inflation, debt, external position, banking and governance indicators.',
-    warnings: ['Market data may be delayed. Reference rates are not tradable prices. RYLAQ does not provide investment or hedging advice and produces no sovereign rating or default prediction.'],
+    warnings: ['Market data may be delayed. Reference rates are not tradable prices. JAQA does not provide investment or hedging advice and produces no sovereign rating or default prediction.'],
     render(ctx) {
       if (!ctx.session) return h('div', null, ui.needSession('macro and sovereign indicators'), ui.dir('macro', null, { title: 'Official macro & central bank sources' }));
       const iso3 = macro.iso3 || countryFromCtx(ctx);
@@ -95,8 +95,8 @@
               macro.more = true;
               R.shell.refresh();
             }, { icon: 'download' }),
-        ui.section('Sovereign, subnational & market link-outs', { icon: 'link' }, ui.dir('macro', null, { compact: true }), h('p', { class: 'rq-muted' }, 'Sovereign credit ratings, CDS spreads and equity index data are licensed; RYLAQ links to providers and never reproduces them.'), ui.dir('ratingAgencies', null, { compact: true })),
-        ui.exportBar('RYLAQ-Market-Macro-indicators.json', 'RYLAQ-Market-Macro-indicators.csv', 'finance')
+        ui.section('Sovereign, subnational & market link-outs', { icon: 'link' }, ui.dir('macro', null, { compact: true }), h('p', { class: 'rq-muted' }, 'Sovereign credit ratings, CDS spreads and equity index data are licensed; JAQA links to providers and never reproduces them.'), ui.dir('ratingAgencies', null, { compact: true })),
+        ui.exportBar('JAQA-Market-Macro-indicators.json', 'JAQA-Market-Macro-indicators.csv', 'finance')
       );
     }
   });
@@ -111,7 +111,7 @@
     short: 'FX, Rates & Commodities',
     description: 'Reference rates, rate indicators, commodity benchmarks and currency-control/sanctions context for treasury, procurement and category teams.',
     warnings: [
-      'Actual exposure requires internal contracts, debt schedules, payables/receivables and hedge data. RYLAQ does not calculate exposure from public data alone and never accepts internal positions.',
+      'Actual exposure requires internal contracts, debt schedules, payables/receivables and hedge data. JAQA does not calculate exposure from public data alone and never accepts internal positions.',
       'No hedging advice. No treasury execution advice. No trade execution.'
     ],
     render(ctx) {
@@ -133,8 +133,8 @@
         ui.section('Commodity benchmarks & currency controls (link-outs)', { icon: 'link' }, ui.linkouts(R.directories.macro.filter((e) => /commodity|AREAER|Treasury|FRED|ECB/i.test(e.name)), null, { compact: true })),
         ui.section('Sanctions & payment restrictions (link-outs)', { icon: 'shield' }, ui.linkouts(R.directories.sanctions.slice(0, 6), null, { compact: true }), ui.warning(R.legal.noHitNotClear, 'amber')),
         ui.section('Trade & category exposure', { icon: 'ship' }, h('p', null, 'Public trade data is aggregated and lagging; it cannot reveal your organization’s exposure.'), ui.button('Open Trade, Customs & Category Exposure', () => R.shell.go('trade', { focus: true }), { cls: 'rq-btn-sm' })),
-        ui.exportBar('RYLAQ-Market-Macro-indicators.json', 'RYLAQ-Market-Macro-indicators.csv', 'finance')
+        ui.exportBar('JAQA-Market-Macro-indicators.json', 'JAQA-Market-Macro-indicators.csv', 'finance')
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

@@ -1,11 +1,11 @@
 /*
- * rylaq-workspace.js — application shell: header, universal search, module
+ * jaqa-workspace.js — application shell: header, universal search, module
  * rail, detail drawer, modals, command palette, status bar and boot.
  *
- * EMBEDDING: the whole app renders inside <main id="rylaq-workspace"
- * class="rylaq-workspace">. All CSS is scoped to .rylaq-workspace, so the
+ * EMBEDDING: the whole app renders inside <main id="jaqa-workspace"
+ * class="jaqa-workspace">. All CSS is scoped to .jaqa-workspace, so the
  * shell can be pasted into a CMS/intranet page without touching host styles.
- * To adopt RYLAQ global CSS, override the --rq-* custom properties.
+ * To adopt JAQA global CSS, override the --rq-* custom properties.
  */
 (function (R) {
   'use strict';
@@ -142,7 +142,7 @@
     svg.setAttribute('aria-hidden', 'true');
     const paths = [
       ['rect', { x: 2, y: 2, width: 28, height: 28, rx: 7, fill: 'var(--rq-navy)' }],
-      ['path', { d: 'M9 23V9h7.2c3 0 5 1.8 5 4.4 0 2-1.2 3.4-3 4l3.6 5.6h-3.5l-3.2-5.1H12V23H9zm3-7.8h4c1.3 0 2.2-.7 2.2-1.8S17.3 11.6 16 11.6h-4v3.6z', fill: '#fff' }],
+      ['path', { d: 'M17.2 8h3.2v10.6c0 3.5-2.2 5.6-5.6 5.6-3 0-5.1-1.8-5.5-4.8l3.1-.6c.2 1.5 1.1 2.4 2.4 2.4 1.5 0 2.4-1 2.4-2.8V8z', fill: '#fff' }],
       ['circle', { cx: 23.5, cy: 23.5, r: 2.5, fill: 'var(--rq-teal)' }]
     ];
     paths.forEach(([t, a]) => {
@@ -163,7 +163,7 @@
   ];
 
   function buildHeader() {
-    const privacyBadge = h('button', { type: 'button', class: 'rq-privacy-badge', onclick: () => shell.openPrivacy(), 'aria-label': 'RYLAQ Privacy: open privacy details' }, icon('lock', 'rq-icon-sm'), h('span', null, R.legal.privacyBadge));
+    const privacyBadge = h('button', { type: 'button', class: 'rq-privacy-badge', onclick: () => shell.openPrivacy(), 'aria-label': 'JAQA Privacy: open privacy details' }, icon('lock', 'rq-icon-sm'), h('span', null, R.legal.privacyBadge));
     const themeBtn = h('button', { type: 'button', class: 'rq-icon-btn', 'aria-label': 'Switch theme: situation room, dark, light (not saved)', title: 'Theme', onclick: () => shell.cycleTheme() }, icon('moon'));
     return h(
       'header',
@@ -172,7 +172,7 @@
         'div',
         { class: 'rq-brand' },
         logo(),
-        h('div', null, h('div', { class: 'rq-wordmark' }, 'RYLAQ'), h('h1', { class: 'rq-title' }, 'RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace'), h('p', { class: 'rq-tagline' }, 'Public-source triage for global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, regulations, events, and supply-chain exposure.'))
+        h('div', null, h('div', { class: 'rq-wordmark' }, 'JAQA'), h('h1', { class: 'rq-title' }, 'JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace'), h('p', { class: 'rq-tagline' }, 'Public-source triage for global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, regulations, events, and supply-chain exposure.'))
       ),
       h(
         'div',
@@ -257,7 +257,7 @@
         wrong
       )
     );
-    if (c.type === 'person') detectEl.appendChild(ui.warning('RYLAQ does not support searches about private individuals and does not aggregate personal data. For compliance screening of named persons, use official sanctions lists and your organization’s screening system of record.', 'red', 'Person search restricted.'));
+    if (c.type === 'person') detectEl.appendChild(ui.warning('JAQA does not support searches about private individuals and does not aggregate personal data. For compliance screening of named persons, use official sanctions lists and your organization’s screening system of record.', 'red', 'Person search restricted.'));
   }
 
   /* ------------------------------- rail ------------------------------- */
@@ -364,7 +364,7 @@
     try {
       body = m.render(ctx());
     } catch (e) {
-      console.error('[RYLAQ] module render failed:', m.id);
+      console.error('[JAQA] module render failed:', m.id);
       body = ui.warning('This module could not be displayed. Other modules are unaffected.', 'red');
     }
     wrap.appendChild(body);
@@ -490,7 +490,7 @@
       return e;
     };
     add('title', { id: 'rq-flow-title' }, 'Data flow');
-    add('desc', { id: 'rq-flow-desc' }, 'Your browser sends a request directly to a selected public API, which responds directly to your browser. There is no RYLAQ server in the middle.');
+    add('desc', { id: 'rq-flow-desc' }, 'Your browser sends a request directly to a selected public API, which responds directly to your browser. There is no JAQA server in the middle.');
     const box = (x, label, sub) => {
       add('rect', { x, y: 30, width: 170, height: 70, rx: 12, fill: 'var(--rq-surface-2)', stroke: 'var(--rq-border-strong)' });
       add('text', { x: x + 85, y: 62, 'text-anchor': 'middle', fill: 'var(--rq-text)', 'font-size': 15, 'font-weight': 600 }, label);
@@ -504,7 +504,7 @@
     add('polygon', { points: '190,72 180,78 190,84', fill: 'var(--rq-navy-ink)' });
     add('text', { x: 320, y: 46, 'text-anchor': 'middle', fill: 'var(--rq-muted)', 'font-size': 12 }, 'request (HTTPS, no cookies)');
     add('text', { x: 320, y: 98, 'text-anchor': 'middle', fill: 'var(--rq-muted)', 'font-size': 12 }, 'public response');
-    add('text', { x: 320, y: 132, 'text-anchor': 'middle', fill: 'var(--rq-text)', 'font-size': 13, 'font-weight': 600 }, 'No RYLAQ server in the middle');
+    add('text', { x: 320, y: 132, 'text-anchor': 'middle', fill: 'var(--rq-text)', 'font-size': 13, 'font-weight': 600 }, 'No JAQA server in the middle');
     return svg;
   }
   shell.dataFlowSvg = dataFlowSvg;
@@ -517,13 +517,13 @@
       h('p', { class: 'rq-lead' }, R.legal.privacyStatement),
       dataFlowSvg(),
       h('ul', null,
-        h('li', null, 'RYLAQ does not collect search terms. No account is required.'),
-        h('li', null, 'Nothing is saved after refresh: no cookies, no browser storage, no service workers, no analytics, no tracking pixels, no RYLAQ server logs of searches.'),
+        h('li', null, 'JAQA does not collect search terms. No account is required.'),
+        h('li', null, 'Nothing is saved after refresh: no cookies, no browser storage, no service workers, no analytics, no tracking pixels, no JAQA server logs of searches.'),
         h('li', null, 'Searches go directly from your browser to selected public providers. Each provider may log requests according to its own policy.'),
         h('li', null, 'Link-out sources are opened directly by your browser in a new tab, with no referrer.'),
         h('li', null, 'Search terms are never placed in the page URL, so the hosting provider’s access logs do not contain them. The hosting provider may keep standard access logs (IP address, user agent, requested static file, time, status).'),
-        h('li', null, 'RYLAQ does not scrape paid, confidential, login-protected, or subscription sources, and does not reproduce paid rating agency reports, paid market reports, paid credit reports, paid ESG ratings, or paywalled news.'),
-        h('li', null, 'RYLAQ is not a system of record, not a sanctions clearance tool, not a credit rating agency, not an insurance broker, underwriter, actuary, claims adjuster, or coverage interpreter, not a procurement advisor, bid manager, contract evaluator, or award authority, and not a real-time supply chain control tower.')
+        h('li', null, 'JAQA does not scrape paid, confidential, login-protected, or subscription sources, and does not reproduce paid rating agency reports, paid market reports, paid credit reports, paid ESG ratings, or paywalled news.'),
+        h('li', null, 'JAQA is not a system of record, not a sanctions clearance tool, not a credit rating agency, not an insurance broker, underwriter, actuary, claims adjuster, or coverage interpreter, not a procurement advisor, bid manager, contract evaluator, or award authority, and not a real-time supply chain control tower.')
       ),
       ui.warning(R.legal.commercialWarning, 'red', 'Commercial confidentiality.'),
       ui.warning(R.legal.sensitiveWarning, 'amber', 'Personal, financial and health data.'),
@@ -534,17 +534,17 @@
       h('p', null, R.legal.copyright)
     );
   };
-  shell.openPrivacy = () => shell.openDialog('RYLAQ Privacy', shell.privacyContent(), 'modal');
+  shell.openPrivacy = () => shell.openDialog('JAQA Privacy', shell.privacyContent(), 'modal');
   shell.openLegal = () => shell.openDialog('Legal disclaimer', h('div', { class: 'rq-prose' }, h('ul', null, ...R.legal.longDisclaimer.map((l) => h('li', null, l))), h('p', null, R.legal.trademarkNotice)), 'modal');
 
   shell.helpContent = function (compact) {
     return h(
       'div',
       { class: 'rq-prose' },
-      h('p', { class: 'rq-lead' }, 'RYLAQ is a public-source triage workspace. It organizes public evidence about organizations, insurers and reinsurers, countries, ports, products, vulnerabilities, tenders, awards, grants, PPPs, regulations and risk concepts — and shows exactly where evidence is missing.'),
+      h('p', { class: 'rq-lead' }, 'JAQA is a public-source triage workspace. It organizes public evidence about organizations, insurers and reinsurers, countries, ports, products, vulnerabilities, tenders, awards, grants, PPPs, regulations and risk concepts — and shows exactly where evidence is missing.'),
       h('div', { class: 'rq-help-grid' },
         h('div', null, h('h3', { class: 'rq-h4' }, 'How it works'), h('ul', null,
-          h('li', null, 'Searches are not stored by RYLAQ. Results come live from selected public providers verified for browser access.'),
+          h('li', null, 'Searches are not stored by JAQA. Results come live from selected public providers verified for browser access.'),
           h('li', null, 'Other sources are link-out only and open in a new tab.'),
           h('li', null, 'Coverage is not global or complete. No hit ≠ clear.'),
           h('li', null, 'Deadlines, timezones and translations must be verified on official portals.'))),
@@ -564,7 +564,7 @@
       compact ? null : h('p', { class: 'rq-fineprint' }, 'Keyboard: / search · Ctrl/⌘+K commands · Esc close dialogs · ↑/↓ move through the module rail.')
     );
   };
-  shell.openHelp = () => shell.openDialog('Using the RYLAQ Workspace', shell.helpContent(false), 'modal');
+  shell.openHelp = () => shell.openDialog('Using the JAQA Workspace', shell.helpContent(false), 'modal');
 
   /* -------------------------- command palette -------------------------- */
   shell.openPalette = function () {
@@ -631,12 +631,12 @@
 
   /* -------------------------------- boot -------------------------------- */
   function boot() {
-    root = document.getElementById('rylaq-workspace');
+    root = document.getElementById('jaqa-workspace');
     if (!root) return;
     const initialModule = root.getAttribute('data-initial-module') || 'situation';
     shell.initialModule = initialModule;
     clear(root);
-    root.classList.add('rylaq-workspace');
+    root.classList.add('jaqa-workspace');
     modalLayer = h('div', { class: 'rq-modal-layer' });
     contentEl = h('div', { id: 'rq-content', class: 'rq-content', tabindex: '-1' });
     statusEl = h('div', { class: 'rq-statusbar', role: 'status', 'aria-label': 'Provider and session status' });
@@ -650,7 +650,7 @@
         'footer',
         { class: 'rq-footer' },
         h('p', null, R.legal.shortDisclaimer),
-        h('p', null, R.legal.copyright + ' ' + R.legal.trademarkNotice + ' RYLAQ™ is an independent interface and is not affiliated with or endorsed by data providers unless expressly stated.'),
+        h('p', null, R.legal.copyright + ' ' + R.legal.trademarkNotice + ' JAQA™ is an independent interface and is not affiliated with or endorsed by data providers unless expressly stated.'),
         h('p', { class: 'rq-footer-links' }, h('button', { type: 'button', class: 'rq-link-btn', onclick: () => shell.openLegal() }, 'Legal disclaimer'), ' · ', h('button', { type: 'button', class: 'rq-link-btn', onclick: () => shell.openPrivacy() }, 'Privacy'), ' · ', h('button', { type: 'button', class: 'rq-link-btn', onclick: () => shell.go('coverage', { focus: true }) }, 'Coverage'), ' · ', h('button', { type: 'button', class: 'rq-link-btn', onclick: () => shell.openHelp() }, 'Support & help'))
       ),
       h('div', { id: 'rq-live', class: 'rq-sr', 'aria-live': 'polite', 'aria-atomic': 'true' }),
@@ -693,4 +693,4 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

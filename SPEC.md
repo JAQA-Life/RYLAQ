@@ -1,6 +1,6 @@
-# SPEC — RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace
+# SPEC — JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace
 
-This is the condensed, authoritative specification for this repository. It is derived from the *Final RYLAQ Build Prompt*, which supersedes all earlier workspace prompts. Each section maps to where it is implemented. When the original prompt and this file disagree, the original prompt wins. Record the decision here.
+This is the condensed, authoritative specification for this repository. It is derived from the *Final JAQA Build Prompt*, which supersedes all earlier workspace prompts. Each section maps to where it is implemented. When the original prompt and this file disagree, the original prompt wins. Record the decision here.
 
 ## 0. Delivery target
 
@@ -14,7 +14,7 @@ GitHub (private) → Claude Code implements a static frontend → `dist/` is com
 
 | # | Rule |
 |---|---|
-| 1 | Live only after CORS is verified from the RYLAQ origin. |
+| 1 | Live only after CORS is verified from the JAQA origin. |
 | 2 | Never proxy. |
 | 3 | Never fabricate data, hardcode demo results or invent endpoints. |
 | 4 | Small initial request budget. |
@@ -28,7 +28,7 @@ GitHub (private) → Claude Code implements a static frontend → `dist/` is com
 | 12 | No external fonts or unnecessary CDNs. |
 | 13 | No storage of searches: no cookies, browser storage, IndexedDB, service workers or analytics. |
 | 14 | Public signals are never presented as clearance, certification, rating, coverage, eligibility, award, solvency or legal determination. |
-| 15 | RYLAQ is not a sanctions system of record, credit rating agency, insurance broker/underwriter/claims adjuster, procurement advisor or award authority, or real-time control tower. |
+| 15 | JAQA is not a sanctions system of record, credit rating agency, insurance broker/underwriter/claims adjuster, procurement advisor or award authority, or real-time control tower. |
 | 16 | No scraping of paid, confidential or login sources. No reproduction of paid ratings, reports or news. |
 | 17 | No assistance with bid rigging, collusion, corruption, sanctions/export-control/tax evasion or anti-competitive conduct. |
 | 18 | Confidential or personal financial, health, insurance, claims or bid data is never accepted or stored. |
@@ -40,8 +40,8 @@ GitHub (private) → Claude Code implements a static frontend → `dist/` is com
 
 ## 2. Identity & branding
 
-- Normal UI: **RYLAQ**.
-- Legal, copyright, privacy, disclaimer, export-metadata and source-header text: **RYLAQ™**.
+- Normal UI: **JAQA**.
+- Legal, copyright, privacy, disclaimer, export-metadata and source-header text: **JAQA™**.
 - Tagline: *Public-source triage for global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, regulations, events, and supply-chain exposure.*
 
 → `R.legal` (`src/modules/core.js`), `docs/PRIVACY_LEGAL_BRANDING.md`
@@ -50,16 +50,16 @@ GitHub (private) → Claude Code implements a static frontend → `dist/` is com
 
 The core question: *What public evidence exists about this organization, counterparty, country, port, category, HS code, CVE, tender, award, grant, PPP, recall, regulation, insurance/reinsurance entity, finance risk domain, or global risk concept?*
 
-RYLAQ has zero retention on its side. The browser talks directly to providers. The privacy statement, badge, confidentiality warning, privacy modal and data-flow SVG are all included.
+JAQA has zero retention on its side. The browser talks directly to providers. The privacy statement, badge, confidentiality warning, privacy modal and data-flow SVG are all included.
 
-→ `src/assets/rylaq-workspace.js` (`privacyContent`, `dataFlowSvg`), `src/modules/net.js`
+→ `src/assets/jaqa-workspace.js` (`privacyContent`, `dataFlowSvg`), `src/modules/net.js`
 
 ## 5–7. Design, stack, repository
 
 - Vanilla HTML/CSS/JS with no runtime dependencies.
 - Option A: a single-file `dist/index.html` (plus optional route pages and an `embed/` fragment).
-- Root `<main id="rylaq-workspace" class="rylaq-workspace">`.
-- `window.RYLAQWorkspace`, with `.modules` (registry) and `.events` (bus).
+- Root `<main id="jaqa-workspace" class="jaqa-workspace">`.
+- `window.JAQAWorkspace`, with `.modules` (registry) and `.events` (bus).
 - CSS is scoped, uses tokens, supports light/dark, uses the system font stack and inline SVG only.
 - The repository structure follows §7, plus extra modules: `net.js`, `clients.js`, `taxonomies.js`, `renderers.js`, `lenses.js`, `advancedQuery.js`.
 
@@ -69,7 +69,7 @@ The Source Capability Registry carries every field listed in §8. The modes are 
 
 → `src/modules/sourceRegistry.js`, `config/cors-verification.json`, `docs/SOURCE_REGISTRY.md`
 
-**Verification result (2026-09-30, origin `https://rylaq.com`):** 18 sources are live: GLEIF, World Bank, USGS, Open-Meteo, NWS, CISA KEV (cisagov mirror), NVD, CPSC, NHTSA, USAspending, Federal Register, SEC submissions, CourtListener, Wikidata, Wikipedia, ECB, GDELT and EPA ECHO. TED, SEC XBRL, ReliefWeb, IMF, Overpass, Comtrade, FRED, OpenCorporates, Companies House, SAM and others are link-out.
+**Verification result (2026-09-30, origin `https://jaqa.life`):** 18 sources are live: GLEIF, World Bank, USGS, Open-Meteo, NWS, CISA KEV (cisagov mirror), NVD, CPSC, NHTSA, USAspending, Federal Register, SEC submissions, CourtListener, Wikidata, Wikipedia, ECB, GDELT and EPA ECHO. TED, SEC XBRL, ReliefWeb, IMF, Overpass, Comtrade, FRED, OpenCorporates, Companies House, SAM and others are link-out.
 
 ## 10. Third-party / external dashboard policy
 
@@ -147,6 +147,6 @@ The header legal comment is in `core.js` and in the built script.
 
 ## Open decisions
 
-1. **Licence.** The repository has a GPL-3.0 `LICENSE`, while the product states "All rights reserved". RYLAQ must pick one; see the README.
+1. **Licence.** The repository has a GPL-3.0 `LICENSE`, while the product states "All rights reserved". JAQA must pick one; see the README.
 2. **ReliefWeb appname.** Request an approved appname, then re-verify.
-3. **Logo.** Replace the inline SVG monogram with the official RYLAQ mark (inline SVG) when available.
+3. **Logo.** Replace the inline SVG monogram with the official JAQA mark (inline SVG) when available.

@@ -1,6 +1,6 @@
 # Third-party source & external project policy
 
-RYLAQ may **reference** public risk, security, sanctions, cyber, trade and intelligence projects. It must not become a forked backend platform, a scanner, an OSINT scraper or a heavy dashboard.
+JAQA may **reference** public risk, security, sanctions, cyber, trade and intelligence projects. It must not become a forked backend platform, a scanner, an OSINT scraper or a heavy dashboard.
 
 ## Integration patterns
 
@@ -16,7 +16,7 @@ RYLAQ may **reference** public risk, security, sanctions, cyber, trade and intel
 A source may be **live** only if **all** of these hold:
 
 1. It has a documented public read-only API.
-2. Browser CORS works from the real RYLAQ origin. Verified by `scripts/verify-cors.mjs`, then re-confirmed in the Coverage Console.
+2. Browser CORS works from the real JAQA origin. Verified by `scripts/verify-cors.mjs`, then re-confirmed in the Coverage Console.
 3. Its terms allow programmatic access.
 4. Its response shape can be validated. Every client validates before rendering.
 5. Its rate limits can be respected through concurrency caps, deduplication, user-triggered enrichment and 429 back-off.
@@ -29,15 +29,15 @@ The **Situation Room** landing view and the default **situation-room (HUD) theme
 
 - It is a clean-room implementation. No code, CSS, images, fonts, data or configuration from either project was copied, adapted or bundled.
 - Neither project is embedded (no iframe), called, forked or depended on at runtime.
-- The globe is RYLAQ's own dependency-free canvas renderer (`src/modules/globe.js`). It uses public-domain Natural Earth outlines (see `THIRD_PARTY_NOTICES.md`), with no map tiles and no WebGL libraries.
-- Everything plotted comes from RYLAQ's verified public sources. The Situation Room feeds are fixed, non-personal queries that stay on standby until the user activates them.
+- The globe is JAQA's own dependency-free canvas renderer (`src/modules/globe.js`). It uses public-domain Natural Earth outlines (see `THIRD_PARTY_NOTICES.md`), with no map tiles and no WebGL libraries.
+- Everything plotted comes from JAQA's verified public sources. The Situation Room feeds are fixed, non-personal queries that stay on standby until the user activates them.
 - The UI shows both projects only as reference link-outs, with a no-affiliation statement.
 
 ## Specific projects
 
 | Project | Status | Reason |
 |---|---|---|
-| **WorldMonitor** (`github.com/koala73/worldmonitor`) | Reference / link-out only | AGPL-3.0-only (legal review required before any fork, modification or deployment). Heavy stack (Vite, TS, globe.gl, Three.js, deck.gl, MapLibre, Tauri, Node sidecar, Redis, edge functions, relay, service worker, AI providers). This conflicts with RYLAQ's static, no-storage, no-tiles, no-proxy model. **No iframe, no API integration, no copied code. Its outputs are never presented as RYLAQ evidence.** |
+| **WorldMonitor** (`github.com/koala73/worldmonitor`) | Reference / link-out only | AGPL-3.0-only (legal review required before any fork, modification or deployment). Heavy stack (Vite, TS, globe.gl, Three.js, deck.gl, MapLibre, Tauri, Node sidecar, Redis, edge functions, relay, service worker, AI providers). This conflicts with JAQA's static, no-storage, no-tiles, no-proxy model. **No iframe, no API integration, no copied code. Its outputs are never presented as JAQA evidence.** |
 | **God's Eye View** (`github.com/bilawalsidhu/gods-eye-view`) | Conditional audit; link-out/reference by default | Not integrated. Integration would require an audit confirming: a permissive or cleared licence; no backend or proxy; no cookies, storage or service workers; no external font/icon/JS/CSS CDNs; no map tiles by default; no scraping of paid, login or confidential sources; no personal-data aggregation; no active scanning; clear provenance and uncertainty labeling. While uncertain, it stays link-out only: no runtime, no iframe, no API calls. |
 | OWASP Dependency-Track | Reference | Backend platform. Not forked. |
 | Trivy, Grype, Syft | Reference | Scanners / SBOM tools. Not integrated. |
@@ -46,10 +46,10 @@ The **Situation Room** landing view and the default **situation-room (HUD) theme
 | CVEProject cvelistV5 | Reference | Never bulk-fetched into the browser. |
 | OpenSanctions | Link-out | No auto-screening and no clearance language. The data licence differs from the code licence. |
 | CycloneDX, OpenSSF Scorecard | Link-out | Standards / hygiene signals. Not supplier approval. |
-| DefectDojo, MISP, OpenCTI, TheHive, DFIR-IRIS | Reference only | Backend platforms. Not suitable for RYLAQ. |
+| DefectDojo, MISP, OpenCTI, TheHive, DFIR-IRIS | Reference only | Backend platforms. Not suitable for JAQA. |
 | SpiderFoot, Recon-ng, Amass, Subfinder, httpx, Nuclei, SQLMap, ZAP | **Never integrated, not linked in the UI** | Active scanning or reconnaissance tools. |
 | Sherlock, Maigret and other username-OSINT tools | **Never integrated, not linked in the UI** | Personal-data risk. |
-| Shodan, Censys, VirusTotal, urlscan | Link-out only (Cyber module) | No live scanning from RYLAQ. Labeled with authorization and confidentiality warnings. |
+| Shodan, Censys, VirusTotal, urlscan | Link-out only (Cyber module) | No live scanning from JAQA. Labeled with authorization and confidentiality warnings. |
 
 Every external reference in the UI (Coverage Console → *Third-party projects*) shows: name, URL, licence/status where known, mode, a note, and the no-affiliation / no-clearance statement.
 
@@ -59,4 +59,4 @@ Dun & Bradstreet, Experian, Creditsafe, EcoVadis, Interos, Resilinc, Everstream,
 
 ## Internal systems
 
-ERP, vendor master, spend cube, contracts, POs, invoices, questionnaires, credit bureau reports, internal risk scores, audit findings, bid documents, underwriting and claims files, policy administration, treasury, hedging, payments and KYC repositories are **unavailable by design**. RYLAQ accepts no file uploads and no internal data.
+ERP, vendor master, spend cube, contracts, POs, invoices, questionnaires, credit bureau reports, internal risk scores, audit findings, bid documents, underwriting and claims files, policy administration, treasury, hedging, payments and KYC repositories are **unavailable by design**. JAQA accepts no file uploads and no internal data.

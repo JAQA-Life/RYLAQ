@@ -1,4 +1,4 @@
-# RYLAQ CI: static safety, syntax, link sanity, reproducible build, smoke test.
+# JAQA CI: static safety, syntax, link sanity, reproducible build, smoke test.
 # Nothing here deploys anything and no secrets are used.
 name: CI
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /*
- * RYLAQ source verification (dev-only tool, never deployed).
+ * JAQA source verification (dev-only tool, never deployed).
  *
- * Sends real requests carrying `Origin: <origin>` (default https://rylaq.com)
+ * Sends real requests carrying `Origin: <origin>` (default https://jaqa.life)
  * to every public endpoint the workspace may call from the browser, and checks:
  *   1. HTTP status is 2xx
  *   2. Access-Control-Allow-Origin is `*` or echoes the origin
@@ -19,7 +19,7 @@
  * from the deployed origin using the Coverage Console ("Check availability").
  *
  * Usage:
- *   node scripts/verify-cors.mjs [--origin https://rylaq.com] [--write] [--out report.json] [--only gleif,ted]
+ *   node scripts/verify-cors.mjs [--origin https://jaqa.life] [--write] [--out report.json] [--only gleif,ted]
  */
 import https from 'node:https';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -32,11 +32,11 @@ const argVal = (name, def) => {
   const i = args.indexOf(name);
   return i >= 0 && args[i + 1] ? args[i + 1] : def;
 };
-const ORIGIN = argVal('--origin', 'https://rylaq.com');
+const ORIGIN = argVal('--origin', 'https://jaqa.life');
 const WRITE = args.includes('--write');
 const OUT = argVal('--out', '');
 const ONLY = argVal('--only', '').split(',').filter(Boolean);
-const UA = 'RYLAQ-source-verification/1.0 (static site CORS check; contact via rylaq.com)';
+const UA = 'JAQA-source-verification/1.0 (static site CORS check; contact via jaqa.life)';
 
 const isArr = Array.isArray;
 const obj = (v) => v && typeof v === 'object';
@@ -76,8 +76,8 @@ const CHECKS = [
   { source: 'nws', id: 'nws-alerts-point', url: 'https://api.weather.gov/alerts/active?point=29.76,-95.37', accept: 'application/geo+json', shape: (j) => isArr(j.features) },
 
   // ReliefWeb
-  { source: 'reliefweb', id: 'rw-v2-reports', url: 'https://api.reliefweb.int/v2/reports?appname=rylaq.com&query%5Bvalue%5D=Malaysia&limit=2&sort%5B%5D=date:desc&fields%5Binclude%5D%5B%5D=title&fields%5Binclude%5D%5B%5D=url&fields%5Binclude%5D%5B%5D=date.created', shape: (j) => isArr(j.data) },
-  { source: 'reliefweb', id: 'rw-v1-reports', url: 'https://api.reliefweb.int/v1/reports?appname=rylaq.com&query%5Bvalue%5D=Malaysia&limit=2', shape: (j) => isArr(j.data), required: false },
+  { source: 'reliefweb', id: 'rw-v2-reports', url: 'https://api.reliefweb.int/v2/reports?appname=jaqa.life&query%5Bvalue%5D=Malaysia&limit=2&sort%5B%5D=date:desc&fields%5Binclude%5D%5B%5D=title&fields%5Binclude%5D%5B%5D=url&fields%5Binclude%5D%5B%5D=date.created', shape: (j) => isArr(j.data) },
+  { source: 'reliefweb', id: 'rw-v1-reports', url: 'https://api.reliefweb.int/v1/reports?appname=jaqa.life&query%5Bvalue%5D=Malaysia&limit=2', shape: (j) => isArr(j.data), required: false },
 
   // CISA KEV (official feed + official cisagov GitHub mirror)
   { source: 'cisaKev', id: 'kev-cisa-gov', url: 'https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json', shape: (j) => isArr(j.vulnerabilities), required: false },

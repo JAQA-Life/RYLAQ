@@ -6,7 +6,7 @@
  * - CSV cells are sanitized against formula injection: any cell starting
  *   with =, +, -, @, tab or carriage return is prefixed with a single quote.
  * - JSON exports carry provenance, confidence, freshness, coverage gaps and
- *   the RYLAQ™ legal metadata block. API keys and secrets are never exported.
+ *   the JAQA™ legal metadata block. API keys and secrets are never exported.
  * - When an export would contain the user's search term, the user is warned
  *   and must confirm before download/copy.
  */
@@ -86,7 +86,7 @@
   const DOMAIN_WARNINGS = {
     finance: 'No credit score, credit rating, solvency opinion, investment, treasury or hedging advice is generated. Public distress signals do not predict insolvency.',
     insurance: 'No insurance, reinsurance, underwriting, claims, coverage, solvency, capacity or recoverability determination is made. Ratings and market reports are link-out only.',
-    sanctions: 'No hit ≠ clear. RYLAQ is not a sanctions screening system of record or an AML system.',
+    sanctions: 'No hit ≠ clear. JAQA is not a sanctions screening system of record or an AML system.',
     procurement: 'Deadlines, timezones, eligibility, lots, amendments and translations must be verified on the official procurement portal. No bid/no-bid advice, award prediction or eligibility determination.',
     globalRisk: 'Coverage is incomplete by region, sector, language and source. The taxonomy is a public-source map, not a risk measurement.'
   };
@@ -109,7 +109,7 @@
     const body = h(
       'div',
       { class: 'rq-prose' },
-      h('p', null, 'This export can include your search term. Files are created in your browser and are not uploaded or stored by RYLAQ, but anyone you share the file with will see it.'),
+      h('p', null, 'This export can include your search term. Files are created in your browser and are not uploaded or stored by JAQA, but anyone you share the file with will see it.'),
       h('div', { class: 'rq-row' }, R.ui.button('Include search term', () => { R.shell.closeDialog(); go(true); }, { variant: 'primary' }), R.ui.button('Export without search term', () => { R.shell.closeDialog(); go(false); }), R.ui.button('Cancel', () => R.shell.closeDialog(), { variant: 'ghost' }))
     );
     R.shell.openDialog('Export warning', body, 'modal');
@@ -186,26 +186,26 @@
     csv: csvExport,
     sessionJSON() {
       const recs = R.tasks.records();
-      jsonExport('RYLAQ-Workspace-results.json', recs, 'globalRisk', { tasks: R.tasks.all().map((t) => ({ label: t.label, source: t.sourceId, status: t.status, errorKind: t.errorKind || null, records: (t.records || []).length })) });
+      jsonExport('JAQA-Workspace-results.json', recs, 'globalRisk', { tasks: R.tasks.all().map((t) => ({ label: t.label, source: t.sourceId, status: t.status, errorKind: t.errorKind || null, records: (t.records || []).length })) });
     },
     visibleCSV() {
       const recs = visibleRecords();
       if (!recs.length) return R.util.announce('No visible records to export.');
-      csvExport('RYLAQ-Workspace-results.csv', recs, 'globalRisk');
+      csvExport('JAQA-Workspace-results.csv', recs, 'globalRisk');
     },
     visibleJSON(filename, domain) {
-      jsonExport(filename || 'RYLAQ-Workspace-results.json', visibleRecords(), domain || 'globalRisk');
+      jsonExport(filename || 'JAQA-Workspace-results.json', visibleRecords(), domain || 'globalRisk');
     },
     evidencePackJSON() {
       const recs = R.state.watchlist.length ? R.state.watchlist : R.tasks.records();
-      jsonExport('RYLAQ-Evidence-Pack.json', recs, 'globalRisk', { evidenceBoardCount: R.state.watchlist.length, note: R.state.watchlist.length ? 'Pinned evidence board records.' : 'No pinned records; all session records included.' });
+      jsonExport('JAQA-Evidence-Pack.json', recs, 'globalRisk', { evidenceBoardCount: R.state.watchlist.length, note: R.state.watchlist.length ? 'Pinned evidence board records.' : 'No pinned records; all session records included.' });
     },
     evidencePackCSV() {
       const recs = R.state.watchlist.length ? R.state.watchlist : R.tasks.records();
-      csvExport('RYLAQ-Evidence-Pack.csv', recs, 'globalRisk');
+      csvExport('JAQA-Evidence-Pack.csv', recs, 'globalRisk');
     },
     watchlistJSON() {
-      jsonExport('RYLAQ-Watchlist.json', R.state.watchlist, 'globalRisk');
+      jsonExport('JAQA-Watchlist.json', R.state.watchlist, 'globalRisk');
     },
     copyIds(key, label) {
       const ids = idList(key);
@@ -223,4 +223,4 @@
     download,
     DOMAIN_WARNINGS
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

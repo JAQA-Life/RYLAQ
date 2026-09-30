@@ -1,8 +1,8 @@
 {
-  "name": "rylaq-workspace",
+  "name": "jaqa-workspace",
   "version": "1.0.0",
   "private": true,
-  "description": "RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace — static, privacy-first public-source triage. All tooling is dev-only; production is static files in dist/.",
+  "description": "JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — static, privacy-first public-source triage. All tooling is dev-only; production is static files in dist/.",
   "type": "module",
   "engines": {
     "node": ">=18"

@@ -32,4 +32,4 @@ http
       res.end('Not found');
     }
   })
-  .listen(port, '127.0.0.1', () => process.stdout.write(`RYLAQ preview: http://127.0.0.1:${port}/ (serving ${path.relative(root, dir)})\n`));
+  .listen(port, '127.0.0.1', () => process.stdout.write(`JAQA preview: http://127.0.0.1:${port}/ (serving ${path.relative(root, dir)})\n`));

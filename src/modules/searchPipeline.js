@@ -412,4 +412,4 @@
   }
 
   R.pipeline = { detect, run, ensureSession, selectPrimary, lensesFor, TYPES, ORG_TYPES, ROUTE, categoryHs };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

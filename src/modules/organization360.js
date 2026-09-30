@@ -5,7 +5,7 @@
  *
  * HOW PUBLIC FILINGS ARE PARSED AND CAVEATED
  *   SEC submissions give form types, dates, accession numbers and 8-K item
- *   codes. RYLAQ lists specific 8-K items (1.03, 2.04, 4.01, 4.02, …) and
+ *   codes. JAQA lists specific 8-K items (1.03, 2.04, 4.01, 4.02, …) and
  *   NT (late filing) notices as source-reported filing facts with links.
  *
  * HOW DERIVED METRICS ARE CALCULATED AND LABELED
@@ -92,7 +92,7 @@
           )
         ),
         isIns ? ui.section('Insurance regulator & rating link-outs', { icon: 'umbrella' }, ui.dir('insuranceRegulators', null, { compact: true }), ui.dir('ratingAgencies', null, { compact: true })) : null,
-        ui.section('Sanctions & debarment (link-out only)', { icon: 'shield' }, ui.warning(R.legal.noHitNotClear + ' RYLAQ is not a sanctions screening system of record.', 'amber'), ui.dir('sanctions', null, { compact: true })),
+        ui.section('Sanctions & debarment (link-out only)', { icon: 'shield' }, ui.warning(R.legal.noHitNotClear + ' JAQA is not a sanctions screening system of record.', 'amber'), ui.dir('sanctions', null, { compact: true })),
         ui.section('Registries & official sources', { icon: 'link' }, ui.dir('entity', name, { compact: true })),
         gapsList([
           lei ? 'GLEIF data is self-reported by the entity via LOUs and corroborated to varying levels.' : 'No LEI selected.',
@@ -100,7 +100,7 @@
           'Name-based lookups (awards, recalls, KEV, courts, EPA) can match unrelated entities with similar names. Verify identifiers.',
           'Website, officers, beneficial owners and internal data are not collected.'
         ]),
-        ui.exportBar('RYLAQ-Counterparty-Evidence-Pack.json', 'RYLAQ-Counterparty-Evidence-Pack.csv', 'globalRisk')
+        ui.exportBar('JAQA-Counterparty-Evidence-Pack.json', 'JAQA-Counterparty-Evidence-Pack.csv', 'globalRisk')
       );
     }
   });
@@ -151,9 +151,9 @@
         ui.section('Insolvency, restructuring & court records', { icon: 'gavel', desc: 'User-triggered. CourtListener covers part of the US federal record (RECAP); PACER is fee-based and not bypassed.' }, ui.taskPanel(T.courts(name, 'r'), { limit: 8 }), ui.dir('insolvency', name, { compact: true })),
         ui.section('Liens, charges & judgments (link-out)', { icon: 'link' }, ui.warning('Lien/UCC/judgment registries are jurisdiction-specific, often delayed, and name matching is ambiguous.', 'amber'), ui.dir('lien', name, { compact: true })),
         ui.section('Sanctions, debarment & enforcement (link-out)', { icon: 'shield' }, ui.dir('sanctions', null, { compact: true }), ui.dir('enforcement', null, { compact: true })),
-        ui.section('Rating agencies & market data (link-out only)', { icon: 'chart' }, ui.dir('ratingAgencies', null, { compact: true }), ui.warning('Ratings are licensed; RYLAQ never scrapes, reproduces or derives them.', 'info')),
+        ui.section('Rating agencies & market data (link-out only)', { icon: 'chart' }, ui.dir('ratingAgencies', null, { compact: true }), ui.warning('Ratings are licensed; JAQA never scrapes, reproduces or derives them.', 'info')),
         ui.warning('Parent/subsidiary ambiguity: stress at a subsidiary, parent or sister entity may be reported under a different legal name. Check the corporate family in Organization 360.', 'amber'),
-        ui.exportBar('RYLAQ-Counterparty-Evidence-Pack.json', 'RYLAQ-Counterparty-Evidence-Pack.csv', 'finance')
+        ui.exportBar('JAQA-Counterparty-Evidence-Pack.json', 'JAQA-Counterparty-Evidence-Pack.csv', 'finance')
       );
     }
   });
@@ -198,9 +198,9 @@
       };
       const fields = [
         ...Object.entries(got).map(([k, v]) => [k + ' (latest, as reported)', v ? `${fmt.money(v.val)} · ${v.concept} · period end ${v.end} · ${v.form} filed ${v.filed}` : null]),
-        metric('Current ratio (derived by RYLAQ)', 'AssetsCurrent ÷ LiabilitiesCurrent', 'AssetsCurrent', 'LiabilitiesCurrent', 'Periods may differ; not a credit metric.'),
-        metric('Debt to equity (derived by RYLAQ)', 'LongTermDebt ÷ StockholdersEquity', 'LongTermDebt', 'Equity', 'Excludes short-term debt and leases; accounting policies differ.'),
-        metric('Interest coverage (derived by RYLAQ)', 'OperatingIncomeLoss ÷ InterestExpense', 'OperatingIncome', 'InterestExpense', 'Operating income is not EBIT/EBITDA; periods may differ.')
+        metric('Current ratio (derived by JAQA)', 'AssetsCurrent ÷ LiabilitiesCurrent', 'AssetsCurrent', 'LiabilitiesCurrent', 'Periods may differ; not a credit metric.'),
+        metric('Debt to equity (derived by JAQA)', 'LongTermDebt ÷ StockholdersEquity', 'LongTermDebt', 'Equity', 'Excludes short-term debt and leases; accounting policies differ.'),
+        metric('Interest coverage (derived by JAQA)', 'OperatingIncomeLoss ÷ InterestExpense', 'OperatingIncome', 'InterestExpense', 'Operating income is not EBIT/EBITDA; periods may differ.')
       ];
       return {
         records: [
@@ -211,7 +211,7 @@
             url: `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${padded}&type=10-K&owner=exclude`,
             endpoint: 'api/xbrl/companyfacts',
             category: 'derived-financial-metric',
-            badges: [{ text: 'Derived by RYLAQ from public filing data', tone: 'fin' }, { text: 'Not a credit rating', tone: 'neutral' }],
+            badges: [{ text: 'Derived by JAQA from public filing data', tone: 'fin' }, { text: 'Not a credit rating', tone: 'neutral' }],
             fields
           })
         ]
@@ -227,7 +227,7 @@
     title: 'Public Filing & Financial Statement Lens',
     short: 'Public Filings',
     description: 'Filing index, filing events and (where live) XBRL financial facts with transparent derived metrics.',
-    warnings: ['Derived by RYLAQ from public filing data. Not a credit rating. Accounting standards, fiscal periods, and restatements may limit comparability.'],
+    warnings: ['Derived by JAQA from public filing data. Not a credit rating. Accounting standards, fiscal periods, and restatements may limit comparability.'],
     render(ctx) {
       const gate = R.entityGate(ctx, 'the Public Filing lens');
       if (gate) return gate;
@@ -250,7 +250,7 @@
         ui.section('Filing index (SEC EDGAR submissions)', { icon: 'doc' }, ui.taskPanel(T.secSubs(cik), { auto: true, render: filingsTable })),
         ui.section('XBRL financial facts & derived metrics', { icon: 'chart', desc: 'Formula, source concepts, periods and caveats shown for every derived value. No credit score, peer ranking or investment conclusion.' }, ui.taskPanel({ key: 'secxbrl:' + cik, sourceId: 'secXbrl', label: 'SEC XBRL company facts', run: () => R.clients.secXbrl.facts(cik) }, { linkout: { href: `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${cik}&type=10-K&owner=exclude`, label: 'Open 10-K filings on EDGAR' } })),
         ui.section('Going-concern, restatement and auditor-change disclosures', { icon: 'warn' }, h('p', null, 'Listed 8-K items 4.01 (auditor change) and 4.02 (non-reliance/restatement) appear in Counterparty Financial Fragility. Going-concern language must be read in the filings themselves:'), extLink('https://www.sec.gov/edgar/search/#/q=%22going%20concern%22&ciks=' + cik, 'EDGAR full-text search: “going concern” for this CIK')),
-        ui.exportBar('RYLAQ-Finance-Risk-results.json', 'RYLAQ-Finance-Risk-results.csv', 'finance')
+        ui.exportBar('JAQA-Finance-Risk-results.json', 'JAQA-Finance-Risk-results.csv', 'finance')
       );
     }
   });
@@ -278,8 +278,8 @@
         ui.section('Insolvency registries', { icon: 'link' }, ui.dir('insolvency', name, { compact: true })),
         ui.section('Liens, UCC, charges, tax liens & judgments', { icon: 'link' }, ui.dir('lien', name, { compact: true }), h('p', { class: 'rq-muted' }, 'Tax liens are recorded with county/state recorders (US) and equivalent offices elsewhere; many are fee-based or not searchable online.')),
         ui.section('Debarment, exclusions & enforcement', { icon: 'shield' }, ui.linkouts(R.directories.sanctions.filter((e) => e.kind === 'debarment'), null, { compact: true }), ui.dir('enforcement', null, { compact: true })),
-        ui.exportBar('RYLAQ-Finance-Risk-results.json', 'RYLAQ-Finance-Risk-results.csv', 'finance')
+        ui.exportBar('JAQA-Finance-Risk-results.json', 'JAQA-Finance-Risk-results.csv', 'finance')
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

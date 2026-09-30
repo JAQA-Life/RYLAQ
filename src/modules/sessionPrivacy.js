@@ -20,7 +20,7 @@
     icon: 'lock',
     title: 'Session & Privacy',
     short: 'Session & Privacy',
-    description: 'How RYLAQ handles your data, provider attributions, display preferences, exports and the legal notice.',
+    description: 'How JAQA handles your data, provider attributions, display preferences, exports and the legal notice.',
     render() {
       const p = R.state.prefs;
       const refresh = () => {
@@ -70,4 +70,4 @@
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

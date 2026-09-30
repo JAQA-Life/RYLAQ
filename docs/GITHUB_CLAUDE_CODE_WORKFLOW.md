@@ -38,18 +38,18 @@ CI rebuilds and fails if `git diff` shows any change to `dist/`, `embed/` or `co
 - proxy or backend endpoints
 - `_blank` links without `rel="noopener noreferrer"`
 - legacy brand names or oncology branding
-- `RYLAQ™` outside a legal context, or in titles, headings or filenames
+- `JAQA™` outside a legal context, or in titles, headings or filenames
 
 It also asserts that the required legal, privacy and security content exists in `dist/`.
 
 ## Source verification (`verify-sources.yml`)
 
-`scripts/verify-cors.mjs` sends real requests with `Origin: https://rylaq.com`. It emulates CORS preflights and validates response shapes. The GitHub workflow runs it from a GitHub-hosted runner, which has open network access, prints the resulting config as a single line, and uploads the full report as an artifact.
+`scripts/verify-cors.mjs` sends real requests with `Origin: https://jaqa.life`. It emulates CORS preflights and validates response shapes. The GitHub workflow runs it from a GitHub-hosted runner, which has open network access, prints the resulting config as a single line, and uploads the full report as an artifact.
 
 To refresh:
 
 1. **Actions → Verify public sources (CORS + shape) → Run workflow.** Set the origin to the real production origin.
-2. Download the artifact, or copy the `RYLAQ_CORS_CONFIG=` line, into `config/cors-verification.json`.
+2. Download the artifact, or copy the `JAQA_CORS_CONFIG=` line, into `config/cors-verification.json`.
 3. Run `npm run build`, review the diff (live sources, CSP `connect-src`, `docs/SOURCE_REGISTRY.md`), then commit.
 
 Never mark a source live by hand. The build derives live mode and CSP from this file only.

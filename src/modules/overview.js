@@ -71,7 +71,7 @@
         'div',
         { class: 'rq-hero' },
         h('h3', { class: 'rq-hero-title' }, 'Start with a company, insurer, reinsurer, broker, country, port, HS code, CVE, tender, award, grant, PPP, regulation, or risk concept'),
-        h('p', null, 'RYLAQ assembles public evidence from ', h('strong', null, live.length + ' live public APIs'), ' verified for browser access, and routes everything else to official link-outs — with provenance, confidence and coverage gaps on every result.'),
+        h('p', null, 'JAQA assembles public evidence from ', h('strong', null, live.length + ' live public APIs'), ' verified for browser access, and routes everything else to official link-outs — with provenance, confidence and coverage gaps on every result.'),
         h('div', { class: 'rq-row' }, ui.button('Focus search', () => R.shell.focusSearch(), { variant: 'primary', icon: 'search' }), ui.button('How it works', () => R.shell.openHelp(), { icon: 'help' }), ui.button('Coverage Console', () => R.shell.go('coverage', { focus: true }), { icon: 'gauge' }))
       ),
       h(
@@ -115,7 +115,7 @@
     }
     if (org) {
       const def = R.T.gleifSearch(s.chosen.orgName || s.query);
-      return ui.section('Entity resolution — choose the legal entity', { icon: 'building', desc: 'Candidates from GLEIF, sorted by match confidence. RYLAQ never silently picks a “Possible” match.' }, ui.taskPanel(def, { auto: true, onSelect: (r) => R.pipeline.selectPrimary(r), selectLabel: 'Use this entity', emptyText: 'No LEI records matched. The entity may be private, unregistered with GLEIF, or known under a different legal name.', linkout: { href: R.linkoutFromTemplate('https://search.gleif.org/#/search/simpleSearch={q}', s.query), label: 'Search GLEIF directly' } }));
+      return ui.section('Entity resolution — choose the legal entity', { icon: 'building', desc: 'Candidates from GLEIF, sorted by match confidence. JAQA never silently picks a “Possible” match.' }, ui.taskPanel(def, { auto: true, onSelect: (r) => R.pipeline.selectPrimary(r), selectLabel: 'Use this entity', emptyText: 'No LEI records matched. The entity may be private, unregistered with GLEIF, or known under a different legal name.', linkout: { href: R.linkoutFromTemplate('https://search.gleif.org/#/search/simpleSearch={q}', s.query), label: 'Search GLEIF directly' } }));
     }
     return null;
   }
@@ -175,4 +175,4 @@
   }
 
   R.modules.register({ id: 'overview', group: 'risk', order: 1, icon: 'gauge', liveRefresh: true, title: 'Overview / Risk Triage', short: 'Overview', description: 'Unified summary of the investigated subject: interpretation, resolution, signals, gaps, coverage and freshness.', render: overview });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

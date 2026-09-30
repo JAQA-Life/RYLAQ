@@ -169,4 +169,4 @@
       );
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

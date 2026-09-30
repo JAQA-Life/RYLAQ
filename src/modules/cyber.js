@@ -51,10 +51,10 @@
       if (ctx.resolved.cik) parts.push(ui.section('Cybersecurity incident disclosures (SEC 8-K item 1.05)', { icon: 'doc' }, ui.taskPanel(T.secSubs(ctx.resolved.cik), { auto: true, render: R.secSignalsView })));
       parts.push(
         ui.section('Advisories & software supply-chain references', { icon: 'link' }, ui.dir('cyber', null, { compact: true })),
-        ui.section('Scanners & exposure search engines (link-out only)', { icon: 'shield', desc: 'RYLAQ never scans, probes, fingerprints or enumerates any system. Use these only under your organization’s authorization and policies.' }, ui.dir('scannersLinkOutOnly', null, { compact: true })),
-        ui.exportBar('RYLAQ-Cyber-results.json', 'RYLAQ-Cyber-results.csv', 'globalRisk')
+        ui.section('Scanners & exposure search engines (link-out only)', { icon: 'shield', desc: 'JAQA never scans, probes, fingerprints or enumerates any system. Use these only under your organization’s authorization and policies.' }, ui.dir('scannersLinkOutOnly', null, { compact: true })),
+        ui.exportBar('JAQA-Cyber-results.json', 'JAQA-Cyber-results.csv', 'globalRisk')
       );
       return h('div', null, ...parts);
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

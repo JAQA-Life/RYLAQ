@@ -88,7 +88,7 @@ ${license}
     });
     return cache;
   };
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);
 `;
 writeFileSync(path.join(root, 'src/modules/worldLand.js'), js);
 console.log(`Wrote src/modules/worldLand.js — ${lines.length} arcs, ${points} points, ${js.length.toLocaleString()} bytes`);

@@ -6,7 +6,7 @@
  * corner brackets, telemetry readouts, optic modes) are INSPIRED BY the
  * public WorldMonitor and God's Eye View projects. No code, assets, styles
  * or data were copied from either project; this is a clean-room
- * implementation built on RYLAQ's own verified sources. Neither project is
+ * implementation built on JAQA's own verified sources. Neither project is
  * integrated, embedded or called (see docs/THIRD_PARTY_SOURCE_POLICY.md).
  *
  * PRIVACY: feeds use fixed, non-personal queries (no search terms), stay on
@@ -317,4 +317,4 @@
       return out;
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

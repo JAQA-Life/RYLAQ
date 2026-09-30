@@ -73,4 +73,4 @@
       return h('div', null, form, tech, st.result && R.state.session ? ui.section('Results', { icon: 'list' }, ui.taskPanel(st.result, { auto: true })) : null);
     }
   });
-})(window.RYLAQWorkspace);
+})(window.JAQAWorkspace);

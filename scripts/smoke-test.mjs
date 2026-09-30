@@ -153,9 +153,9 @@ const bodyText = () => page.locator('#rq-content').innerText();
 console.log('Deployment & privacy');
 await page.goto(BASE);
 await page.waitForSelector('.rq-rail-item');
-ok((await page.title()) === 'RYLAQ Global Risk, Finance, Insurance & Procurement Intelligence Workspace', 'page title uses normal branding (no ™)');
+ok((await page.title()) === 'JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace', 'page title uses normal branding (no ™)');
 ok(!(await page.locator('h1').first().innerText()).includes('™'), 'H1 has no trademark symbol');
-ok((await page.locator('.rq-footer').innerText()).includes('RYLAQ™. All rights reserved.'), 'footer has © year RYLAQ™ copyright');
+ok((await page.locator('.rq-footer').innerText()).includes('JAQA™. All rights reserved.'), 'footer has © year JAQA™ copyright');
 ok(await page.locator('.rq-privacy-badge').isVisible(), 'privacy badge visible');
 ok((await page.locator('#rq-confidential').innerText()).includes('Do not enter confidential'), 'confidentiality warning visible');
 ok((await page.locator('input[type=file]').count()) === 0, 'no file upload inputs');
@@ -163,7 +163,7 @@ ok(externalHosts.size === 0, 'no external requests on initial load (no auto-prob
 ok((await page.locator('.rq-situation').count()) === 1, 'lands on the Situation Room');
 ok((await page.locator('.rq-globe-canvas').count()) === 1, 'globe canvas renders without network');
 ok((await page.locator('.rq-strip').innerText()).includes('STANDBY'), 'feeds start on standby');
-ok((await page.getAttribute('#rylaq-workspace', 'data-theme')) === 'ops', 'situation-room theme is the default');
+ok((await page.getAttribute('#jaqa-workspace', 'data-theme')) === 'ops', 'situation-room theme is the default');
 await shot('01-situation-standby');
 
 console.log('Situation Room feeds');
@@ -286,14 +286,14 @@ const dl = page.waitForEvent('download');
 await page.click('button:has-text("Export Evidence Pack")');
 await page.click('.rq-dialog button:has-text("Export without search term")');
 const file = await dl;
-ok(file.suggestedFilename() === 'RYLAQ-Evidence-Pack.json', 'export filename is fixed and has no search term');
+ok(file.suggestedFilename() === 'JAQA-Evidence-Pack.json', 'export filename is fixed and has no search term');
 const json = JSON.parse(await (await file.createReadStream()).toArray().then((c) => Buffer.concat(c).toString('utf8')));
-ok(json.legal && json.legal.trademark === 'RYLAQ™' && /RYLAQ™\. All rights reserved/.test(json.legal.copyright), 'export JSON carries RYLAQ™ legal metadata');
+ok(json.legal && json.legal.trademark === 'JAQA™' && /JAQA™\. All rights reserved/.test(json.legal.copyright), 'export JSON carries JAQA™ legal metadata');
 ok(json.session && json.session.query === '[omitted by user]', 'search term omitted when user chooses');
 ok(Array.isArray(json.records) && json.records.every((r) => r.provenance && r.provenance.source), 'records carry provenance');
 
 console.log('CSV injection');
-const csvCell = await page.evaluate(() => window.RYLAQWorkspace.exporters.csvCell('=HYPERLINK("x")'));
+const csvCell = await page.evaluate(() => window.JAQAWorkspace.exporters.csvCell('=HYPERLINK("x")'));
 ok(csvCell.startsWith('"\'=') || csvCell.startsWith("'="), 'CSV formula injection neutralized');
 
 console.log('Clear session & storage');
@@ -318,13 +318,13 @@ ok(overflow <= 1, 'no horizontal scroll at phone width');
 await shot('08-mobile');
 await page.setViewportSize({ width: 1440, height: 1000 });
 await page.click('.rq-header button[aria-label^="Switch theme"]');
-ok((await page.getAttribute('#rylaq-workspace', 'data-theme')) === 'dark', 'theme cycles to dark');
+ok((await page.getAttribute('#jaqa-workspace', 'data-theme')) === 'dark', 'theme cycles to dark');
 await shot('09-dark');
 await page.click('.rq-header button[aria-label^="Switch theme"]');
-ok((await page.getAttribute('#rylaq-workspace', 'data-theme')) === 'light', 'theme cycles to light');
+ok((await page.getAttribute('#jaqa-workspace', 'data-theme')) === 'light', 'theme cycles to light');
 await shot('10-light');
 await page.click('.rq-header button[aria-label^="Switch theme"]');
-ok((await page.getAttribute('#rylaq-workspace', 'data-theme')) === 'ops', 'theme cycles back to situation room');
+ok((await page.getAttribute('#jaqa-workspace', 'data-theme')) === 'ops', 'theme cycles back to situation room');
 
 await browser.close();
 server.kill();

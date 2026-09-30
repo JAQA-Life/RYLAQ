@@ -1,0 +1,721 @@
+{
+  "origin": "https://rylaq.com",
+  "verifiedAt": "2026-09-30T09:11:31.145Z",
+  "runner": "github-actions:36694308369",
+  "method": "Server-side request with Origin header + CORS preflight emulation + response-shape validation. Confirm from the deployed origin with the Coverage Console.",
+  "sources": {
+    "gleif": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "gleif-fulltext",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "gleif-record",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "gleif-children",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "gleif-direct-parent",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "gleif-ultimate-parent",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "gleif-fuzzy",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "gleif-fulltext",
+        "gleif-record",
+        "gleif-children",
+        "gleif-direct-parent",
+        "gleif-ultimate-parent",
+        "gleif-fuzzy"
+      ]
+    },
+    "worldbank": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "wb-country",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "wb-lpi",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "wb-wgi-legacy",
+          "ok": false,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": false
+        },
+        {
+          "id": "wb-wgi-source3",
+          "ok": false,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": false
+        },
+        {
+          "id": "wb-wgi-gov",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "wb-inflation",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "wb-country",
+        "wb-lpi",
+        "wb-wgi-gov",
+        "wb-inflation"
+      ]
+    },
+    "imf": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "imf-datamapper",
+          "ok": false,
+          "required": true,
+          "status": 403,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "usgs": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "usgs-query",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "usgs-query"
+      ]
+    },
+    "openmeteo": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "om-forecast",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "om-geocode",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "om-forecast",
+        "om-geocode"
+      ]
+    },
+    "nws": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "nws-alerts-point",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "nws-alerts-point"
+      ]
+    },
+    "reliefweb": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "rw-v2-reports",
+          "ok": false,
+          "required": true,
+          "status": 403,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": false
+        },
+        {
+          "id": "rw-v1-reports",
+          "ok": false,
+          "required": false,
+          "status": 410,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "cisaKev": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "kev-cisa-gov",
+          "ok": false,
+          "required": false,
+          "status": 200,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "kev-cisagov-github",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "kev-cisagov-github"
+      ]
+    },
+    "nvd": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "nvd-cve",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "nvd-keyword",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "nvd-apikey-preflight",
+          "ok": false,
+          "required": false,
+          "status": null,
+          "acao": null,
+          "preflightOk": false,
+          "shapeOk": null
+        }
+      ],
+      "passingEndpoints": [
+        "nvd-cve",
+        "nvd-keyword"
+      ]
+    },
+    "cpsc": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "cpsc-recall-number",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "cpsc-recall",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "cpsc-recall-number",
+        "cpsc-recall"
+      ]
+    },
+    "nhtsa": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "nhtsa-campaign",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "https://rylaq.com",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "nhtsa-vehicle",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "https://rylaq.com",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "nhtsa-campaign",
+        "nhtsa-vehicle"
+      ]
+    },
+    "usaspending": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "usa-autocomplete-recipient",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": true,
+          "shapeOk": true
+        },
+        {
+          "id": "usa-awards",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": true,
+          "shapeOk": true
+        },
+        {
+          "id": "usa-award-detail",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "usa-grants",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": true,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "usa-autocomplete-recipient",
+        "usa-awards",
+        "usa-award-detail",
+        "usa-grants"
+      ]
+    },
+    "federalRegister": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "fr-agency",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "fr-search",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "fr-agency",
+        "fr-search"
+      ]
+    },
+    "sec": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "sec-submissions",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "sec-submissions"
+      ]
+    },
+    "secXbrl": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "sec-companyfacts",
+          "ok": false,
+          "required": true,
+          "status": 200,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "sec-companyconcept",
+          "ok": false,
+          "required": false,
+          "status": 200,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "secTickers": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "sec-tickers",
+          "ok": false,
+          "required": true,
+          "status": 403,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "secFullText": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "sec-efts",
+          "ok": false,
+          "required": true,
+          "status": 200,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "ted": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "ted-search",
+          "ok": false,
+          "required": true,
+          "status": 200,
+          "acao": null,
+          "preflightOk": false,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "courtlistener": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "cl-v4-search",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "https://rylaq.com",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "cl-v4-opinions",
+          "ok": true,
+          "required": false,
+          "status": 200,
+          "acao": "https://rylaq.com",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "cl-v4-search",
+        "cl-v4-opinions"
+      ]
+    },
+    "wikidata": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "wd-search",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        },
+        {
+          "id": "wd-entities",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "wd-search",
+        "wd-entities"
+      ]
+    },
+    "wikipedia": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "wp-summary",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "wp-summary"
+      ]
+    },
+    "overpass": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "overpass-around",
+          "ok": false,
+          "required": true,
+          "status": 504,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "ecb": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "ecb-exr",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "ecb-exr"
+      ]
+    },
+    "gdelt": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "gdelt-doc",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "*",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "gdelt-doc"
+      ]
+    },
+    "epa": {
+      "verified": true,
+      "checks": [
+        {
+          "id": "echo-facility-info",
+          "ok": true,
+          "required": true,
+          "status": 200,
+          "acao": "https://rylaq.com",
+          "preflightOk": null,
+          "shapeOk": true
+        }
+      ],
+      "passingEndpoints": [
+        "echo-facility-info"
+      ]
+    },
+    "comtrade": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "comtrade-preview",
+          "ok": false,
+          "required": true,
+          "status": 200,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": []
+    },
+    "fred": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "fred-nokey",
+          "ok": false,
+          "required": true,
+          "status": 400,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": [],
+      "preflightVerified": false,
+      "keyGated": true
+    },
+    "companiesHouse": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "ch-preflight",
+          "ok": true,
+          "required": true,
+          "status": null,
+          "acao": null,
+          "preflightOk": true,
+          "shapeOk": null
+        }
+      ],
+      "passingEndpoints": [
+        "ch-preflight"
+      ],
+      "preflightVerified": true,
+      "keyGated": true
+    },
+    "opencorporates": {
+      "verified": false,
+      "checks": [
+        {
+          "id": "oc-search",
+          "ok": false,
+          "required": true,
+          "status": 401,
+          "acao": null,
+          "preflightOk": null,
+          "shapeOk": false
+        }
+      ],
+      "passingEndpoints": [],
+      "preflightVerified": false,
+      "keyGated": true
+    }
+  }
+}

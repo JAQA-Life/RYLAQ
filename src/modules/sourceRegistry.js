@@ -188,11 +188,13 @@
     tier: 'A', region: 'United States', liveCapable: true, apiBase: 'https://data.sec.gov/api/xbrl', endpoints: ['/companyfacts/CIK##########.json'],
     linkoutDetailUrlTemplate: 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={id}&type=10-K&owner=exclude', officialDocsUrl: 'https://www.sec.gov/search-filings/edgar-application-programming-interfaces',
     attribution: 'XBRL financial data provided by U.S. SEC EDGAR.', financeSensitive: true, concurrencyLimit: 1, timeoutMs: 20000,
+    coverageGapWarning: 'The companyfacts endpoint returned no CORS header in verification, so XBRL facts and derived metrics are link-out only (filing index remains live).',
     probe: 'https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json'
   });
   S('secFullText', 'SEC EDGAR full-text search', {
     tier: 'B', region: 'United States', liveCapable: true, apiBase: 'https://efts.sec.gov/LATEST', endpoints: ['/search-index?q='],
-    linkoutSearchUrlTemplate: 'https://www.sec.gov/edgar/search/#/q=%22{q}%22', attribution: 'Filing text search provided by U.S. SEC EDGAR.', financeSensitive: true
+    linkoutSearchUrlTemplate: 'https://www.sec.gov/edgar/search/#/q=%22{q}%22', attribution: 'Filing text search provided by U.S. SEC EDGAR.', financeSensitive: true,
+    coverageGapWarning: 'No CORS header returned in verification; link-out only.'
   });
   S('ted', 'TED — Tenders Electronic Daily API', {
     tier: 'A', region: 'European Union / EEA', liveCapable: true, apiBase: 'https://api.ted.europa.eu/v3', endpoints: ['POST /notices/search'],
@@ -279,7 +281,14 @@
   S('firms', 'NASA FIRMS active fire data', { tier: 'B', officialSiteUrl: 'https://firms.modaps.eosdis.nasa.gov/map/', attribution: 'NASA FIRMS data provided by NASA where used.', coverageGapWarning: 'API requires a MAP_KEY; link-out only.' });
   S('comtrade', 'UN Comtrade', { tier: 'B', officialSiteUrl: 'https://comtradeplus.un.org/', attribution: 'Trade data provided by UN Comtrade where used.', mayLagOfficialDb: true, coverageGapWarning: 'Keyed API without browser CORS; link-out only. Aggregated, lagging data; no shipment-level visibility.' });
   S('acled', 'ACLED conflict data', { tier: 'B', officialSiteUrl: 'https://acleddata.com/', attribution: 'Event data provided by ACLED where used.', coverageGapWarning: 'Registration/key and licence terms required; link-out only.' });
-  S('gdelt', 'GDELT Project', { tier: 'B', officialSiteUrl: 'https://www.gdeltproject.org/', attribution: 'Event data provided by GDELT where used.', coverageGapWarning: 'Noisy media signals, not truth. Rate-limited without CORS headers on error; link-out only.' });
+  S('gdelt', 'GDELT DOC 2.0 API', {
+    tier: 'B', liveCapable: true, apiBase: 'https://api.gdeltproject.org/api/v2', endpoints: ['/doc/doc?mode=artlist&format=json'],
+    officialDocsUrl: 'https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/', officialSiteUrl: 'https://www.gdeltproject.org/',
+    attribution: 'Media event data provided by the GDELT Project where used.', concurrencyLimit: 1, timeoutMs: 15000,
+    rateLimitPolicy: 'GDELT asks for at most one request every 5 seconds; RYLAQ sends user-triggered requests only.',
+    coverageGapWarning: 'Noisy media signals, not truth, and not adverse-media screening. Rate-limit responses omit CORS headers, so a throttled request appears as unavailable for the session.',
+    probe: 'https://api.gdeltproject.org/api/v2/doc/doc?query=%22port%20congestion%22&mode=artlist&format=json&maxrecords=1'
+  });
   S('opencorporates', 'OpenCorporates', { tier: 'B', linkoutSearchUrlTemplate: 'https://opencorporates.com/companies?q={q}', officialSiteUrl: 'https://opencorporates.com/', attribution: 'Company registry data provided by OpenCorporates where used.', coverageGapWarning: 'API requires a token; link-out only.' });
   S('companiesHouse', 'UK Companies House', {
     tier: 'B', region: 'United Kingdom', linkoutSearchUrlTemplate: 'https://find-and-update.company-information.service.gov.uk/search?q={q}', linkoutDetailUrlTemplate: 'https://find-and-update.company-information.service.gov.uk/company/{id}',
@@ -345,7 +354,7 @@
       L('BIS Entity List', 'https://www.bis.gov/entity-list', { region: 'United States', kind: 'export-control' }),
       L('SAM.gov exclusions', 'https://sam.gov/search/?index=ex', { region: 'United States', kind: 'debarment' }),
       L('World Bank debarred firms & individuals', 'https://www.worldbank.org/en/projects-operations/procurement/debarred-firms', { region: 'Global (IFI)', kind: 'debarment' }),
-      L('ADB sanctions list', 'https://lnadbg4.adb.org/oga0009p.nsf/sancALL1P?OpenView&count=999', { region: 'Asia-Pacific (IFI)', kind: 'debarment' }),
+      L('ADB Office of Anticorruption and Integrity (sanctions)', 'https://www.adb.org/who-we-are/integrity', { region: 'Asia-Pacific (IFI)', kind: 'debarment' }),
       L('AfDB debarment list', 'https://www.afdb.org/en/projects-and-operations/procurement/debarment-and-sanctions-procedures', { region: 'Africa (IFI)', kind: 'debarment' }),
       L('IDB sanctioned firms & individuals', 'https://www.iadb.org/en/who-we-are/topics/transparency/integrity-at-the-idb-group/sanctioned-firms-and-individuals', { region: 'Latin America (IFI)', kind: 'debarment' }),
       L('EBRD ineligible entities', 'https://www.ebrd.com/ineligible-entities.html', { region: 'Europe/Central Asia (IFI)', kind: 'debarment' }),

@@ -16,6 +16,7 @@
  * It also asserts that required legal text and privacy architecture exist.
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -130,6 +131,22 @@ else {
   const h = readFileSync(ht, 'utf8');
   for (const need of ['Options -Indexes', 'X-Content-Type-Options', 'X-Frame-Options "DENY"', 'Referrer-Policy "no-referrer"', 'Permissions-Policy', 'Cross-Origin-Opener-Policy', 'Cross-Origin-Resource-Policy', 'Content-Security-Policy', "frame-ancestors 'none'", "object-src 'none'"])
     if (!h.includes(need)) failures.push('dist/.htaccess missing: ' + need);
+  // Every inline <script> in every page must match a CSP script-src hash exactly,
+  // or browsers refuse to run it and the page renders blank in production.
+  const cspValue = (h.match(/Header always set Content-Security-Policy "([^"]+)"/) || ['', ''])[1];
+  const allowed = new Set([...(cspValue.match(/script-src ([^;]+)/) || ['', ''])[1].matchAll(/'(sha256-[A-Za-z0-9+/=]+)'/g)].map((m) => m[1]));
+  const pages = walk(path.join(root, 'dist')).filter((f) => f.endsWith('.html'));
+  for (const f of pages) {
+    const scripts = [...readFileSync(f, 'utf8').matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script>/g)]
+      .filter((m) => !/type="application\/(ld\+)?json"/.test(m[1] || '')) // data blocks are not executed
+      .map((m) => m[2])
+      .filter((c) => c.length);
+    if (!scripts.length) failures.push(`${path.relative(root, f)} has no inline script`);
+    for (const c of scripts) {
+      const hash = 'sha256-' + createHash('sha256').update(c, 'utf8').digest('base64');
+      if (!allowed.has(hash)) failures.push(`${path.relative(root, f)}: inline script hash ${hash} is not allowed by the CSP in dist/.htaccess (page would render blank)`);
+    }
+  }
 }
 
 if (failures.length) {

@@ -104,7 +104,10 @@ const css = read('src/assets/jaqa-workspace.css').trim();
 const js = scripts.map((s) => `/* ---- ${s} ---- */\n` + read('src/' + s).trim()).join('\n\n') + '\n';
 if (/<\/script/i.test(js)) throw new Error('Inline JS must not contain a closing script tag');
 if (/<\/style/i.test(css)) throw new Error('Inline CSS must not contain a closing style tag');
-const scriptHash = 'sha256-' + createHash('sha256').update(js, 'utf8').digest('base64');
+// The CSP hash must cover the EXACT text between <script> and </script> in the
+// page, including the leading newline — otherwise browsers block the app (blank page).
+const inlineJs = '\n' + js;
+const scriptHash = 'sha256-' + createHash('sha256').update(inlineJs, 'utf8').digest('base64');
 
 const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Single self-contained static file: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
 
@@ -124,7 +127,7 @@ function page({ title, description, canonical, initialModule }) {
   // Function replacements: the inlined code contains `$&`-style sequences that
   // String.prototype.replace would otherwise interpret.
   out = out.replace(cssBlock[0], () => `<style>\n${css}\n</style>`);
-  out = out.replace(jsBlock[0], () => `<script>\n${js}</script>`);
+  out = out.replace(jsBlock[0], () => `<script>${inlineJs}</script>`);
   out = out.replace('data-initial-module="situation"', `data-initial-module="${initialModule}"`);
   return out;
 }

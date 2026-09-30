@@ -16,7 +16,7 @@ Hostinger returns this when the web root (`public_html/`) has **no `index.html`*
 
 | Cause | Fix |
 |---|---|
-| Hostinger Git deploys a branch whose root has no `index.html`. For example, `main` before the app was merged, or `main` after it: the app lives in `dist/`, not at the repo root. | Deploy the **`hostinger`** branch (section 3). It contains only the contents of `dist/`, so `index.html` sits at its root. |
+| Hostinger Git deploys a branch whose root has no `index.html`. For example, `main` before the app pull request was merged, when it held only `LICENSE`. | **Merge the app into `main`, then click Deploy in hPanel.** The repository-root `.htaccess` routes every request into `dist/`, so a deploy of `main` serves the app at `/`. Better still, deploy the **`hostinger`** branch (section 2), which contains only the site files. |
 | The `dist/` **folder** was uploaded instead of its **contents** (`public_html/dist/index.html`). | Move the files up, so the page is at `public_html/index.html`. |
 | Hostinger's placeholder `default.php` (or an old `index.php`) is still in `public_html/`, or the directory was not empty when Git deploy was set up. | Delete the placeholders, empty `public_html/`, and redeploy. |
 | Wrong permissions after a manual upload. | Folders `755`, files `644` (File Manager → Permissions). |
@@ -63,7 +63,12 @@ Notes:
 
 - Hostinger's clone puts a `.git/` folder in `public_html/`. The generated `.htaccess` refuses every dotfile path (`RewriteRule (^|/)\.(?!well-known/) - [F,L]`), so `https://jaqa.life/.git/config` returns 403. Section 9 has a check for this.
 - The `hostinger` branch is append-only: every publish is a normal commit that records the source commit, and it is never force-pushed. That history is what you roll back to.
-- Never point Hostinger Git at `main`. That serves a 403 (there is no `index.html` at the root) and would expose `src/`, `scripts/` and `.github/`.
+- **Deploying `main` directly also works.** The repository-root `.htaccess` rewrites every request into `dist/`:
+  - `https://jaqa.life/` serves `dist/index.html`, with its CSP and headers.
+  - Source paths such as `/src/…`, `/scripts/…` and `/package.json` return 404.
+  - `/.git/…` returns 403.
+
+  The source files are still copied onto the server's disk, though, and on Nginx or with `.htaccess` disabled they would be served. The `hostinger` branch is therefore the recommended target.
 
 ## 3. Manual upload (File Manager)
 

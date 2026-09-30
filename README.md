@@ -11,6 +11,7 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 | Path | Purpose |
 |---|---|
 | `dist/index.html` | **Production artifact**: one self-contained HTML file (CSS and JS inlined, inline SVG icons, system fonts). Upload to Hostinger or open locally. |
+| `.htaccess` (root) | Used only if Hostinger deploys the repository root (`main`). It routes every request into `dist/` and returns 404 for source files. |
 | `dist/.htaccess` | Security headers, HTTPS redirect, no directory listing, gzip, and a strict CSP. `script-src` is pinned to the script's SHA-256 hash and `connect-src` allows only verified API origins. |
 | `dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/` | Optional standalone routes: the same app with route-specific title, meta and canonical, opening on the matching module. |
 | `embed/jaqa-workspace-embed.html` | Fragment for CMS/intranet custom-HTML blocks. It contains no html/head/body, and its styles are scoped to `.jaqa-workspace`. |
@@ -73,7 +74,7 @@ The workspace opens on the **Situation Room**: a command-center grid with an int
 
 ## Deployment
 
-See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). The site is built for the domain root, `https://jaqa.life/`. On every push to `main`, `.github/workflows/publish-hostinger-branch.yml` publishes **only the contents of `dist/`** to the `hostinger` branch. Point **hPanel → Advanced → Git** at branch `hostinger` with an empty directory (that is, `public_html/`). Never point it at `main`: the repository root has no `index.html`, so Hostinger answers *403 Forbidden*. Manual upload of the `dist/` contents (including `.htaccess`) and the optional FTPS workflow (`deploy-hostinger.yml`, skipped until secrets are set) also work. Hostinger needs no Node.js, PHP, database or build step.
+See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). The site is built for the domain root, `https://jaqa.life/`. On every push to `main`, `.github/workflows/publish-hostinger-branch.yml` publishes **only the contents of `dist/`** to the `hostinger` branch. Point **hPanel → Advanced → Git** at branch `hostinger` with an empty directory (that is, `public_html/`). If Hostinger stays pointed at `main`, the repository-root `.htaccess` serves `dist/` at `/` and hides everything else, so that works too once the app is merged. Manual upload of the `dist/` contents (including `.htaccess`) and the optional FTPS workflow (`deploy-hostinger.yml`, skipped until secrets are set) also work. Hostinger needs no Node.js, PHP, database or build step.
 
 ## Licence
 

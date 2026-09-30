@@ -75,9 +75,9 @@ The workspace opens on the **Situation Room**: a command-center grid with an int
 
 See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). In short, upload the **contents** of `dist/` to `public_html/workspace/` (or `public_html/`), including `.htaccess`. Hostinger needs no Node.js, PHP, database or build step. The optional GitHub Actions FTPS deploy is in `.github/workflows/deploy-hostinger.yml`.
 
-## Licence note
+## Licence
 
-The repository currently contains a `LICENSE` file with **GPL-3.0**, which predates this build. The product copy uses "© JAQA™. All rights reserved." These two positions conflict. Choose one: keep GPL-3.0 and adjust the footer wording, or replace `LICENSE` with a proprietary licence (`PROPRIETARY.md`). This is a legal decision for JAQA and was deliberately not changed here.
+**Proprietary — © JAQA. All rights reserved.** See [`LICENSE`](LICENSE). No licence is granted to use, copy, modify, deploy or distribute this software without JAQA's written permission. Third-party material (Natural Earth outlines via world-atlas, ISC) keeps its own licence; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The earlier GPL-3.0 placeholder licence was replaced so that the licence matches the product's "All rights reserved" notice. Have counsel review `LICENSE` before external distribution.
 
 ---
 JAQA™ is a trademark of JAQA. JAQA™ is an independent interface and is not affiliated with or endorsed by data providers unless expressly stated.

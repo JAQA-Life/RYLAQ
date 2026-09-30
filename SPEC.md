@@ -138,6 +138,7 @@ The header legal comment is in `core.js` and in the built script.
 
 ## Decision log
 
+- **2026-09-30 — Licence.** The GPL-3.0 placeholder `LICENSE` was replaced with a proprietary JAQA licence (all rights reserved; `package.json` `license: UNLICENSED`), which resolves the conflict with the product's copyright notice.
 - **2026-09-30 — Rename.** The product brand is **JAQA** (formerly RYLAQ) and the production domain is **jaqa.life**. CORS was re-verified from `https://jaqa.life`: 19 sources are live, and Overpass passed this run.
 - **2026-09-30 — Design direction.** At the product owner's request, the UI/UX takes its design language from WorldMonitor (dense intelligence grid, wire, status strip) and God's Eye View (HUD globe, reticle, optic modes). The outcome:
   - The Situation Room is the landing module.
@@ -148,6 +149,5 @@ The header legal comment is in `core.js` and in the built script.
 
 ## Open decisions
 
-1. **Licence.** The repository has a GPL-3.0 `LICENSE`, while the product states "All rights reserved". JAQA must pick one; see the README.
-2. **ReliefWeb appname.** Request an approved appname, then re-verify.
-3. **Logo.** Replace the inline SVG monogram with the official JAQA mark (inline SVG) when available.
+1. **ReliefWeb appname.** Request an approved appname, then re-verify.
+2. **Logo.** Replace the inline SVG monogram with the official JAQA mark (inline SVG) when available.

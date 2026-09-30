@@ -2,7 +2,7 @@
   "name": "jaqa-workspace",
   "version": "1.0.0",
   "private": true,
-  "description": "JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — static, privacy-first public-source triage. All tooling is dev-only; production is static files in dist/.",
+  "description": "JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace \u2014 static, privacy-first public-source triage. All tooling is dev-only; production is static files in dist/.",
   "type": "module",
   "engines": {
     "node": ">=18"
@@ -17,5 +17,6 @@
     "preview": "node scripts/preview.mjs",
     "test:smoke": "node scripts/smoke-test.mjs"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "license": "UNLICENSED"
 }

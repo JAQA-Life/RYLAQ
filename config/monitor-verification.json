@@ -1,0 +1,197 @@
+{
+  "verifiedAt": "2026-09-30T18:15:34.995Z",
+  "runner": "github-actions:36757264566",
+  "userAgent": "JAQA-Monitor/1.0 (+https://jaqa.life)",
+  "method": "Server-side GET of each allowlisted feed with the production parser; verified = HTTP 2xx and at least one item with a title and an http(s) link.",
+  "feeds": {
+    "un-news": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 30,
+      "withCoordinates": 0,
+      "withDates": 30,
+      "sampleTitle": "Malaysia: UN agency urges safeguards after refugees returned to Myanmar"
+    },
+    "un-peace": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 30,
+      "withCoordinates": 0,
+      "withDates": 30,
+      "sampleTitle": "Lebanon: One in five children goes to bed hungry, says UNICEF"
+    },
+    "wto-news": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 10,
+      "withCoordinates": 0,
+      "withDates": 10,
+      "sampleTitle": "John H. Jackson Moot Court Competition kicks off with webinar support on offer"
+    },
+    "gdacs": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 40,
+      "withCoordinates": 40,
+      "withDates": 40,
+      "sampleTitle": "Green flood alert in Thailand"
+    },
+    "eonet": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 40,
+      "withCoordinates": 40,
+      "withDates": 40,
+      "sampleTitle": "Tropical Storm Hanna — Severe Storms"
+    },
+    "usgs-significant": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 8,
+      "withCoordinates": 8,
+      "withDates": 8,
+      "sampleTitle": "M 4.2 - 6 km WNW of Wauna, Washington"
+    },
+    "nhc-atlantic": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 7,
+      "withCoordinates": 0,
+      "withDates": 7,
+      "sampleTitle": "Atlantic Tropical Weather Outlook"
+    },
+    "nhc-epacific": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 13,
+      "withCoordinates": 0,
+      "withDates": 13,
+      "sampleTitle": "Eastern North Pacific Tropical Weather Outlook"
+    },
+    "reliefweb-updates": {
+      "verified": false,
+      "status": 406,
+      "error": "http_406",
+      "items": 0,
+      "withCoordinates": 0,
+      "withDates": 0,
+      "sampleTitle": null
+    },
+    "reliefweb-disasters": {
+      "verified": false,
+      "status": 202,
+      "error": "no_items_parsed",
+      "items": 0,
+      "withCoordinates": 0,
+      "withDates": 0,
+      "sampleTitle": null
+    },
+    "who-news": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 25,
+      "withCoordinates": 0,
+      "withDates": 25,
+      "sampleTitle": "WHO Director-General visits Jordan to recognize strong collaboration on health system delivery, emergency relief and adv"
+    },
+    "cisa-advisories": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 30,
+      "withCoordinates": 0,
+      "withDates": 30,
+      "sampleTitle": "Baicells Nova 430H"
+    },
+    "ncsc-uk": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 20,
+      "withCoordinates": 0,
+      "withDates": 20,
+      "sampleTitle": "Exploitation of vulnerabilities affecting Citrix NetScaler ADC and Citrix NetScaler Gateway"
+    },
+    "ecb-press": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 15,
+      "withCoordinates": 0,
+      "withDates": 15,
+      "sampleTitle": "Christine Lagarde: Interview with La Croix"
+    },
+    "fed-press": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 20,
+      "withCoordinates": 0,
+      "withDates": 20,
+      "sampleTitle": "Federal Reserve Board finalizes changes to enhance the transparency and public accountability of its stress test and red"
+    },
+    "sec-press": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 25,
+      "withCoordinates": 0,
+      "withDates": 25,
+      "sampleTitle": "SEC Charges Two Individuals With Orchestrating Fraud Scheme That Targeted Veterans"
+    },
+    "boe-news": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 40,
+      "withCoordinates": 0,
+      "withDates": 40,
+      "sampleTitle": "Financial Policy Committee Record – September 2026"
+    },
+    "bis-press": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 10,
+      "withCoordinates": 0,
+      "withDates": 10,
+      "sampleTitle": "Basel III risk-based capital and leverage ratios are stable while liquidity indicators show limited movements for large "
+    },
+    "imf-news": {
+      "verified": false,
+      "status": 403,
+      "error": "http_403",
+      "items": 0,
+      "withCoordinates": 0,
+      "withDates": 0,
+      "sampleTitle": null
+    },
+    "us-travel": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 40,
+      "withCoordinates": 0,
+      "withDates": 40,
+      "sampleTitle": "Suriname - Level 1: Exercise Normal Precautions"
+    },
+    "uk-travel": {
+      "verified": true,
+      "status": 200,
+      "error": null,
+      "items": 20,
+      "withCoordinates": 0,
+      "withDates": 20,
+      "sampleTitle": "Brazil"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+# JAQA — https://jaqa.life/
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://jaqa.life/sitemap.xml

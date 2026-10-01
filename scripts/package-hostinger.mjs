@@ -93,7 +93,14 @@ writeFileSync(
 cpSync(path.join(root, 'apps', 'globe', 'package-lock.json'), path.join(stage, 'package-lock.json'));
 execFileSync('npm', ['install', '--package-lock-only', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: stage, stdio: 'inherit' });
 writeFileSync(path.join(stage, '.nvmrc'), '24\n');
-writeFileSync(path.join(stage, '.gitignore'), 'node_modules/\n.env\n.env.*\n!.env.example\napps/globe/.env\n');
+writeFileSync(path.join(stage, '.gitignore'), 'node_modules/\n.env\n.env.*\n!.env.example\napps/globe/.env\napps/globe/dist-next/\n');
+// God's Eye View's own .gitignore excludes `dist`; in the deploy branch the
+// built globe IS the payload, so keep every rule except that one.
+{
+  const gi = path.join(stage, 'apps', 'globe', '.gitignore');
+  const kept = readFileSync(gi, 'utf8').split('\n').filter((l) => l.trim() !== 'dist' && l.trim() !== '/dist' && l.trim() !== 'dist/');
+  writeFileSync(gi, kept.join('\n'));
+}
 
 if (outDir) {
   console.log('wrote deployment to ' + outDir);

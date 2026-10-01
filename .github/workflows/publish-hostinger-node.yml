@@ -66,10 +66,36 @@ jobs:
           fi
           node scripts/package-hostinger.mjs --dir "$SITE"
 
-      - name: Test the deployment exactly as Hostinger runs it
+      - name: Commit the build to hostinger-node (not pushed yet)
+        id: commit
         working-directory: ${{ runner.temp }}/site
+        env:
+          SOURCE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "hostinger-node already matches this build."
+          else
+            git commit -q -m "Deploy JAQA full site from ${SOURCE_SHA}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Test exactly what was committed, the way Hostinger runs it
+        run: |
+          set -euo pipefail
+          # A clean export of the commit: anything .gitignore kept out is missing
+          # here too, exactly as Hostinger would see it.
+          V="$RUNNER_TEMP/verify"
+          rm -rf "$V" && mkdir -p "$V"
+          git -C "$RUNNER_TEMP/site" archive HEAD | tar -x -C "$V"
+          cd "$V"
+          missing=0
+          for f in package.json package-lock.json server/jaqa-server.mjs server/monitor.mjs config/monitor-verification.json dist/index.html dist/.htaccess apps/globe/vite.config.js apps/globe/dist/index.html apps/globe/dist/cesium/Cesium.js apps/globe/dist/cesium/Workers/createVerticesFromHeightmap.js; do
+            [ -f "$f" ] || { echo "::error::Missing from the deploy commit: $f"; missing=1; }
+          done
+          [ "$missing" = 0 ]
           npm ci --no-audit --no-fund
           npm run build
           PORT=3000 node server/jaqa-server.mjs > "$RUNNER_TEMP/server.log" 2>&1 &
@@ -79,6 +105,9 @@ jobs:
           for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /globe/cesium/Workers/createVerticesFromHeightmap.js /globe/cesium/Assets/Textures/NaturalEarthII/tilemapresource.xml /about/ /faq/ /sources/ /privacy/ /3d-globe/ /sitemap.xml /robots.txt /llms.txt /api/jaqa/monitor/feeds; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 200 ] || fail=1
           done
+          # The globe page must reference assets that exist (catches a missing build).
+          asset=$(curl -s http://127.0.0.1:3000/globe/ | grep -m1 -o '/globe/assets/index-[A-Za-z0-9_-]*\.js' || true)
+          code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$asset"); echo "globe app bundle $asset -> $code"; [ -n "$asset" ] && [ "$code" = 200 ] || fail=1
           for p in /.htaccess /package.json /server/jaqa-server.mjs /apps/globe/package.json /api/setup/status; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 404 ] || fail=1
           done
@@ -87,20 +116,13 @@ jobs:
           echo "${feed:0:300}"
           kill $SERVER || true
           cat "$RUNNER_TEMP/server.log"
-          rm -rf node_modules apps/globe/node_modules
           [ "$fail" = 0 ] || (echo "::error::Deployment test failed; not publishing." && exit 1)
 
-      - name: Publish to the hostinger-node branch
+      - name: Push to the hostinger-node branch
+        if: steps.commit.outputs.changed == 'true'
         working-directory: ${{ runner.temp }}/site
         env:
           SOURCE_SHA: ${{ github.sha }}
         run: |
-          set -euo pipefail
-          git add -A
-          if git diff --cached --quiet; then
-            echo "hostinger-node already matches this build — nothing to publish."
-            exit 0
-          fi
-          git commit -q -m "Deploy JAQA full site from ${SOURCE_SHA}"
           git push origin hostinger-node
           echo "::notice::Published the full site from ${SOURCE_SHA} to hostinger-node. Hostinger redeploys on push."

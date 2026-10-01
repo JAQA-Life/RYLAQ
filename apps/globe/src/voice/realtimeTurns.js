@@ -85,7 +85,7 @@ export class RealtimeTurns {
 
   sendTextCommand(text) {
     if (!this.dc || this.dc.readyState !== 'open') {
-      throw new Error('GEV voice is not connected');
+      throw new Error('Voice is not connected');
     }
     const cleanText = String(text || '').trim();
     if (!cleanText) return;

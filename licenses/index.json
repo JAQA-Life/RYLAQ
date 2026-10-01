@@ -1,0 +1,114 @@
+[
+  {
+    "name": "God’s Eye View (code base of JAQA Eye View)",
+    "version": "commit 082074a",
+    "license": "MIT",
+    "file": "jaqa-eye-view-MIT.txt",
+    "url": "https://github.com/bilawalsidhu/gods-eye-view"
+  },
+  {
+    "name": "cesium",
+    "version": "1.138.0",
+    "license": "Apache-2.0",
+    "file": "cesium-1.138.0.txt",
+    "url": "https://www.npmjs.com/package/cesium"
+  },
+  {
+    "name": "hls.js",
+    "version": "1.7.3",
+    "license": "Apache-2.0",
+    "file": "hls.js-1.7.3.txt",
+    "url": "https://www.npmjs.com/package/hls.js"
+  },
+  {
+    "name": "satellite.js",
+    "version": "6.0.2",
+    "license": "MIT",
+    "file": "satellite.js-6.0.2.txt",
+    "url": "https://www.npmjs.com/package/satellite.js"
+  },
+  {
+    "name": "mgrs",
+    "version": "2.1.0",
+    "license": "MIT",
+    "file": "mgrs-2.1.0.txt",
+    "url": "https://www.npmjs.com/package/mgrs"
+  },
+  {
+    "name": "egm96-universal",
+    "version": "1.1.1",
+    "license": "MIT",
+    "file": "egm96-universal-1.1.1.txt",
+    "url": "https://www.npmjs.com/package/egm96-universal"
+  },
+  {
+    "name": "rfc4648",
+    "version": "1.5.4",
+    "license": "MIT",
+    "file": "rfc4648-1.5.4.txt",
+    "url": "https://www.npmjs.com/package/rfc4648"
+  },
+  {
+    "name": "@mapbox/vector-tile",
+    "version": "3.0.0",
+    "license": "BSD-3-Clause",
+    "file": "mapbox-vector-tile-3.0.0.txt",
+    "url": "https://www.npmjs.com/package/@mapbox/vector-tile"
+  },
+  {
+    "name": "@mapbox/point-geometry",
+    "version": "1.1.0",
+    "license": "ISC",
+    "file": "mapbox-point-geometry-1.1.0.txt",
+    "url": "https://www.npmjs.com/package/@mapbox/point-geometry"
+  },
+  {
+    "name": "pbf",
+    "version": "5.1.2",
+    "license": "BSD-3-Clause",
+    "file": "pbf-5.1.2.txt",
+    "url": "https://www.npmjs.com/package/pbf"
+  },
+  {
+    "name": "resolve-protobuf-schema",
+    "version": "2.1.0",
+    "license": "MIT",
+    "file": "resolve-protobuf-schema-2.1.0.txt",
+    "url": "https://www.npmjs.com/package/resolve-protobuf-schema"
+  },
+  {
+    "name": "protocol-buffers-schema",
+    "version": "3.6.1",
+    "license": "MIT",
+    "file": "protocol-buffers-schema-3.6.1.txt",
+    "url": "https://www.npmjs.com/package/protocol-buffers-schema"
+  },
+  {
+    "name": "@meri-imperiumi/eccodes-wasm",
+    "version": "2.48.2",
+    "license": "Apache-2.0",
+    "file": "meri-imperiumi-eccodes-wasm-2.48.2.txt",
+    "url": "https://www.npmjs.com/package/@meri-imperiumi/eccodes-wasm"
+  },
+  {
+    "name": "@fontsource/inter",
+    "version": "5.3.0",
+    "license": "OFL-1.1",
+    "file": "fontsource-inter-5.3.0.txt",
+    "url": "https://www.npmjs.com/package/@fontsource/inter"
+  },
+  {
+    "name": "@fontsource/jetbrains-mono",
+    "version": "5.3.0",
+    "license": "OFL-1.1",
+    "file": "fontsource-jetbrains-mono-5.3.0.txt",
+    "url": "https://www.npmjs.com/package/@fontsource/jetbrains-mono"
+  },
+  {
+    "name": "material-symbols",
+    "version": "0.47.5",
+    "license": "Apache-2.0",
+    "file": "material-symbols-0.47.5.txt",
+    "url": "https://www.npmjs.com/package/material-symbols"
+  }
+]

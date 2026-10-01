@@ -79,7 +79,13 @@ const seen = new Set();
 for (const file of files) {
   if (seen.has(file)) continue;
   seen.add(file);
-  const text = readFileSync(file, 'utf8');
+  let text = readFileSync(file, 'utf8');
+  // /licenses/ reproduces third-party licence texts verbatim, HTML-escaped
+  // inside <pre> (inert text, e.g. a licence naming a font project). Blank
+  // those blocks, keeping line numbers; the rest of the page is still checked.
+  if (path.relative(root, file).split(path.sep).join('/') === 'dist/licenses/index.html') {
+    text = text.replace(/(<pre[^>]*>)([^<]*)(<\/pre>)/g, (m, open, body, close) => open + body.replace(/[^\n]/g, '') + close);
+  }
   const lines = text.split('\n');
   lines.forEach((ln, i) => {
     for (const [re, msg] of RULES) if (re.test(ln)) fail(file, i + 1, msg, ln);

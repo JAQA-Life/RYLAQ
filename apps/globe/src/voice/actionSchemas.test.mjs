@@ -21,7 +21,8 @@ test('the complete Realtime tool payload pins the additive analyst and satellite
     .digest('hex');
   assert.equal(
     digest,
-    '9e33ac0fa5a860a17bb6d79f2c43646b6c36d0c932590bf114814e891a1c96de',
+    // JAQA rebrand: the app name in the fly_to_location, set_layer_visibility and set_visual_style descriptions changed from "God's Eye View" to "JAQA Eye View"; nothing else changed.
+    'c2ef26b5d996f04028067b45c9196fb80c80b9969f82a75092c0e6f09cbefcc8',
   );
 });
 

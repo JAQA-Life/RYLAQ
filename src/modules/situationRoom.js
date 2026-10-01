@@ -5,9 +5,9 @@
  * grid, live wire/ticker, status strip) and the HUD language (reticle,
  * corner brackets, telemetry readouts, optic modes) are INSPIRED BY the
  * public WorldMonitor and God's Eye View projects. No code, assets, styles
- * or data were copied from either project; this is a clean-room
- * implementation built on JAQA's own verified sources. Neither project is
- * integrated, embedded or called (see docs/THIRD_PARTY_SOURCE_POLICY.md).
+ * or data were copied into this module; it is a clean-room implementation
+ * built on JAQA's own verified sources. (God's Eye View's MIT code ships
+ * separately as JAQA Eye View at /globe/; see THIRD_PARTY_NOTICES.md.)
  *
  * PRIVACY: feeds use fixed, non-personal queries (no search terms), stay on
  * STANDBY until the user activates them, and are wiped by Clear Session.
@@ -197,7 +197,7 @@
       h('div', { class: 'rq-hud-top rq-mono', 'aria-hidden': 'true' }, h('span', null, 'OPTIC ' + (MODES.find((m) => m[0] === st.mode) || MODES[0])[1]), h('span', { class: 'rq-utc' }, R.shell.utcNow())),
       h('div', { class: 'rq-hud-bottom', 'aria-live': 'off' }, readout, vis)
     );
-    // Link into the integrated God's Eye View globe, kept in step with this view.
+    // Link into JAQA Eye View (/globe/), kept in step with this view.
     const alt3d = (z) => Math.round(Math.max(150000, 14000000 / Math.max(1, z)));
     const link3d = R.globe3d ? R.globe3d.link('Open in 3D globe', { lat: view.lat, lon: ((view.lon + 540) % 360) - 180, alt: alt3d(view.zoom), style: st.mode }) : null;
     if (globe) globe.destroy();
@@ -242,7 +242,7 @@
         s && s.resolved && s.resolved.lat !== undefined && s.resolved.lat !== null ? ui.button('Recenter on subject', () => globe.focus(s.resolved.lat, s.resolved.lon), { cls: 'rq-btn-xs', icon: 'globe' }) : null
       )
     );
-    const open3d = h('div', { class: 'rq-row rq-row-tight' }, link3d, link3d ? h('span', { class: 'rq-fineprint' }, 'Photorealistic God’s Eye View globe at this view (coordinates only).') : null);
+    const open3d = h('div', { class: 'rq-row rq-row-tight' }, link3d, link3d ? h('span', { class: 'rq-fineprint' }, 'Photorealistic JAQA Eye View globe at this view (coordinates only).') : null);
     return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, open3d, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
   }
 
@@ -318,7 +318,7 @@
         panel('Markers (text alternative)', { cls: 'rq-panel-wide', meta: 'from loaded records' }, markerList),
         statusPanel
       );
-      const out = h('div', { class: 'rq-situation' }, strip, ticker(), grid, h('p', { class: 'rq-fineprint' }, 'Design language inspired by public situational-awareness projects (clean-room implementation; no code, assets or data reused; no affiliation). ', extLink('https://github.com/koala73/worldmonitor', 'WorldMonitor'), ' · ', extLink('https://github.com/bilawalsidhu/gods-eye-view', 'God’s Eye View'), ' — reference links only.'));
+      const out = h('div', { class: 'rq-situation' }, strip, ticker(), grid, h('p', { class: 'rq-fineprint' }, 'Signals come from the public records loaded in this session. Open-source licences: ', h('a', { href: '/licenses/' }, 'Licences'), '.'));
       setTimeout(renderMarkerList, 0);
       return out;
     }

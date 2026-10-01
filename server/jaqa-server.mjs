@@ -32,7 +32,7 @@ const globeDist = path.join(globeRoot, 'dist');
 
 for (const [p, what] of [
   [path.join(jaqaDist, 'index.html'), 'JAQA build (run: npm run build)'],
-  [path.join(globeDist, 'index.html'), "God's Eye View build (run: npm run build:globe)"],
+  [path.join(globeDist, 'index.html'), 'JAQA Eye View build (run: npm run build:globe)'],
 ]) {
   if (!existsSync(p)) {
     console.error('Missing ' + what + ': ' + path.relative(root, p));

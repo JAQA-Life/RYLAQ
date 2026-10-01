@@ -15,7 +15,7 @@ This branch (`jaqa-ultimate`) combines three things in one site served by one No
 | `/` | **JAQA workspace:** Situation Room, search, 30+ modules, exports | JAQA (proprietary) |
 | `/global-monitor/` | **Global Monitor:** headlines from 18 verified official feeds, event map, countries in the headlines, ECB FX board | JAQA, clean-room and WorldMonitor-inspired (no WorldMonitor code: it is AGPL) |
 | `/` → *3D Globe* screen | **CesiumJS 3D evidence globe:** your session's evidence on a [CesiumJS](https://github.com/CesiumGS/cesium) Earth with bundled Natural Earth II imagery, making no third-party requests | JAQA, using CesiumJS (Apache-2.0) |
-| `/globe/` | **3D globe:** God's Eye View (live aircraft, ships, satellites, hazards, cameras, CRT/NVG/FLIR styles, voice) | God's Eye View, MIT, © Bilawal Sidhu (`apps/globe/`) |
+| `/globe/` | **3D globe:** JAQA Eye View (live aircraft, ships, satellites, hazards, cameras, CRT/NVG/FLIR styles, voice) | Built on God's Eye View, MIT, © Bilawal Sidhu (`apps/globe/`); licences on `/licenses/` |
 | `/about/`, `/faq/`, `/sources/`, `/privacy/`, `/3d-globe/` | Crawlable static pages, plus `sitemap.xml`, `robots.txt`, `llms.txt` and JSON-LD structured data | JAQA |
 
 ```bash

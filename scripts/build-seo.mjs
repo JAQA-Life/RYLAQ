@@ -5,14 +5,20 @@
  *  - jsonLd(): Organization + WebSite + WebApplication (+ FAQPage on home)
  *  - aboutSection(): crawlable About + FAQ block on every workspace page
  *    (visible text, so crawlers that do not run JavaScript still get content)
- *  - staticPages(): /about/ /faq/ /sources/ /privacy/ /3d-globe/ /404.html,
+ *  - staticPages(): /about/ /faq/ /sources/ /privacy/ /3d-globe/ /licenses/ /404.html,
  *    robots.txt, sitemap.xml, llms.txt, llms-full.txt, manifest, icons
  *
  * Output is deterministic (dates come from the verification files) so CI can
  * diff dist/. Pages carry no script except JSON-LD data blocks.
  * JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.
  */
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { DEFINITION, FAQ, FEATURES, PRIVACY_POINTS, TAGLINE } from './seo-content.mjs';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const readRepo = (p) => readFileSync(path.join(ROOT, p), 'utf8');
 
 export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ld = (obj) => `<script type="application/ld+json">\n${JSON.stringify(obj).replace(/</g, '\\u003c')}\n</script>`;
@@ -70,7 +76,7 @@ ${FEATURES.map(([t, d]) => `<li><strong>${esc(t)}.</strong> ${esc(d)}</li>`).joi
 </ul>
 <h2>Frequently asked questions</h2>
 ${faq.slice(0, 6).map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('\n')}
-<p class="jaqa-about-nav">${[link('about/', 'About'), link('faq/', 'All questions'), link('sources/', 'Data sources'), link('privacy/', 'Privacy'), link('3d-globe/', '3D Globe'), link('global-monitor/', 'Global Monitor')].join(' · ')}</p>
+<p class="jaqa-about-nav">${[link('about/', 'About'), link('faq/', 'All questions'), link('sources/', 'Data sources'), link('privacy/', 'Privacy'), link('3d-globe/', '3D Globe'), link('global-monitor/', 'Global Monitor'), link('licenses/', 'Licences')].join(' · ')}</p>
 <p class="jaqa-about-legal">© 2026 JAQA™. All rights reserved. JAQA™ is a trademark of JAQA. Educational and information-discovery use only; not legal, compliance, credit, investment, insurance, sanctions or procurement advice.</p>
 </div>
 </section>`;
@@ -105,7 +111,7 @@ ${lead ? `<p class="site-lead">${esc(lead)}</p>` : ''}
 ${body}
 </main>
 <footer class="site-foot">
-<p><a href="${up}">Open the JAQA workspace</a> · <a href="${up}globe/">Open the 3D globe</a></p>
+<p><a href="${up}">Open the JAQA workspace</a> · <a href="${up}globe/">Open the 3D globe</a> · <a href="${up}licenses/">Licences</a></p>
 <p>© 2026 JAQA™. All rights reserved. JAQA™ is a trademark of JAQA. JAQA™ is an independent interface and is not affiliated with or endorsed by data providers unless expressly stated.</p>
 <p>Educational and enterprise information-discovery use only. Not legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice.</p>
 </footer>
@@ -137,8 +143,8 @@ ${body}
 <ul class="site-list">${PRIVACY_POINTS.map((p) => `<li>${esc(p)}</li>`).join('')}</ul>
 <h2>What JAQA is not</h2>
 <p>JAQA is not a sanctions system of record, a credit rating agency, an insurance broker, underwriter or claims adjuster, a procurement advisor or award authority, or a real-time control tower. Public signals are never presented as clearance, certification, rating, coverage, eligibility, award, solvency or legal determination.</p>
-<h2>Credits</h2>
-<p>The 3D globe is <a href="https://github.com/bilawalsidhu/gods-eye-view" rel="noopener noreferrer">God’s Eye View</a> by Bilawal Sidhu (MIT licence). The Global Monitor is JAQA’s own code, inspired by public situational-awareness dashboards such as <a href="https://github.com/koala73/worldmonitor" rel="noopener noreferrer">WorldMonitor</a> (no WorldMonitor code is used). Coastlines: Natural Earth (public domain) via world-atlas.</p>`
+<h2>Open source</h2>
+<p>JAQA uses open-source software and open data. Their licences and credits are on the <a href="../licenses/">Licences</a> page.</p>`
     }));
 
     // /faq/
@@ -170,7 +176,7 @@ ${monitorConfig.feeds.map((f) => `<tr><td>${esc(f.name)}</td><td><a href="${esc(
 <p>Official registries, portals, regulators and data services that JAQA links to but does not call — because verification failed, a key or login is required, or policy (paid ratings, sanctions lists, market reports) requires it.</p>
 <ul class="site-list site-cols">${linkouts.map((s) => `<li>${esc(s.displayName)}</li>`).join('')}</ul>
 <h2>3D globe data</h2>
-<p>The integrated God’s Eye View globe uses its own providers (for example OpenSky and ADS-B aircraft, AIS ships, CelesTrak satellites, USGS earthquakes, NASA FIRMS fires, NOAA weather and cyclones, Launch Library 2, OpenStreetMap). They are listed with their terms in God’s Eye View’s DATA_SOURCES.md.</p>`
+<p>JAQA Eye View uses its own providers (for example OpenSky and ADS-B aircraft, AIS ships, CelesTrak satellites, USGS earthquakes, NASA FIRMS fires, NOAA weather and cyclones, Launch Library 2, OpenStreetMap). Each layer’s credit is listed under “Data attribution” on the globe.</p>`
     }));
 
     // /privacy/
@@ -182,20 +188,20 @@ ${monitorConfig.feeds.map((f) => `<tr><td>${esc(f.name)}</td><td><a href="${esc(
 <h2>What not to enter</h2>
 <p>Do not enter confidential commercial, financial, insurance, claims, procurement, personal, health, bank, payment or other protected information. JAQA rejects inputs that look sensitive and never stores them.</p>
 <h2>The 3D globe</h2>
-<p>God’s Eye View runs at /globe/ and requests its layers from public providers through the JAQA server. If its voice agent is enabled on the server, your voice is sent to OpenAI to operate it. Links from the workspace to the globe carry only coordinates and a visual style, never your search terms.</p>
+<p>JAQA Eye View runs at /globe/ and requests its layers from public providers through the JAQA server. If its voice agent is enabled on the server, your voice is sent to OpenAI to operate it. Links from the workspace to the globe carry only coordinates and a visual style, never your search terms.</p>
 <h2>Legal notice</h2>
 <p>${esc(R.legal.shortDisclaimer || '')}</p>`
     }));
 
     // /3d-globe/
     write('dist/3d-globe/index.html', page({
-      path: '3d-globe/', title: 'JAQA 3D Globe | Live Aircraft, Ships, Satellites & Hazards (God’s Eye View)', description: 'God’s Eye View in JAQA: a photorealistic 3D globe with live aircraft, ships, satellites, earthquakes, wildfires, weather and CRT, NVG and FLIR sensor styles.',
-      h1: '3D Globe', lead: 'God’s Eye View, the open-source spy-satellite-style globe by Bilawal Sidhu, integrated into JAQA.',
-      graph: (c) => [{ '@type': 'WebPage', name: 'JAQA 3D Globe', url: c, about: { '@type': 'SoftwareApplication', name: 'God’s Eye View', applicationCategory: 'MultimediaApplication', operatingSystem: 'Any (web browser with WebGL)', author: { '@type': 'Person', name: 'Bilawal Sidhu' }, license: 'https://opensource.org/licenses/MIT', url: SITE + '/globe/' } }, ...bc('3D Globe')(c)],
+      path: '3d-globe/', title: 'JAQA Eye View | 3D Globe with Live Aircraft, Ships, Satellites & Hazards', description: 'JAQA Eye View: a photorealistic 3D globe with live aircraft, ships, satellites, earthquakes, wildfires, weather and CRT, NVG and FLIR sensor styles.',
+      h1: 'JAQA Eye View', lead: 'A photorealistic 3D globe of live public signals, part of JAQA.',
+      graph: (c) => [{ '@type': 'WebPage', name: 'JAQA 3D Globe', url: c, about: { '@type': 'WebApplication', name: 'JAQA Eye View', applicationCategory: 'MultimediaApplication', operatingSystem: 'Any (web browser with WebGL)', isAccessibleForFree: true, publisher: { '@id': SITE + '/#org' }, url: SITE + '/globe/' } }, ...bc('3D Globe')(c)],
       body: `<p><a class="site-cta" href="../globe/">Open the 3D globe</a></p>
 <h2>What it shows</h2>
 <ul class="site-list">
-<li><strong>Photorealistic Earth.</strong> CesiumJS with Esri satellite imagery and OpenStreetMap without keys; Google Photorealistic 3D Tiles with a Google Maps key or Cesium ion token.</li>
+<li><strong>Photorealistic Earth.</strong> Satellite imagery and OpenStreetMap without keys; photorealistic 3D city tiles when the server has a Google Maps key or Cesium ion token.</li>
 <li><strong>Live contacts.</strong> Aircraft, ships and satellites, with click-to-track, trails and a 250 km contacts roster.</li>
 <li><strong>Hazards and weather.</strong> Earthquakes, wildfires, weather radar, wind, clouds, lightning and tropical cyclone tracks.</li>
 <li><strong>Space.</strong> Satellite orbits, pass predictions and a rolling 30 days of launches.</li>
@@ -205,8 +211,33 @@ ${monitorConfig.feeds.map((f) => `<tr><td>${esc(f.name)}</td><td><a href="${esc(
 </ul>
 <h2>From the workspace</h2>
 <p>The Situation Room, the Global Monitor and the 3D Globe screen in the workspace open the globe at the place you are looking at. Links carry only coordinates and a style, never your search.</p>
-<h2>Credits and licence</h2>
-<p>God’s Eye View © 2026 Bilawal Sidhu, released under the MIT licence (<a href="https://github.com/bilawalsidhu/gods-eye-view" rel="noopener noreferrer">source code</a>). JAQA serves it with self-hosted fonts and otherwise unmodified code. Positions, feeds and camera images can be delayed, incomplete or wrong; nothing on the globe is a determination of risk, ownership, intent or exposure.</p>`
+<h2>Data and licences</h2>
+<p>Each map layer’s source is credited under “Data attribution” on the globe. Open-source licences are on the <a href="../licenses/">Licences</a> page. Positions, feeds and camera images can be delayed, incomplete or wrong; nothing on the globe is a determination of risk, ownership, intent or exposure.</p>`
+    }));
+
+    // /licenses/ — text only: open-source licences (copied verbatim by
+    // scripts/gen-licenses.mjs) and the credits that licences require.
+    const licIndex = JSON.parse(readRepo('licenses/index.json'));
+    const mdLinks = (t) => esc(t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)').replace(/`/g, ''));
+    const modelRows = readRepo('apps/globe/public/models/README.md').split('\n').filter((l) => /^\| `[^`]+\.glb` \|/.test(l)).map((l) => l.split('|').slice(1, -1).map((c) => c.trim()));
+    const landNotice = (readRepo('src/modules/worldLand.js').match(/Copyright 2013-2019 Michael Bostock[\s\S]*?THIS SOFTWARE\./) || [''])[0].replace(/^\s*\* ?/gm, '');
+    if (!landNotice) throw new Error('world-atlas notice not found in src/modules/worldLand.js');
+    write('dist/licenses/index.html', page({
+      path: 'licenses/', title: 'Licences | JAQA', description: 'Open-source licences and credits for the software, fonts, 3D models and map data used by JAQA and JAQA Eye View.',
+      h1: 'Licences', lead: 'JAQA uses open-source software and open data. Their licences and the credits they require are reproduced here.',
+      graph: (c) => [{ '@type': 'WebPage', name: 'JAQA licences', url: c }, ...bc('Licences')(c)],
+      body: `<h2>Software and fonts</h2>
+<p>Each licence text below is copied unmodified from the package or project it covers. The CesiumJS licence also lists the third-party code bundled inside CesiumJS.</p>
+${licIndex.map((e) => `<details class="site-license"><summary><strong>${esc(e.name)}</strong> ${esc(e.version)} · ${esc(e.license)}</summary><p><a href="${esc(e.url)}" rel="noopener noreferrer">${esc(e.url.replace(/^https:\/\//, ''))}</a></p><pre>${esc(readRepo('licenses/' + e.file))}</pre></details>`).join('\n')}
+<h2>3D models (JAQA Eye View)</h2>
+<p>These models are licensed under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener noreferrer">CC BY 4.0</a> and were modified for the globe as described. The credits do not imply endorsement by the creators.</p>
+<div class="site-table-wrap"><table class="site-table"><thead><tr><th scope="col">File</th><th scope="col">Work and creator</th><th scope="col">Source</th><th scope="col">Modifications</th></tr></thead><tbody>
+${modelRows.map(([f, w, src, , mod]) => `<tr><td>${mdLinks(f)}</td><td>${mdLinks(w)}</td><td>${mdLinks(src)}</td><td>${mdLinks(mod)}</td></tr>`).join('\n')}
+</tbody></table></div>
+<h2>Map data</h2>
+<p>The workspace’s land outlines come from Natural Earth (public domain) through the world-atlas package:</p>
+<pre class="site-pre">${esc(landNotice)}</pre>
+<p>The 3D evidence globe in the workspace uses the Natural Earth II imagery bundled with CesiumJS (public domain). JAQA Eye View credits each live map layer and bundled dataset (for example OpenStreetMap contributors, Esri and its imagery partners, NASA, NOAA and USGS) under “Data attribution” on the globe. Those datasets keep their own licences and terms; some are licensed for non-commercial use only.</p>`
     }));
 
     // 404
@@ -214,18 +245,19 @@ ${monitorConfig.feeds.map((f) => `<tr><td>${esc(f.name)}</td><td><a href="${esc(
 
     // robots.txt, sitemap.xml
     write('dist/robots.txt', `# JAQA — ${SITE}/\nUser-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
-    const urls = ['', 'global-monitor/', 'global-risk/', 'finance-risk/', 'insurance-reinsurance/', 'procurement-bids/', '3d-globe/', 'globe/', 'about/', 'faq/', 'sources/', 'privacy/'];
+    const urls = ['', 'global-monitor/', 'global-risk/', 'finance-risk/', 'insurance-reinsurance/', 'procurement-bids/', '3d-globe/', 'globe/', 'about/', 'faq/', 'sources/', 'privacy/', 'licenses/'];
     write('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE}/${u}</loc><lastmod>${lastmod}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 
     // llms.txt (https://llmstxt.org) + full text
     const pages = [
       ['JAQA workspace', '', 'the interactive workspace (Situation Room, search, all modules)'],
       ['Global Monitor', 'global-monitor/', `headlines from ${n.feeds} verified official feeds, event map, countries in the headlines, FX board`],
-      ['3D Globe', '3d-globe/', 'God’s Eye View photorealistic globe with live aircraft, ships, satellites and hazards'],
+      ['JAQA Eye View (3D globe)', '3d-globe/', 'photorealistic 3D globe with live aircraft, ships, satellites and hazards'],
       ['About', 'about/', 'what JAQA is, how it works, what it is not'],
       ['FAQ', 'faq/', 'direct answers about sources, privacy, verification and coverage'],
       ['Data sources', 'sources/', 'every live API, official feed and link-out'],
-      ['Privacy', 'privacy/', 'no accounts, cookies, storage or stored searches']
+      ['Privacy', 'privacy/', 'no accounts, cookies, storage or stored searches'],
+      ['Licences', 'licenses/', 'open-source licences and credits']
     ];
     write('dist/llms.txt', `# JAQA\n\n> ${TAGLINE}\n\n${DEFINITION(n)}\n\n## Pages\n\n${pages.map(([t, u, d]) => `- [${t}](${SITE}/${u}): ${d}`).join('\n')}\n\n## Optional\n\n- [Full text for language models](${SITE}/llms-full.txt): about, features, FAQ, privacy and source lists in one file\n`);
     write('dist/llms-full.txt', [

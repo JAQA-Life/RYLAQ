@@ -25,7 +25,8 @@ npm start                  # http://localhost:3000/  (PORT, HOST env vars)
 node scripts/package-hostinger.mjs   # → release/jaqa-hostinger.zip (deploy bundle)
 ```
 
-- **Deploy:** see [`docs/DEPLOY-NODE.md`](docs/DEPLOY-NODE.md). It covers a Hostinger VPS or a Node.js hosting plan with Node 24. Shared hosting with `public_html` only can't run the server; use the static-only `release/jaqa-web.zip` there (workspace and SEO pages, without the monitor and globe).
+- **Deploy from GitHub (recommended):** see [`docs/DEPLOY-HOSTINGER-GITHUB.md`](docs/DEPLOY-HOSTINGER-GITHUB.md). In Hostinger, create a Node.js web app (Business or Cloud plan) from this repository's `hostinger-node` branch, with Node 24, build command `npm run build` and entry file `server/jaqa-server.mjs`. The *Publish full site to hostinger-node branch* workflow builds and tests every merge to `main` and publishes it there, and Hostinger redeploys on push.
+- **Deploy by upload / VPS:** see [`docs/DEPLOY-NODE.md`](docs/DEPLOY-NODE.md). It covers a Hostinger VPS or a Node.js hosting plan with Node 24. Shared hosting with `public_html` only can't run the server; use the static-only `release/jaqa-web.zip` there (workspace and SEO pages, without the monitor and globe).
 - **Before commercial use:** God's Eye View bundles non-commercial datasets (TeleGeography cables, the Bhote Koshi pack) and uses OpenSky, whose licence is non-commercial. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 - **Monitor feeds** are re-verified with the *Verify monitor feeds* workflow; results go into `config/monitor-verification.json`.
 

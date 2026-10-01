@@ -11,7 +11,7 @@
  * provider console. Nothing is hardcoded here.
  */
 import { spawnSync } from 'node:child_process';
-import { existsSync, renameSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, renameSync, rmSync, symlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -22,26 +22,46 @@ if (major < 24 || (major === 24 && minor < 14)) {
   console.error(`God's Eye View requires Node >= 24.14 (running ${process.versions.node}).`);
   process.exit(1);
 }
-if (!existsSync(path.join(globe, 'node_modules', 'vite'))) {
-  console.error('Run `npm ci` in apps/globe first.');
+// Vite: apps/globe/node_modules (development) or the root node_modules (deploy branch).
+const vite = [path.join(globe, 'node_modules', 'vite', 'bin', 'vite.js'), path.join(root, 'node_modules', 'vite', 'bin', 'vite.js')].find((p) => existsSync(p));
+if (!vite) {
+  console.error('Vite not found: run `npm ci` in apps/globe (development) or `npm install` (deploy branch).');
   process.exit(1);
 }
 
-const vite = path.join(globe, 'node_modules', 'vite', 'bin', 'vite.js');
-const r = spawnSync(process.execPath, [vite, 'build', '--base', '/globe/'], { cwd: globe, stdio: 'inherit' });
-if (r.status !== 0) process.exit(r.status || 1);
+// vite-plugin-cesium reads Cesium from <apps/globe>/node_modules/cesium. In the
+// deploy branch Cesium is installed at the repository root, so link it there.
+const localCesium = path.join(globe, 'node_modules', 'cesium');
+const rootCesium = path.join(root, 'node_modules', 'cesium');
+if (!existsSync(localCesium) && existsSync(rootCesium)) {
+  mkdirSync(path.dirname(localCesium), { recursive: true });
+  symlinkSync(path.relative(path.dirname(localCesium), rootCesium), localCesium, 'dir');
+}
 
+// Build into a temporary folder and swap it in only after it is verified, so a
+// failed rebuild never breaks the globe that is currently being served.
+const dist = path.join(globe, 'dist');
+const next = path.join(globe, 'dist-next');
+rmSync(next, { recursive: true, force: true });
+const r = spawnSync(process.execPath, [vite, 'build', '--base', '/globe/', '--outDir', 'dist-next', '--emptyOutDir'], { cwd: globe, stdio: 'inherit' });
+if (r.status !== 0) {
+  rmSync(next, { recursive: true, force: true });
+  console.error('Globe build failed; the existing apps/globe/dist was left unchanged.');
+  process.exit(r.status || 1);
+}
 // vite-plugin-cesium writes Cesium's static files under <outDir>/<base>/cesium,
 // while the page requests <base>cesium/…; move them so /globe/cesium/ resolves.
-const dist = path.join(globe, 'dist');
-const nested = path.join(dist, 'globe', 'cesium');
+const nested = path.join(next, 'globe', 'cesium');
 if (existsSync(nested)) {
-  rmSync(path.join(dist, 'cesium'), { recursive: true, force: true });
-  renameSync(nested, path.join(dist, 'cesium'));
-  rmSync(path.join(dist, 'globe'), { recursive: true, force: true });
+  rmSync(path.join(next, 'cesium'), { recursive: true, force: true });
+  renameSync(nested, path.join(next, 'cesium'));
+  rmSync(path.join(next, 'globe'), { recursive: true, force: true });
 }
-if (!existsSync(path.join(dist, 'cesium', 'Cesium.js'))) {
-  console.error('Cesium runtime missing from apps/globe/dist/cesium');
+if (!existsSync(path.join(next, 'cesium', 'Cesium.js')) || !existsSync(path.join(next, 'index.html'))) {
+  rmSync(next, { recursive: true, force: true });
+  console.error('Cesium runtime missing from the new build; the existing apps/globe/dist was left unchanged.');
   process.exit(1);
 }
+rmSync(dist, { recursive: true, force: true });
+renameSync(next, dist);
 console.log('God\'s Eye View built to apps/globe/dist (served at /globe/).');

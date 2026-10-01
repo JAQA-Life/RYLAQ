@@ -1,0 +1,106 @@
+# Builds the FULL JAQA site (workspace + God's Eye View 3D globe + Global
+# Monitor + Node server), tests it exactly the way Hostinger runs a Node.js web
+# app, and publishes the ready-to-run result to the `hostinger-node` branch.
+#
+# Hostinger (hPanel → Node.js web app → import from GitHub):
+#   repository JAQA-Life/RYLAQ · branch hostinger-node · Node 24.x
+#   build command: npm run build · entry file: server/jaqa-server.mjs
+# Every push to main → this workflow → new commit on hostinger-node → Hostinger
+# redeploys automatically. See docs/DEPLOY-HOSTINGER-GITHUB.md.
+#
+# The branch is append-only (never force-pushed): each deployment is a commit
+# you can roll back to.
+name: Publish full site to hostinger-node branch
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-hostinger-node
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.repository.fork == false && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install God's Eye View dependencies
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+        run: npm ci --prefix apps/globe --no-audit --no-fund
+
+      - name: Build — JAQA (must match the committed dist/) and the 3D globe
+        run: |
+          node scripts/build.mjs
+          git diff --exit-code -- dist embed release src/modules/corsConfig.js || (echo "::error::dist/ is stale; refusing to publish." && exit 1)
+          node scripts/check-static-safety.mjs
+          node scripts/build-globe.mjs
+
+      - name: Prepare the hostinger-node worktree
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          SITE="$RUNNER_TEMP/site"
+          if git ls-remote --exit-code --heads origin hostinger-node >/dev/null 2>&1; then
+            git fetch --no-tags --depth=1 origin hostinger-node:refs/remotes/origin/hostinger-node
+            git worktree add -B hostinger-node "$SITE" origin/hostinger-node
+          else
+            git worktree add --detach "$SITE" HEAD
+            git -C "$SITE" checkout --orphan hostinger-node
+          fi
+          node scripts/package-hostinger.mjs --dir "$SITE"
+
+      - name: Test the deployment exactly as Hostinger runs it
+        working-directory: ${{ runner.temp }}/site
+        run: |
+          set -euo pipefail
+          npm ci --no-audit --no-fund
+          npm run build
+          PORT=3000 node server/jaqa-server.mjs > "$RUNNER_TEMP/server.log" 2>&1 &
+          SERVER=$!
+          for i in $(seq 1 40); do curl -sf http://127.0.0.1:3000/ >/dev/null && break; sleep 1; done
+          fail=0
+          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /about/ /faq/ /sources/ /privacy/ /3d-globe/ /sitemap.xml /robots.txt /llms.txt /api/jaqa/monitor/feeds; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 200 ] || fail=1
+          done
+          for p in /.htaccess /package.json /server/jaqa-server.mjs /apps/globe/package.json /api/setup/status; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 404 ] || fail=1
+          done
+          echo "Live monitor feed through the server:"
+          feed=$(curl -sf "http://127.0.0.1:3000/api/jaqa/monitor/feed?id=gdacs") || fail=1
+          echo "${feed:0:300}"
+          kill $SERVER || true
+          cat "$RUNNER_TEMP/server.log"
+          rm -rf node_modules apps/globe/node_modules
+          [ "$fail" = 0 ] || (echo "::error::Deployment test failed; not publishing." && exit 1)
+
+      - name: Publish to the hostinger-node branch
+        working-directory: ${{ runner.temp }}/site
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git add -A
+          if git diff --cached --quiet; then
+            echo "hostinger-node already matches this build — nothing to publish."
+            exit 0
+          fi
+          git commit -q -m "Deploy JAQA full site from ${SOURCE_SHA}"
+          git push origin hostinger-node
+          echo "::notice::Published the full site from ${SOURCE_SHA} to hostinger-node. Hostinger redeploys on push."

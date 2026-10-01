@@ -146,7 +146,10 @@ function jaqaRoutes() {
   };
 }
 
-const { preview } = await import(pathToFileURL(path.join(globeRoot, 'node_modules', 'vite', 'dist', 'node', 'index.js')).href);
+// Vite comes from apps/globe/node_modules in a development checkout, or from
+// the root node_modules in the deploy branch (where Hostinger runs npm install).
+const localVite = path.join(globeRoot, 'node_modules', 'vite', 'dist', 'node', 'index.js');
+const { preview } = existsSync(localVite) ? await import(pathToFileURL(localVite).href) : await import('vite');
 const port = Number(process.env.PORT) || 3000;
 const host = process.env.HOST || '0.0.0.0';
 const server = await preview({

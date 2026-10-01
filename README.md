@@ -1,6 +1,6 @@
 # Deploy JAQA (full site) to Hostinger from GitHub
 
-This deploys **all features** — the JAQA workspace, the God's Eye View 3D globe, the Global Monitor and their data APIs — as a Hostinger **Node.js web app** connected to GitHub. After the one-time setup below, every merge to `main` goes live automatically.
+This deploys **all features** — the JAQA workspace, the JAQA Eye View 3D globe, the Global Monitor and their data APIs — as a Hostinger **Node.js web app** connected to GitHub. After the one-time setup below, every merge to `main` goes live automatically.
 
 ```
 merge to main ─► GitHub Actions builds + tests the full site ─► branch hostinger-node ─► Hostinger redeploys

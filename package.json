@@ -2,7 +2,7 @@
   "name": "jaqa-site",
   "version": "1.0.0",
   "private": true,
-  "description": "JAQA site: workspace (/), God’s Eye View 3D globe (/globe/) and data APIs (/api/) in one Node.js server.",
+  "description": "JAQA site: workspace (/), JAQA Eye View 3D globe (/globe/) and data APIs (/api/) in one Node.js server.",
   "type": "module",
   "main": "server/jaqa-server.mjs",
   "engines": {

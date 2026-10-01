@@ -5,7 +5,7 @@ This guide covers `jaqa-hostinger.zip`. It runs the **whole site** from one Node
 | Path | What it serves |
 |---|---|
 | `/` | JAQA workspace, plus `/about/`, `/faq/`, `/sources/`, `/privacy/`, `/3d-globe/`, `/global-monitor/` and the other section pages |
-| `/globe/` | God's Eye View 3D globe (MIT, © Bilawal Sidhu) |
+| `/globe/` | JAQA Eye View 3D globe (built on God's Eye View, MIT, © Bilawal Sidhu) |
 | `/api/…` | God's Eye View's data providers (aircraft, ships, satellites, weather, cameras, …) |
 | `/api/jaqa/monitor/…` | JAQA Global Monitor feeds (18 verified official feeds) |
 

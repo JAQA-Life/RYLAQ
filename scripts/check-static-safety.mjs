@@ -142,7 +142,9 @@ else {
   // inline script pinned by hash broke in production when the HTML changed.)
   const cspValue = (h.match(/Header always set Content-Security-Policy "([^"]+)"/) || ['', ''])[1];
   const scriptSrc = ((cspValue.match(/(?:^|;\s*)script-src ([^;]+)/) || ['', ''])[1] || '').trim();
-  if (scriptSrc !== "'self'") failures.push(`dist/.htaccess CSP script-src must be exactly 'self' (found: ${scriptSrc || 'none'})`);
+  // 'wasm-unsafe-eval' permits compiling WebAssembly (CesiumJS) but not JavaScript eval.
+  if (!["'self'", "'self' 'wasm-unsafe-eval'"].includes(scriptSrc)) failures.push(`dist/.htaccess CSP script-src must be 'self' (optionally plus 'wasm-unsafe-eval'); found: ${scriptSrc || 'none'}`);
+  if (/'unsafe-eval'|'unsafe-inline'/.test(scriptSrc)) failures.push("dist/.htaccess CSP script-src must not allow 'unsafe-eval' or 'unsafe-inline'");
   for (const need of ['AddType text/javascript .js', 'AddType text/css .css']) if (!h.includes(need)) failures.push('dist/.htaccess missing: ' + need);
   const pages = walk(path.join(root, 'dist')).filter((f) => f.endsWith('.html'));
   if (!pages.length) failures.push('dist/ has no HTML pages');

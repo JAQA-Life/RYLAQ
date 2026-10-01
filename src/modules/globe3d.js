@@ -46,6 +46,41 @@
     ['Voice agent', 'Hands-free control through the OpenAI Realtime API (needs a server-side OpenAI key).']
   ];
 
+  /** CesiumJS 3D evidence globe (src/modules/cesiumView.js), mounted on render. */
+  function cesiumSection(here) {
+    const host = h('div', { class: 'rq-cesium' }, h('p', { class: 'rq-muted rq-cesium-status' }, 'Loading CesiumJS…'));
+    const count = h('span', { class: 'rq-mono rq-muted' }, '');
+    let ctl = null;
+    const btn = (label, icon, fn) => ui.button(label, () => ctl && fn(ctl), { icon, cls: 'rq-btn-sm' });
+    const controls = h(
+      'div',
+      { class: 'rq-row rq-row-tight' },
+      btn('Zoom in', 'search', (c) => c.zoom(2)),
+      btn('Zoom out', 'search', (c) => c.zoom(0.5)),
+      btn('Reset view', 'globe', (c) => c.reset()),
+      here ? btn('Fly to ' + here.label, 'pin', (c) => c.flyTo(here.lat, here.lon, 1500000)) : null,
+      count
+    );
+    setTimeout(() => {
+      if (!host.isConnected || !R.cesium3d) return;
+      const pts = R.situation ? R.situation.collectPoints() : [];
+      R.cesium3d
+        .mount(host, pts, { center: here ? { lat: here.lat, lon: here.lon, height: 3000000 } : null, onCount: (n) => (count.textContent = n + ' marker(s)') })
+        .then((c) => (ctl = c))
+        .catch(() => {
+          host.replaceChildren(ui.warning('The CesiumJS 3D view needs the JAQA server, which serves CesiumJS at /globe/cesium/. It is not available on this static-only deployment; the Situation Room globe still works.', 'info'));
+          controls.remove();
+        });
+    }, 0);
+    return ui.section(
+      'CesiumJS 3D evidence globe',
+      { icon: 'globe', desc: 'Your session’s evidence on a real 3D Earth: seismic events, places, the current subject and Global Monitor events. Imagery is the Natural Earth II set bundled with CesiumJS, so this view makes no third-party requests. Drag to rotate, scroll to zoom, click a marker for details.' },
+      host,
+      controls,
+      h('p', { class: 'rq-fineprint' }, 'Powered by CesiumJS (github.com/CesiumGS/cesium, Apache-2.0, © Cesium GS). Marker positions come from the loaded public records; they are not facility, loss or exposure data.')
+    );
+  }
+
   R.modules.register({
     id: 'globe3d',
     group: 'risk',
@@ -67,10 +102,11 @@
       return h(
         'div',
         { class: 'rq-stack' },
+        cesiumSection(here),
         h(
           'div',
           { class: 'rq-hero' },
-          h('h3', { class: 'rq-hero-title' }, 'Launch the 3D globe'),
+          h('h3', { class: 'rq-hero-title' }, 'Launch the full 3D globe (God’s Eye View)'),
           h('p', null, 'The full God’s Eye View app opens in this tab. Use your browser’s Back button to return to the JAQA workspace.'),
           h('div', { class: 'rq-row' }, R.globe3d.link('Open 3D globe', { lat: 20, lon: 10, alt: 18000000 }, 'rq-btn rq-btn-primary'), here ? R.globe3d.link('Fly to ' + here.label, { lat: here.lat, lon: here.lon, alt: 60000 }) : null),
           h('p', { class: 'rq-fineprint' }, 'Only coordinates and a visual style go into the link, never your search terms.')

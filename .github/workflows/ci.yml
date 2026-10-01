@@ -83,7 +83,7 @@ jobs:
         run: |
           PORT=3000 HOST=127.0.0.1 node server/jaqa-server.mjs &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:3000/ >/dev/null && break; sleep 1; done
-          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /about/ /faq/ /sitemap.xml /llms.txt /api/jaqa/monitor/feeds; do
+          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /globe/cesium/Workers/createVerticesFromHeightmap.js /globe/cesium/Assets/Textures/NaturalEarthII/tilemapresource.xml /about/ /faq/ /sitemap.xml /llms.txt /api/jaqa/monitor/feeds; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 200 ] || exit 1
           done
           for p in /.htaccess /server/monitor.mjs /apps/globe/package.json /api/setup/status; do

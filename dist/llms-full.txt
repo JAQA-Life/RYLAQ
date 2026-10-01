@@ -8,6 +8,7 @@ JAQA is a privacy-first web workspace for investigating public evidence about or
 
 - **Situation Room**: A command-center view with an interactive evidence globe, a live wire of public feeds (earthquakes, exploited vulnerabilities, US regulatory notices, ECB reference rates) and the signals from your current investigation.
 - **3D Globe (God’s Eye View)**: The open-source God’s Eye View app (MIT licence, by Bilawal Sidhu), integrated at /globe/: a photorealistic 3D globe with live aircraft, ships, satellites, earthquakes, wildfires, weather, space launches, public cameras and sensor styles (CRT, NVG, FLIR).
+- **CesiumJS 3D evidence globe**: Inside the workspace, your session’s evidence — seismic events, places, the current subject and monitor events — on a CesiumJS 3D Earth (CesiumGS, Apache-2.0) with bundled Natural Earth imagery, so the view makes no third-party requests.
 - **Global Monitor**: Latest headlines from official publishers (UN, WHO, GDACS, NASA EONET, USGS, NOAA NHC, CISA, UK NCSC, ECB, Federal Reserve, SEC, Bank of England, BIS, WTO, US and UK travel advice), an event map, the countries named in the headlines and an ECB FX board.
 - **Organization & counterparty evidence**: Across the workspace: legal-entity (GLEIF LEI) records and parents, SEC filings and 8-K event signals, court dockets, US federal awards, environmental enforcement and product-recall records — each with its source, retrieval time and match confidence.
 - **Risk universes**: A Global Risk Universe of 82 domains and a Finance Risk Universe of 32 domains, each mapped to the public sources that can evidence it and to the gaps where none can.
@@ -29,7 +30,7 @@ No. JAQA has no accounts, cookies, browser storage, service workers or analytics
 
 ### What is the 3D globe?
 
-It is God’s Eye View, an open-source app by Bilawal Sidhu (MIT licence), integrated into JAQA at jaqa.life/globe/. It shows a photorealistic 3D Earth with live aircraft, ships, satellites, earthquakes, wildfires, weather, space launches and public cameras, with CRT, NVG and FLIR sensor styles. JAQA can open it at the location you are investigating.
+It is God’s Eye View, an open-source app by Bilawal Sidhu (MIT licence), integrated into JAQA at jaqa.life/globe/. It shows a photorealistic 3D Earth with live aircraft, ships, satellites, earthquakes, wildfires, weather, space launches and public cameras, with CRT, NVG and FLIR sensor styles. JAQA can open it at the location you are investigating. The workspace also has its own CesiumJS 3D evidence globe, which plots your session’s evidence using CesiumJS (CesiumGS, Apache-2.0) and bundled imagery, without third-party requests.
 
 ### What is the Global Monitor?
 

@@ -216,6 +216,8 @@ ok(/^https:\/\//.test((await page.locator('.rq-mon-title a').first().getAttribut
 await shot('02b-monitor');
 await page.click('.rq-rail-item:has-text("3D Globe")');
 ok(((await page.locator('a:has-text("Open 3D globe")').first().getAttribute('href')) || '').startsWith('/globe/'), '3D Globe module links to /globe/');
+await page.waitForSelector('.rq-cesium .rq-warning', { timeout: 8000 }).catch(() => {});
+ok(((await page.locator('.rq-cesium').innerText()) || '').includes('needs the JAQA server'), 'CesiumJS 3D view falls back cleanly on static-only hosting (no /globe/cesium/)');
 
 console.log('Organization flow');
 await search('Allianz SE');

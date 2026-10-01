@@ -76,7 +76,7 @@ jobs:
           SERVER=$!
           for i in $(seq 1 40); do curl -sf http://127.0.0.1:3000/ >/dev/null && break; sleep 1; done
           fail=0
-          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /about/ /faq/ /sources/ /privacy/ /3d-globe/ /sitemap.xml /robots.txt /llms.txt /api/jaqa/monitor/feeds; do
+          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /globe/cesium/Workers/createVerticesFromHeightmap.js /globe/cesium/Assets/Textures/NaturalEarthII/tilemapresource.xml /about/ /faq/ /sources/ /privacy/ /3d-globe/ /sitemap.xml /robots.txt /llms.txt /api/jaqa/monitor/feeds; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 200 ] || fail=1
           done
           for p in /.htaccess /package.json /server/jaqa-server.mjs /apps/globe/package.json /api/setup/status; do

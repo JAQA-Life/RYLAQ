@@ -4,7 +4,7 @@
  *   dist/index.html                     the workspace page (small HTML; loads assets/)
  *   dist/assets/jaqa-*.<hash>.{js,css}  app script, startup diagnostics and stylesheet;
  *                                       file names carry a content hash (safe to cache)
- *   dist/.htaccess                      security headers incl. CSP (script-src 'self')
+ *   dist/.htaccess                      security headers incl. CSP (script-src 'self' + wasm only)
  *   dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/index.html
  *   embed/jaqa-workspace-embed.html    fragment for CMS / intranet custom-HTML blocks
  *   release/jaqa-web.zip                all dist/ files as one download for Hostinger File Manager upload
@@ -207,7 +207,7 @@ write('embed/jaqa-workspace-embed.html', embed);
 /* 5. .htaccess with strict security headers and CSP (Apache / LiteSpeed on Hostinger). */
 const csp = [
   "default-src 'self'",
-  "script-src 'self'",
+  "script-src 'self' 'wasm-unsafe-eval'", // WebAssembly compile only (CesiumJS); JavaScript eval stays blocked
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
@@ -217,7 +217,7 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  "worker-src 'none'",
+  "worker-src 'self'", // CesiumJS web workers (same-origin ES-module files)
   "manifest-src 'self'",
   'upgrade-insecure-requests'
 ].join('; ');
@@ -227,8 +227,9 @@ const htaccess = `# JAQA Workspace — static hosting security configuration (ge
 #
 # CSP connect-src lists ONLY sources verified for browser CORS from ${cors.origin || 'the production origin'}
 # (config/cors-verification.json, ${cors.verifiedAt || 'not verified'}). Unverified sources are link-out only.
-# script-src 'self': the app runs from files in assets/ on this site. No inline script, eval or
-# third-party script is allowed, and nothing depends on the HTML staying byte-identical.
+# script-src 'self' 'wasm-unsafe-eval': the app runs from files on this site; WebAssembly may be
+# compiled (CesiumJS 3D view) but JavaScript eval, inline script and third-party script are
+# blocked, and nothing depends on the HTML staying byte-identical.
 
 Options -Indexes
 ServerSignature Off

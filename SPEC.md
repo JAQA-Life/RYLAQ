@@ -161,6 +161,11 @@ The header legal comment is in `core.js` and in the built script.
   3. **God's Eye View** (MIT code) is integrated with **all** layers, including CCTV, ALPR locations, live tracking and the voice agent. This overrides the earlier personal-data OSINT exclusion. Non-commercial data carve-outs are documented in `THIRD_PARTY_NOTICES.md`.
   4. **SEO/GEO/AEO:** crawlable static pages, JSON-LD, sitemap, robots and `llms.txt`, all generated from implemented facts only.
 
+- **2026-10-01 — CesiumJS in the workspace.** At the product owner's request ("use CesiumGS/cesium"), the workspace's 3D Globe screen includes a CesiumJS 3D evidence globe. It loads the self-hosted CesiumJS build from `/globe/cesium/`, uses the bundled Natural Earth II imagery (no third-party requests), and is built from `CesiumWidget` plus primitives (no Knockout widgets).
+  - **CSP:** `script-src 'self' 'wasm-unsafe-eval'` (CesiumJS compiles WebAssembly; JavaScript `eval` stays blocked) and `worker-src 'self'`.
+  - **Workers:** CesiumJS is steered to its same-origin ES-module workers instead of `blob:` scripts.
+  - **Verified in Chromium** under the production CSP: no console errors and no external requests. The only CSP report is protobuf's caught `require` probe, which stays blocked.
+
 ## Open decisions
 
 1. **ReliefWeb appname.** Request an approved appname, then re-verify.

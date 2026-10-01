@@ -55,6 +55,14 @@ The same notice is embedded in the generated file header.
 | @fontsource/inter, @fontsource/jetbrains-mono 5.3 (Inter, JetBrains Mono fonts) | SIL OFL 1.1 |
 | material-symbols 0.47 (Material Symbols Outlined; JAQA ships a 5 KB subset) | Apache-2.0 |
 
+## CesiumJS — 3D globe engine
+
+[CesiumJS](https://github.com/CesiumGS/cesium) (`cesium` 1.138.0, Apache-2.0, Copyright 2011-2022 Cesium Contributors / Cesium GS, Inc.) is the 3D engine used in two places:
+- **God's Eye View**, at `/globe/`.
+- **JAQA's own CesiumJS 3D evidence globe**, on the workspace's 3D Globe screen (`src/modules/cesiumView.js`).
+
+Both load the same self-hosted build from `/globe/cesium/`. Each file keeps its Apache-2.0 header, and the Cesium credit is displayed on the globe. The JAQA view uses the **Natural Earth II** imagery bundled with CesiumJS (public domain), so it makes no requests to Cesium ion or any tile server.
+
 ## WorldMonitor — inspiration only (no code)
 
 **WorldMonitor** (https://github.com/koala73/worldmonitor) is licensed **AGPL-3.0-only**. JAQA's Global Monitor and Situation Room are JAQA's own clean-room code, inspired by its situational-awareness dashboard concept:

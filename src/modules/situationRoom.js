@@ -62,6 +62,7 @@
         else if (r.kind === 'place') add({ kind: 'place', lat: d.lat, lon: d.lon, label: 'Place · ' + r.title, record: r });
         else if (r.kind === 'country' && isFinite(d.lat)) add({ kind: 'place', lat: d.lat, lon: d.lon, label: 'Country reference · ' + r.title + (d.capital ? ' (' + d.capital + ')' : ''), record: r });
         else if (r.kind === 'forecast' && d.flags && d.flags.length) add({ kind: 'signal', lat: d.lat, lon: d.lon, label: 'Forecast threshold signal · ' + d.flags[0], record: r });
+        else if (r.kind === 'monitor' && isFinite(d.lat)) add({ kind: 'signal', lat: d.lat, lon: d.lon, label: 'Global Monitor · ' + r.title, record: r });
       }
     }
     const s = R.state.session;
@@ -196,6 +197,9 @@
       h('div', { class: 'rq-hud-top rq-mono', 'aria-hidden': 'true' }, h('span', null, 'OPTIC ' + (MODES.find((m) => m[0] === st.mode) || MODES[0])[1]), h('span', { class: 'rq-utc' }, R.shell.utcNow())),
       h('div', { class: 'rq-hud-bottom', 'aria-live': 'off' }, readout, vis)
     );
+    // Link into the integrated God's Eye View globe, kept in step with this view.
+    const alt3d = (z) => Math.round(Math.max(150000, 14000000 / Math.max(1, z)));
+    const link3d = R.globe3d ? R.globe3d.link('Open in 3D globe', { lat: view.lat, lon: ((view.lon + 540) % 360) - 180, alt: alt3d(view.zoom), style: st.mode }) : null;
     if (globe) globe.destroy();
     globe = R.globe.create(host, {
       view,
@@ -204,6 +208,7 @@
       onView: (v) => {
         readout.textContent = `CTR ${Math.abs(v.lat).toFixed(1)}°${v.lat >= 0 ? 'N' : 'S'} ${Math.abs(((v.lon + 540) % 360) - 180).toFixed(1)}°${((v.lon + 540) % 360) - 180 >= 0 ? 'E' : 'W'} · ZOOM ${v.zoom.toFixed(1)}×`;
         vis.textContent = `MARKERS ${v.visible}`;
+        if (link3d) link3d.setAttribute('href', R.util.safeUrl(R.globe3d.url({ lat: v.lat, lon: ((v.lon + 540) % 360) - 180, alt: alt3d(v.zoom), style: st.mode })) || R.globe3d.base);
       }
     });
     globe.setPoints(collectPoints());
@@ -237,7 +242,8 @@
         s && s.resolved && s.resolved.lat !== undefined && s.resolved.lat !== null ? ui.button('Recenter on subject', () => globe.focus(s.resolved.lat, s.resolved.lon), { cls: 'rq-btn-xs', icon: 'globe' }) : null
       )
     );
-    return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
+    const open3d = h('div', { class: 'rq-row rq-row-tight' }, link3d, link3d ? h('span', { class: 'rq-fineprint' }, 'Photorealistic God’s Eye View globe at this view (coordinates only).') : null);
+    return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, open3d, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
   }
 
   /** Compact globe for other modules (e.g. Climate & Catastrophe). */

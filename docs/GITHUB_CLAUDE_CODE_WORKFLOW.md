@@ -12,13 +12,13 @@
 `dist/` is **committed** so Hostinger can serve it directly. It must always match `src/`:
 
 ```bash
-npm run build     # regenerates dist/, embed/, docs/SOURCE_REGISTRY.md, src/modules/corsConfig.js
+npm run build     # regenerates dist/, embed/, release/jaqa-web.zip, docs/SOURCE_REGISTRY.md, src/modules/corsConfig.js
 npm run check     # static safety + link sanity
 npm run test:smoke   # optional locally (needs Playwright); always runs in CI
 git add -A && git commit
 ```
 
-CI rebuilds and fails if `git diff` shows any change to `dist/`, `embed/` or `corsConfig.js`. In practice that means someone edited `src/` without rebuilding, or edited `dist/` by hand, which is not allowed.
+CI rebuilds and fails if `git diff` shows any change to `dist/`, `embed/`, `release/` or `corsConfig.js`. In practice that means someone edited `src/` without rebuilding, or edited `dist/` by hand, which is not allowed.
 
 ## What CI checks
 

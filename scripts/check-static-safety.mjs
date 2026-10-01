@@ -98,7 +98,14 @@ for (const file of files) {
 const distIndex = path.join(root, 'dist', 'index.html');
 if (!existsSync(distIndex)) failures.push('dist/index.html missing — run npm run build');
 else {
-  const d = readFileSync(distIndex, 'utf8');
+  // Assertions run over the page plus the assets it loads.
+  const indexHtml = readFileSync(distIndex, 'utf8');
+  const assetText = [...indexHtml.matchAll(/(?:src|href)="(assets\/[^"]+\.(?:js|css))"/g)]
+    .map((m) => path.join(root, 'dist', m[1]))
+    .filter((f) => existsSync(f))
+    .map((f) => readFileSync(f, 'utf8'))
+    .join('\n');
+  const d = indexHtml + '\n' + assetText;
   const must = [
     [/JAQA™\. All rights reserved\./, 'footer copyright “© {year} JAQA™. All rights reserved.”'],
     [/JAQA™ is a trademark of JAQA\./, 'trademark notice'],
@@ -130,6 +137,41 @@ else {
   const h = readFileSync(ht, 'utf8');
   for (const need of ['Options -Indexes', 'X-Content-Type-Options', 'X-Frame-Options "DENY"', 'Referrer-Policy "no-referrer"', 'Permissions-Policy', 'Cross-Origin-Opener-Policy', 'Cross-Origin-Resource-Policy', 'Content-Security-Policy', "frame-ancestors 'none'", "object-src 'none'"])
     if (!h.includes(need)) failures.push('dist/.htaccess missing: ' + need);
+  // The app must run from same-origin files under a script-src 'self' policy:
+  // no executable inline scripts, and every referenced asset must exist. (An
+  // inline script pinned by hash broke in production when the HTML changed.)
+  const cspValue = (h.match(/Header always set Content-Security-Policy "([^"]+)"/) || ['', ''])[1];
+  const scriptSrc = ((cspValue.match(/(?:^|;\s*)script-src ([^;]+)/) || ['', ''])[1] || '').trim();
+  // 'wasm-unsafe-eval' permits compiling WebAssembly (CesiumJS) but not JavaScript eval.
+  if (!["'self'", "'self' 'wasm-unsafe-eval'"].includes(scriptSrc)) failures.push(`dist/.htaccess CSP script-src must be 'self' (optionally plus 'wasm-unsafe-eval'); found: ${scriptSrc || 'none'}`);
+  if (/'unsafe-eval'|'unsafe-inline'/.test(scriptSrc)) failures.push("dist/.htaccess CSP script-src must not allow 'unsafe-eval' or 'unsafe-inline'");
+  for (const need of ['AddType text/javascript .js', 'AddType text/css .css']) if (!h.includes(need)) failures.push('dist/.htaccess missing: ' + need);
+  const pages = walk(path.join(root, 'dist')).filter((f) => f.endsWith('.html'));
+  if (!pages.length) failures.push('dist/ has no HTML pages');
+  for (const f of pages) {
+    const page = readFileSync(f, 'utf8');
+    const rp = path.relative(root, f);
+    for (const m of page.matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script>/g)) {
+      const attrs = m[1] || '';
+      if (/type="application\/(ld\+)?json"/.test(attrs)) continue; // data block, never executed
+      if (m[2].trim()) failures.push(`${rp}: executable inline <script> is not allowed (CSP script-src 'self')`);
+      if (!/\ssrc="/.test(attrs)) failures.push(`${rp}: <script> without src`);
+    }
+    const refs = [...page.matchAll(/<(?:script|link)\s[^>]*(?:src|href)="([^"]+\.(?:js|css))"/g)].map((m) => m[1]);
+    if (page.includes('id="jaqa-workspace"')) {
+      // Workspace pages load the app.
+      if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.js$/.test(r))) failures.push(`${rp}: does not load the app script`);
+      if (!refs.some((r) => /jaqa-workspace\.[0-9a-f]+\.css$/.test(r))) failures.push(`${rp}: does not load the stylesheet`);
+    } else {
+      // Static content pages (about, faq, …): site stylesheet, and no script at all.
+      if (!refs.some((r) => /jaqa-site\.[0-9a-f]+\.css$/.test(r))) failures.push(`${rp}: static page does not load the site stylesheet`);
+      if (refs.some((r) => r.endsWith('.js'))) failures.push(`${rp}: static page must not load scripts`);
+    }
+    for (const r of refs) {
+      if (/^(https?:)?\/\//.test(r)) failures.push(`${rp}: external asset not allowed: ${r}`);
+      else if (!existsSync(r.startsWith('/') ? path.join(root, 'dist', r) : path.resolve(path.dirname(f), r))) failures.push(`${rp}: references missing asset ${r}`);
+    }
+  }
 }
 
 if (failures.length) {

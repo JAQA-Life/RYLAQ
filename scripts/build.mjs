@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 /*
  * JAQA build (dev-only). Produces the static production artifact:
- *   dist/index.html                     single self-contained page (CSS + JS inlined)
- *   dist/.htaccess                      security headers incl. CSP with script hash
+ *   dist/index.html                     the workspace page (small HTML; loads assets/)
+ *   dist/assets/jaqa-*.<hash>.{js,css}  app script, startup diagnostics and stylesheet;
+ *                                       file names carry a content hash (safe to cache)
+ *   dist/.htaccess                      security headers incl. CSP (script-src 'self' + wasm only)
  *   dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/index.html
  *   embed/jaqa-workspace-embed.html    fragment for CMS / intranet custom-HTML blocks
+ *   release/jaqa-web.zip                all dist/ files as one download for Hostinger File Manager upload
  *   src/modules/corsConfig.js           compiled from config/cors-verification.json
  *
  * Output is deterministic (no timestamps) so CI can verify dist/ is up to date.
  * Options: --site https://jaqa.life  --workspace-path /   (site served from the domain root)
  */
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync, readdirSync, statSync, copyFileSync } from 'node:fs';
+import { createSeo } from './build-seo.mjs';
 import { createHash } from 'node:crypto';
 import vm from 'node:vm';
 import path from 'node:path';
@@ -30,6 +34,17 @@ const write = (p, s) => {
   mkdirSync(path.dirname(rel(p)), { recursive: true });
   writeFileSync(rel(p), s);
   console.log('  wrote', p, `(${Buffer.byteLength(s).toLocaleString()} bytes)`);
+};
+
+/* 0. Global Monitor catalogue + verification (server-backed feeds). */
+const { FEEDS: MONITOR_FEEDS, CATEGORIES: MONITOR_CATEGORIES } = await import('../server/monitor-feeds.mjs');
+const monitorVerification = existsSync(rel('config/monitor-verification.json')) ? JSON.parse(read('config/monitor-verification.json')) : { feeds: {} };
+const monitorConfig = {
+  verifiedAt: monitorVerification.verifiedAt || null,
+  runner: monitorVerification.runner || null,
+  categories: MONITOR_CATEGORIES,
+  candidates: MONITOR_FEEDS.map(({ id, name, publisher, category, home }) => ({ id, name, publisher, category, home })),
+  feeds: MONITOR_FEEDS.filter((f) => monitorVerification.feeds && monitorVerification.feeds[f.id] && monitorVerification.feeds[f.id].verified).map(({ id, name, publisher, category, home }) => ({ id, name, publisher, category, home }))
 };
 
 /* 1. Compile CORS verification config into a module (also used by src/ dev mode). */
@@ -53,6 +68,8 @@ const corsJs = `/*
     null,
     2
   ).replace(/\n/g, '\n  ')};
+  // Global Monitor: only feeds verified by scripts/verify-monitor.mjs (served by the JAQA server).
+  R.config.monitor = ${JSON.stringify(monitorConfig, null, 2).replace(/\n/g, '\n  ')};
 })(window.JAQAWorkspace);
 `;
 write('src/modules/corsConfig.js', corsJs);
@@ -93,37 +110,63 @@ if (missing.length) {
   process.exit(1);
 }
 
-/* 3. Inline CSS and JS in the order declared in src/index.html. */
+/* 3. Bundle CSS and JS (in the order declared in src/index.html) into
+ * content-hashed files under dist/assets/. The pages load them with
+ * <script src> / <link href>, so the CSP is simply script-src 'self': nothing
+ * depends on the HTML staying byte-identical (a host, cache or CDN that
+ * rewrites HTML can no longer block the app). */
 const html = read('src/index.html');
 const jsBlock = html.match(/<!-- JAQA:JS:BEGIN -->([\s\S]*?)<!-- JAQA:JS:END -->/);
 const cssBlock = html.match(/<!-- JAQA:CSS:BEGIN -->([\s\S]*?)<!-- JAQA:CSS:END -->/);
-if (!jsBlock || !cssBlock) throw new Error('Build markers missing in src/index.html');
+const bootBlock = html.match(/<!-- JAQA:BOOT:BEGIN -->([\s\S]*?)<!-- JAQA:BOOT:END -->/);
+if (!jsBlock || !cssBlock || !bootBlock) throw new Error('Build markers missing in src/index.html');
 const scripts = [...jsBlock[1].matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
 const css = read('src/assets/jaqa-workspace.css').trim();
 const js = scripts.map((s) => `/* ---- ${s} ---- */\n` + read('src/' + s).trim()).join('\n\n') + '\n';
+const bootJs = read('src/assets/jaqa-boot.js').trim() + '\n';
+// The embed fragment (for CMS blocks) still inlines everything.
 if (/<\/script/i.test(js)) throw new Error('Inline JS must not contain a closing script tag');
 if (/<\/style/i.test(css)) throw new Error('Inline CSS must not contain a closing style tag');
-const scriptHash = 'sha256-' + createHash('sha256').update(js, 'utf8').digest('base64');
+const contentHash = (s) => createHash('sha256').update(s, 'utf8').digest('hex').slice(0, 10);
+const ASSET = {
+  js: `assets/jaqa-workspace.${contentHash(js)}.js`,
+  css: `assets/jaqa-workspace.${contentHash(css)}.css`,
+  boot: `assets/jaqa-boot.${contentHash(bootJs)}.js`
+};
+// Start from an empty dist/ so no stale hashed asset or page survives a rebuild.
+rmSync(rel('dist'), { recursive: true, force: true });
+write('dist/' + ASSET.js, js);
+write('dist/' + ASSET.css, css + '\n');
+write('dist/' + ASSET.boot, bootJs);
 
-const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Single self-contained static file: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
+// Source registry (evaluated like the browser does) for SEO pages and docs.
+function loadRegistry() {
+  const sandbox = { window: {}, console };
+  vm.createContext(sandbox);
+  for (const f of ['src/modules/core.js', 'src/modules/corsConfig.js', 'src/modules/sourceRegistry.js']) vm.runInContext(read(f), sandbox, { filename: f });
+  return sandbox.window.JAQAWorkspace;
+}
+const REG = loadRegistry();
+const lastmod = [cors.verifiedAt, monitorConfig.verifiedAt].filter(Boolean).sort().pop()?.slice(0, 10) || '2026-09-30';
+const seo = createSeo({ SITE, R: REG, monitorConfig, lastmod });
+const siteCss = read('src/assets/jaqa-site.css').trim() + '\n';
+ASSET.site = `assets/jaqa-site.${contentHash(siteCss)}.css`;
+write('dist/' + ASSET.site, siteCss);
 
-function page({ title, description, canonical, initialModule }) {
-  const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const stripDevComment = (s) => s.replace(/<!--\s*\n\s*JAQA Global Risk[\s\S]*?-->\n/, '<!--\n  JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace — production build.\n  Static files only: no backend, no proxy, no storage, no analytics.\n  JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.\n-->\n');
+
+function page({ file, title, description, canonical, initialModule }) {
+  // Relative asset paths, so the site also works from a sub-folder or file://.
+  const up = '../'.repeat(file.split('/').length - 2);
   let out = stripDevComment(html);
-  out = out.replace(/<!-- JAQA:META:BEGIN -->[\s\S]*?<!-- JAQA:META:END -->/, () => [
-    `<title>${esc(title)}</title>`,
-    `<meta name="description" content="${esc(description)}">`,
-    `<link rel="canonical" href="${canonical}">`,
-    `<meta property="og:title" content="${esc(title)}">`,
-    `<meta property="og:description" content="${esc(description)}">`,
-    `<meta property="og:type" content="website">`,
-    `<meta property="og:url" content="${canonical}">`
-  ].join('\n'));
-  out = out.replace(/"@type":"WebApplication",(.*?)"url":"[^"]*"/, (m, mid) => `"@type":"WebApplication",${mid}"url":"${canonical}"`);
+  out = out.replace(/<!-- JAQA:META:BEGIN -->[\s\S]*?<!-- JAQA:META:END -->/, () => seo.head({ title, description, canonical, up }));
+  out = out.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => seo.workspaceLd({ title, description, canonical, home: file === 'dist/index.html' }));
+  out = out.replace(/<!-- JAQA:SEO:BEGIN -->[\s\S]*?<!-- JAQA:SEO:END -->/, () => seo.aboutSection(up));
   // Function replacements: the inlined code contains `$&`-style sequences that
   // String.prototype.replace would otherwise interpret.
-  out = out.replace(cssBlock[0], () => `<style>\n${css}\n</style>`);
-  out = out.replace(jsBlock[0], () => `<script>\n${js}</script>`);
+  out = out.replace(cssBlock[0], () => `<link rel="stylesheet" href="${up}${ASSET.css}">`);
+  out = out.replace(bootBlock[0], () => `<script src="${up}${ASSET.boot}"></script>`);
+  out = out.replace(jsBlock[0], () => `<script src="${up}${ASSET.js}"></script>`);
   out = out.replace('data-initial-module="situation"', `data-initial-module="${initialModule}"`);
   return out;
 }
@@ -134,10 +177,21 @@ const PAGES = [
   { file: 'dist/global-risk/index.html', initialModule: 'globalRisk', canonical: WORKSPACE_URL + 'global-risk/', title: 'JAQA Global Risk Universe | Public-Source Enterprise Risk Intelligence', description: 'Explore public-source evidence across strategic, financial, operational, cyber, climate, ESG, supply chain, insurance, reinsurance, procurement, sanctions, regulatory, and catastrophe risk domains. Privacy-first JAQA workspace powered by selected public APIs and official link-outs.' },
   { file: 'dist/finance-risk/index.html', initialModule: 'financeRisk', canonical: WORKSPACE_URL + 'finance-risk/', title: 'JAQA Finance & Counterparty Risk | Public-Source Financial Risk Intelligence', description: 'Explore public-source evidence for counterparty financial fragility, filings, credit/insolvency signals, market/macro indicators, FX/rate/commodity context, insurance/reinsurance financial strength, sanctions/enforcement, trade finance, and project/PPP finance. Privacy-first JAQA workspace. Not credit, investment, treasury, insurance, legal, tax, AML, or sanctions advice.' },
   { file: 'dist/insurance-reinsurance/index.html', initialModule: 'insurance', canonical: WORKSPACE_URL + 'insurance-reinsurance/', title: 'JAQA Insurance & Reinsurance Intelligence | Public-Source Counterparty and Market Evidence', description: 'Investigate public evidence for insurers, reinsurers, brokers, captives, MGAs, ILS/cat bond entities, regulators, market reports, catastrophe signals, and insurance-related procurement. Privacy-first JAQA workspace. Not insurance, underwriting, claims, or coverage advice.' },
-  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: WORKSPACE_URL + 'procurement-bids/', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' }
+  { file: 'dist/procurement-bids/index.html', initialModule: 'procurement', canonical: WORKSPACE_URL + 'procurement-bids/', title: 'JAQA Global Procurement & Bid Radar | Tenders, Awards, Grants, PPPs, and Concessions', description: 'Discover public tenders, bids, RFPs, RFQs, awards, grants, PPPs, concessions, and procurement notices across global portals and development banks. Privacy-first JAQA workspace. Not bid/no-bid, eligibility, award, or procurement legal advice.' },
+  { file: 'dist/global-monitor/index.html', initialModule: 'monitor', canonical: WORKSPACE_URL + 'global-monitor/', title: 'JAQA Global Monitor | Official Feeds, Event Map & FX Board', description: `Headlines from ${monitorConfig.feeds.length} verified official feeds (UN, WHO, GDACS, NASA, USGS, CISA, central banks, travel advice), an event map and an ECB FX board.` }
 ];
 console.log('Building JAQA static artifact');
 for (const p of PAGES) write(p.file, page(p));
+
+/* 3b. SEO / GEO / AEO: crawlable static pages, sitemap, robots, llms.txt, manifest, icons. */
+seo.staticPages({
+  write,
+  copy: (from, to) => {
+    mkdirSync(path.dirname(rel(to)), { recursive: true });
+    copyFileSync(rel(from), rel(to));
+  },
+  siteCss: ASSET.site
+});
 
 /* 4. Embed fragment (no html/head/body) for CMS custom-HTML blocks. */
 const embed = `<!-- JAQA Workspace embed fragment. Paste into a custom HTML block. Styles are scoped to .jaqa-workspace. JAQA™ is a trademark of JAQA. -->
@@ -153,18 +207,18 @@ write('embed/jaqa-workspace-embed.html', embed);
 /* 5. .htaccess with strict security headers and CSP (Apache / LiteSpeed on Hostinger). */
 const csp = [
   "default-src 'self'",
-  `script-src '${scriptHash}'`,
+  "script-src 'self' 'wasm-unsafe-eval'", // WebAssembly compile only (CesiumJS); JavaScript eval stays blocked
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "font-src 'self'",
-  `connect-src ${connect.join(' ')}`,
+  `connect-src 'self' ${connect.join(' ')}`,
   "frame-src 'none'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  "worker-src 'none'",
-  "manifest-src 'none'",
+  "worker-src 'self'", // CesiumJS web workers (same-origin ES-module files)
+  "manifest-src 'self'",
   'upgrade-insecure-requests'
 ].join('; ');
 const htaccess = `# JAQA Workspace — static hosting security configuration (generated by scripts/build.mjs).
@@ -173,11 +227,14 @@ const htaccess = `# JAQA Workspace — static hosting security configuration (ge
 #
 # CSP connect-src lists ONLY sources verified for browser CORS from ${cors.origin || 'the production origin'}
 # (config/cors-verification.json, ${cors.verifiedAt || 'not verified'}). Unverified sources are link-out only.
-# script-src pins the SHA-256 hash of the inlined application script: rebuild after any JS change.
+# script-src 'self' 'wasm-unsafe-eval': the app runs from files on this site; WebAssembly may be
+# compiled (CesiumJS 3D view) but JavaScript eval, inline script and third-party script are
+# blocked, and nothing depends on the HTML staying byte-identical.
 
 Options -Indexes
 ServerSignature Off
 DirectoryIndex index.html
+ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -194,16 +251,20 @@ DirectoryIndex index.html
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "DENY"
   Header always set Referrer-Policy "no-referrer"
-  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), clipboard-read=(), interest-cohort=()"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), clipboard-read=()"
   Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set Cross-Origin-Resource-Policy "same-origin"
   Header always set Content-Security-Policy "${csp}"
   Header unset X-Powered-By
 
-  # HTML: never cache (always pick up the latest build and CSP hash)
+  # HTML: never cache, so every visit gets the current page and asset names.
   <FilesMatch "\\.(html)$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
     Header set Pragma "no-cache"
+  </FilesMatch>
+  # assets/: file names contain a content hash, so a changed file always has a new name.
+  <FilesMatch "\\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>
 
@@ -212,9 +273,87 @@ DirectoryIndex index.html
 </IfModule>
 
 AddDefaultCharset utf-8
+# Explicit types: with X-Content-Type-Options nosniff, a script served with the
+# wrong type would be refused by the browser.
 AddType text/html .html
+AddType text/javascript .js
+AddType text/css .css
+AddType application/manifest+json .webmanifest
+AddType text/plain .txt
+AddType application/xml .xml
+AddType image/svg+xml .svg
+AddCharset utf-8 .html .js .css
 `;
 write('dist/.htaccess', htaccess);
+
+/* 5b. release/jaqa-web.zip: the exact dist/ files (incl. .htaccess) as one download
+ * to upload to Hostinger (File Manager → public_html → Upload → Extract).
+ * Entries are STORED (no compression) with a fixed 1980-01-01 timestamp and sorted
+ * names, so the archive is byte-identical on every build and CI can diff it. */
+{
+  const CRC = new Uint32Array(256).map((_, n) => {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    return c >>> 0;
+  });
+  const crc32 = (buf) => {
+    let c = 0xffffffff;
+    for (const b of buf) c = CRC[(c ^ b) & 0xff] ^ (c >>> 8);
+    return (c ^ 0xffffffff) >>> 0;
+  };
+  const listDist = (dir) =>
+    readdirSync(rel(dir)).flatMap((f) => (statSync(rel(dir + '/' + f)).isDirectory() ? listDist(dir + '/' + f) : [dir + '/' + f]));
+  const files = listDist('dist').map((f) => f.slice('dist/'.length)).sort();
+  const DOS_DATE = (0 << 9) | (1 << 5) | 1; // 1980-01-01
+  const locals = [];
+  const centrals = [];
+  let offset = 0;
+  for (const name of files) {
+    const data = readFileSync(rel('dist/' + name));
+    const nameBuf = Buffer.from(name, 'utf8');
+    const crc = crc32(data);
+    const local = Buffer.alloc(30);
+    local.writeUInt32LE(0x04034b50, 0);
+    local.writeUInt16LE(10, 4); // version needed
+    local.writeUInt16LE(0x0800, 6); // UTF-8 names
+    local.writeUInt16LE(0, 8); // stored
+    local.writeUInt16LE(0, 10); // time
+    local.writeUInt16LE(DOS_DATE, 12);
+    local.writeUInt32LE(crc, 14);
+    local.writeUInt32LE(data.length, 18);
+    local.writeUInt32LE(data.length, 22);
+    local.writeUInt16LE(nameBuf.length, 26);
+    local.writeUInt16LE(0, 28);
+    const central = Buffer.alloc(46);
+    central.writeUInt32LE(0x02014b50, 0);
+    central.writeUInt16LE((3 << 8) | 20, 4); // made by: Unix
+    central.writeUInt16LE(10, 6);
+    central.writeUInt16LE(0x0800, 8);
+    central.writeUInt16LE(0, 10);
+    central.writeUInt16LE(0, 12);
+    central.writeUInt16LE(DOS_DATE, 14);
+    central.writeUInt32LE(crc, 16);
+    central.writeUInt32LE(data.length, 20);
+    central.writeUInt32LE(data.length, 24);
+    central.writeUInt16LE(nameBuf.length, 28);
+    central.writeUInt32LE((0o100644 << 16) >>> 0, 38); // -rw-r--r--
+    central.writeUInt32LE(offset, 42);
+    locals.push(local, nameBuf, data);
+    centrals.push(central, nameBuf);
+    offset += local.length + nameBuf.length + data.length;
+  }
+  const cd = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0);
+  end.writeUInt16LE(files.length, 8);
+  end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(cd.length, 12);
+  end.writeUInt32LE(offset, 16);
+  const zip = Buffer.concat([...locals, cd, end]);
+  mkdirSync(rel('release'), { recursive: true });
+  writeFileSync(rel('release/jaqa-web.zip'), zip);
+  console.log('  wrote release/jaqa-web.zip', `(${zip.length.toLocaleString()} bytes, ${files.length} files)`);
+}
 
 /* 6. docs/SOURCE_REGISTRY.md generated from the actual registry (never drifts from code). */
 {
@@ -245,4 +384,4 @@ write('dist/.htaccess', htaccess);
 
 console.log(`\nVerified live sources (${verified.length}): ${verified.join(', ')}`);
 console.log('CSP connect-src:', connect.join(' '));
-console.log('Script hash:', scriptHash);
+console.log('Assets:', Object.values(ASSET).join(', '));

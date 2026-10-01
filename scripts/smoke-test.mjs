@@ -122,6 +122,7 @@ const context = await browser.newContext({ viewport: { width: 1440, height: 1000
 const page = await context.newPage();
 const consoleErrors = [];
 const externalHosts = new Set();
+const monitorRequests = [];
 const apiBodies = [];
 // Network-level 404s (e.g. GLEIF “no parent reported”) are expected API semantics, not app errors.
 page.on('console', (m) => m.type() === 'error' && !/Failed to load resource/.test(m.text()) && consoleErrors.push(m.text()));
@@ -129,6 +130,16 @@ page.on('pageerror', (e) => consoleErrors.push('pageerror: ' + e.message));
 await context.route('**/*', async (route) => {
   const req = route.request();
   const url = req.url();
+  if (url.startsWith(`http://127.0.0.1:${PORT}/api/jaqa/monitor/`)) {
+    // The JAQA server's Global Monitor endpoint (mocked: the preview server is static).
+    const u = new URL(url);
+    monitorRequests.push(u.pathname + u.search);
+    const id = u.searchParams.get('id');
+    const items = id === 'gdacs'
+      ? [{ title: 'Green flood alert in Thailand', link: 'https://www.gdacs.org/report.aspx?eventid=1', published: '2026-09-30T06:00:00.000Z', lat: 14.5, lon: 100.9 }]
+      : [{ title: 'Fixture headline for ' + id, link: 'https://example.org/' + id, published: '2026-09-30T05:00:00.000Z' }];
+    return route.fulfill({ status: 200, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ok: true, id, fetchedAt: '2026-09-30T06:05:00.000Z', items }) });
+  }
   if (url.startsWith(`http://127.0.0.1:${PORT}`)) return route.continue();
   externalHosts.add(new URL(url).host);
   if (req.postData()) apiBodies.push(req.postData());
@@ -160,6 +171,8 @@ ok(await page.locator('.rq-privacy-badge').isVisible(), 'privacy badge visible')
 ok((await page.locator('#rq-confidential').innerText()).includes('Do not enter confidential'), 'confidentiality warning visible');
 ok((await page.locator('input[type=file]').count()) === 0, 'no file upload inputs');
 ok(externalHosts.size === 0, 'no external requests on initial load (no auto-probing)');
+ok((await page.locator('#jaqa-boot').count()) === 0, 'startup screen removed once the app has started');
+ok(await page.evaluate(() => [...document.scripts].every((x) => x.src || x.type === 'application/ld+json')), 'no executable inline scripts (CSP script-src self)');
 ok((await page.locator('.rq-situation').count()) === 1, 'lands on the Situation Room');
 ok((await page.locator('.rq-globe-canvas').count()) === 1, 'globe canvas renders without network');
 ok((await page.locator('.rq-strip').innerText()).includes('STANDBY'), 'feeds start on standby');
@@ -185,6 +198,26 @@ ok(zoomed, 'globe responds to keyboard zoom');
 await page.click('.rq-seg-btn:has-text("NVG")');
 ok((await page.locator('.rq-optic-nvg').count()) === 1, 'optic mode switches (NVG)');
 await shot('02-situation-active');
+
+console.log('Global Monitor & 3D globe');
+const link3d = await page.locator('a:has-text("Open in 3D globe")').first().getAttribute('href');
+ok(/^\/globe\/#lat=-?[\d.]+&lon=-?[\d.]+&alt=\d+&pitch=-?\d+&style=nvg$/.test(link3d || ''), 'Situation Room links to the 3D globe with coordinates + style only: ' + link3d);
+await page.click('.rq-rail-item:has-text("Global Monitor")');
+ok((await bodyText()).includes('Monitor on standby'), 'monitor starts on standby');
+ok(monitorRequests.length === 0, 'no monitor requests before activation');
+await page.click('button:has-text("Load monitor feeds")');
+await page.waitForSelector('.rq-mon-hot li', { timeout: 6000 }).catch(() => {});
+const monText = await bodyText();
+ok(monText.includes('Green flood alert in Thailand'), 'monitor shows official headlines');
+ok((await page.locator('.rq-mon-hot li').count()) > 0 && (await page.locator('.rq-mon-hot').innerText()).includes('Thailand'), 'countries in the headlines are counted');
+ok(monitorRequests.length > 0 && monitorRequests.every((u) => /^\/api\/jaqa\/monitor\/feed\?id=[a-z0-9-]+$/.test(u)), 'monitor requests carry only a fixed feed id');
+ok((await page.locator('.rq-mon-map canvas').count()) === 1, 'monitor event map renders');
+ok(/^https:\/\//.test((await page.locator('.rq-mon-title a').first().getAttribute('href')) || ''), 'headline links open the publisher');
+await shot('02b-monitor');
+await page.click('.rq-rail-item:has-text("3D Globe")');
+ok(((await page.locator('a:has-text("Open 3D globe")').first().getAttribute('href')) || '').startsWith('/globe/'), '3D Globe module links to /globe/');
+await page.waitForSelector('.rq-cesium .rq-warning', { timeout: 8000 }).catch(() => {});
+ok(((await page.locator('.rq-cesium').innerText()) || '').includes('needs the JAQA server'), 'CesiumJS 3D view falls back cleanly on static-only hosting (no /globe/cesium/)');
 
 console.log('Organization flow');
 await search('Allianz SE');

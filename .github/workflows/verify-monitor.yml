@@ -1,0 +1,28 @@
+# Verifies the Global Monitor's allowlisted official feeds from a GitHub-hosted
+# runner (open network). The result line JAQA_MONITOR_CONFIG=… is copied into
+# config/monitor-verification.json; only verified feeds are ever served.
+name: Verify monitor feeds
+
+on:
+  push:
+    branches: [jaqa-ultimate]
+    paths:
+      - server/monitor*.mjs
+      - scripts/verify-monitor.mjs
+      - .github/workflows/verify-monitor.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Fetch and parse every candidate feed
+        run: node scripts/verify-monitor.mjs --print

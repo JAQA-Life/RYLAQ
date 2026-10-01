@@ -87,6 +87,17 @@
         ? `Verification did not pass (${(v.checks || []).filter((c) => !c.ok).map((c) => c.id + (c.status ? ' → HTTP ' + c.status : '')).join('; ') || 'no passing checks'}). Link-out only until re-verified.`
         : 'Documented API, not yet verified for browser CORS from the JAQA origin. Link-out only.';
     }
+    if (props.serverBacked) {
+      // Same-origin feeds fetched by the JAQA server (no browser CORS involved):
+      // live only when scripts/verify-monitor.mjs verified at least one feed.
+      const mc = R.config.monitor || { feeds: [] };
+      const n = (mc.feeds || []).length;
+      s.defaultMode = n ? 'live' : 'linkout';
+      s.status = n ? 'live' : 'verify';
+      s.lastVerifiedNote = n
+        ? `${n} official feed(s) verified by server-side fetch on ${(mc.verifiedAt || '').slice(0, 10) || 'unknown date'}. Needs the JAQA server; on static-only hosting this source is unavailable.`
+        : 'No monitor feed verified yet. Link-out to the publishers only.';
+    }
     SOURCES.push(s);
     return s;
   }
@@ -295,6 +306,14 @@
     officialSiteUrl: 'https://find-and-update.company-information.service.gov.uk/', officialDocsUrl: 'https://developer.company-information.service.gov.uk/',
     attribution: 'UK company data provided by Companies House where used.', officialSourceAuthoritative: true, insolvencyRegistryLinkOutOnly: true, lienRegistryLinkOutOnly: true,
     coverageGapWarning: 'API requires a key; link-out only in this release (extension point: in-memory browser key).'
+  });
+
+  /* ------------- Server-backed (same-origin JAQA server) ------------- */
+  S('jaqaMonitor', 'JAQA Global Monitor — official public feeds (via the JAQA server)', {
+    tier: 'B', region: 'Global', liveCapable: true, serverBacked: true, apiBase: '/api/jaqa/monitor', endpoints: ['/feed?id={feed}'],
+    officialSiteUrl: 'https://jaqa.life/', attribution: 'Headlines and links from the listed official publishers, fetched by the JAQA server. Content and copyright remain with each publisher.',
+    coverageGapWarning: 'A selected set of official feeds. Headlines are not the full story and are not verified, ranked or summarized by JAQA.',
+    rateLimitPolicy: 'Server-side cache of 10 minutes per feed. Max 4 concurrent.', concurrencyLimit: 4, officialSourceAuthoritative: true
   });
 
   /* ------------------ Tier C (link-out only by policy) ------------------ */

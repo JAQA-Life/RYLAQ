@@ -6,3 +6,7 @@ playwright-report/
 *.log
 .env
 .env.*
+
+# Deployment bundles (built by scripts/package-hostinger.mjs; large, not versioned)
+release/jaqa-hostinger.zip
+release/stage/

@@ -2,8 +2,8 @@
 <!--
   JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace
   Development entry point: loads the unbundled modules so the app runs from
-  src/ without a build step. `npm run build` inlines everything into
-  dist/index.html (single self-contained file for static hosting).
+  src/ without a build step. `npm run build` writes dist/: small HTML pages
+  plus content-hashed files in dist/assets/ (see scripts/build.mjs).
   JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.
 -->
 <html lang="en">
@@ -25,20 +25,67 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"JAQA Global Risk, Finance, Insurance & Procurement Intelligence Workspace","applicationCategory":"BusinessApplication","operatingSystem":"Any (web browser)","url":"https://jaqa.life/","description":"Public-source triage workspace for enterprise risk, finance, insurance/reinsurance, and procurement evidence. Educational and information-discovery use only; not legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice.","isAccessibleForFree":true,"publisher":{"@type":"Organization","name":"JAQA","url":"https://jaqa.life/"}}
 </script>
-<style>html,body{margin:0;padding:0}</style>
+<style>
+html,body{margin:0;padding:0}
+/* Startup screen: visible until the app has fully started; stays (with the reason) if it cannot start. */
+.jaqa-boot{box-sizing:border-box;min-height:100vh;padding:48px 20px;color:#C9D6E8;background:#05080F;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.jaqa-boot-inner{max-width:720px;margin:0 auto}
+.jaqa-boot-brand{margin:0 0 6px;font:700 13px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.3em;color:#38E1FF}
+.jaqa-boot-title{margin:0 0 20px;font-size:22px;font-weight:600;line-height:1.3;color:#EAF2FF}
+.jaqa-boot-msg{margin:0 0 20px;padding:12px 14px;border:1px solid #1E3A52;border-radius:8px;background:#0A1320;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+.jaqa-boot[data-state="error"] .jaqa-boot-msg{border-color:#F2B84B;color:#FFE2A8;background:#1C1606}
+.jaqa-boot-help{font-size:14px;color:#9FB0C6}
+.jaqa-boot-help ol{padding-left:20px}
+.jaqa-boot-help li{margin:6px 0}
+/* Crawlable About + FAQ section below the workspace (generated at build time). */
+.jaqa-about{background:#05080F;color:#C9D6E8;border-top:1px solid #1E3A52;padding:40px 20px 96px;font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.jaqa-about-inner{max-width:980px;margin:0 auto}
+.jaqa-about h2{color:#EAF2FF;font-size:20px;margin:28px 0 12px}
+.jaqa-about h2:first-child{margin-top:0}
+.jaqa-about-features{padding-left:20px;display:grid;gap:8px}
+.jaqa-about strong{color:#EAF2FF}
+.jaqa-about details{border:1px solid #1E3A52;border-radius:6px;padding:10px 14px;margin:8px 0;background:#0A1320}
+.jaqa-about summary{cursor:pointer;color:#EAF2FF;font-weight:600}
+.jaqa-about details p{margin:8px 0 2px}
+.jaqa-about a{color:#67E8F9}
+.jaqa-about-nav{margin-top:20px}
+.jaqa-about-legal{font-size:13px;color:#8FA3BA;margin-top:14px}
+.jaqa-boot code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#EAF2FF}
+</style>
+<!-- JAQA:BOOT:BEGIN -->
+<script src="assets/jaqa-boot.js"></script>
+<!-- JAQA:BOOT:END -->
 <!-- JAQA:CSS:BEGIN -->
 <link rel="stylesheet" href="assets/jaqa-workspace.css">
 <!-- JAQA:CSS:END -->
 </head>
 <body>
+<div id="jaqa-boot" class="jaqa-boot" role="status" aria-live="polite" data-nosnippet>
+  <div class="jaqa-boot-inner">
+    <p class="jaqa-boot-brand">JAQA</p>
+    <h1 class="jaqa-boot-title">JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</h1>
+    <p class="jaqa-boot-msg" id="jaqa-boot-msg">Starting the workspace…</p>
+    <div class="jaqa-boot-help">
+      <p>If this screen does not go away within a few seconds, the app did not start. On Hostinger, check these:</p>
+      <ol>
+        <li>Files from an earlier upload are still in <code>public_html</code>, especially an old <code>.htaccess</code>. Delete everything in <code>public_html</code>, then extract <code>jaqa-web.zip</code> again.</li>
+        <li>The <code>assets</code> folder must sit in <code>public_html</code>, next to <code>index.html</code>.</li>
+        <li>Git deployment is switched off in hPanel. If it is on, it replaces your upload.</li>
+        <li>Clear the website cache in hPanel. If the Hostinger CDN is on, purge it and turn off any HTML or JS minification.</li>
+        <li>Reload the page with Ctrl+Shift+R (on a Mac, Cmd+Shift+R).</li>
+      </ol>
+    </div>
+  </div>
+</div>
 <main id="jaqa-workspace" class="jaqa-workspace" data-initial-module="situation">
   <noscript>
     <div style="padding:24px;font-family:system-ui,sans-serif">
-      <h1>JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</h1>
+      <p><strong>JAQA Global Risk, Finance, Insurance &amp; Procurement Intelligence Workspace</strong></p>
       <p>This workspace needs JavaScript. It runs entirely in your browser: no account, no cookies, no stored searches.</p>
     </div>
   </noscript>
 </main>
+<!-- JAQA:SEO:BEGIN --><!-- JAQA:SEO:END -->
 <!-- JAQA:JS:BEGIN -->
 <script src="modules/core.js"></script>
 <script src="modules/corsConfig.js"></script>
@@ -59,6 +106,9 @@
 <script src="modules/insuranceReinsurance.js"></script>
 <script src="modules/cyber.js"></script>
 <script src="modules/situationRoom.js"></script>
+<script src="modules/cesiumView.js"></script>
+<script src="modules/globe3d.js"></script>
+<script src="modules/globalMonitor.js"></script>
 <script src="modules/climateCatastrophe.js"></script>
 <script src="modules/lenses.js"></script>
 <script src="modules/procurementBids.js"></script>

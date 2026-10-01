@@ -632,3 +632,66 @@
   .jaqa-workspace a.rq-ext::after { content: ' (' attr(href) ')'; font-size: 9pt; color: #333; overflow-wrap: anywhere; }
   .jaqa-workspace .rq-footer { border-top: 1px solid #000; }
 }
+
+/* Ops (situation-room) theme on desktop: command-center density, so the evidence
+   globe and live panels lead the first screen — layout language inspired by
+   WorldMonitor and God's Eye View (clean-room CSS; no code or assets reused).
+   Spacing and type only: every notice, warning and control stays visible. */
+@media screen and (min-width: 1100px) {
+  .jaqa-workspace[data-theme='ops'] .rq-header { align-items: center; padding: 8px 20px; gap: 8px 20px; }
+  .jaqa-workspace[data-theme='ops'] .rq-brand { align-items: center; gap: 12px; flex: 1 1 380px; }
+  .jaqa-workspace[data-theme='ops'] .rq-brand > div { min-width: 0; }
+  .jaqa-workspace[data-theme='ops'] .rq-logo-mark { width: 36px; height: 36px; }
+  .jaqa-workspace[data-theme='ops'] .rq-wordmark { font-size: 11px; }
+  .jaqa-workspace[data-theme='ops'] .rq-title { font-size: 15px; line-height: 1.3; margin: 1px 0 0; }
+  .jaqa-workspace[data-theme='ops'] .rq-tagline { font-size: 12px; max-width: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .jaqa-workspace[data-theme='ops'] .rq-header-actions { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px 8px; flex: 1 1 620px; }
+  .jaqa-workspace[data-theme='ops'] .rq-privacy-badge { padding: 4px 10px; font-size: 11.5px; line-height: 1.3; max-width: 330px; }
+  .jaqa-workspace[data-theme='ops'] .rq-header .rq-btn-sm { min-height: 30px; padding: 3px 9px; font-size: 12.5px; }
+  .jaqa-workspace[data-theme='ops'] .rq-header .rq-icon-btn { width: 30px; height: 30px; }
+
+  .jaqa-workspace[data-theme='ops'] .rq-search-wrap { padding: 10px 20px 8px; }
+  .jaqa-workspace[data-theme='ops'] .rq-search-input { height: 42px; }
+  .jaqa-workspace[data-theme='ops'] .rq-search .rq-btn-lg { min-height: 42px; font-size: 15px; }
+  .jaqa-workspace[data-theme='ops'] .rq-confidential { margin-top: 6px; padding: 3px 10px; font-size: 11.5px; }
+  .jaqa-workspace[data-theme='ops'] .rq-pills-wrap { margin-top: 6px; }
+  .jaqa-workspace[data-theme='ops'] .rq-pills { max-height: 28px; }
+  .jaqa-workspace[data-theme='ops'] .rq-pill { min-height: 26px; padding: 2px 9px; font-size: 11.5px; }
+
+  .jaqa-workspace[data-theme='ops'] .rq-content { padding-top: 12px; }
+  .jaqa-workspace[data-theme='ops'] [data-module='situation'] .rq-module-head { margin-bottom: 6px; align-items: center; }
+  .jaqa-workspace[data-theme='ops'] [data-module='situation'] .rq-eyebrow { display: none; }
+  .jaqa-workspace[data-theme='ops'] [data-module='situation'] .rq-h2 { font-size: 18px; }
+  .jaqa-workspace[data-theme='ops'] [data-module='situation'] .rq-module-desc { font-size: 13px; margin-top: 0; }
+  .jaqa-workspace[data-theme='ops'] [data-module='situation'] .rq-module-warnings { margin-bottom: 8px; }
+  .jaqa-workspace[data-theme='ops'] [data-module='situation'] .rq-module-warnings .rq-warning { margin: 0; padding: 4px 10px; font-size: 12.5px; }
+  .jaqa-workspace[data-theme='ops'] .rq-situation { gap: 8px; }
+  .jaqa-workspace[data-theme='ops'] .rq-strip { padding: 4px 12px; }
+  .jaqa-workspace[data-theme='ops'] .rq-ticker { height: 30px; }
+}
+
+/* Global Monitor + 3D Globe launcher */
+.jaqa-workspace .rq-stack { display: grid; gap: 12px; }
+.jaqa-workspace .rq-list { padding-left: 18px; display: grid; gap: 6px; }
+.jaqa-workspace .rq-mon-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 12px; }
+.jaqa-workspace .rq-mon-grid > .rq-panel { grid-column: span 4; }
+.jaqa-workspace .rq-mon-grid > .rq-mon-map { grid-column: span 8; grid-row: span 2; }
+.jaqa-workspace .rq-mon-row { grid-template-columns: 92px minmax(0, 1fr) auto; }
+.jaqa-workspace .rq-mon-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.jaqa-workspace .rq-mon-title .rq-ext { display: inline; white-space: normal; }
+.jaqa-workspace .rq-mon-hot { padding-left: 22px; display: grid; gap: 4px; }
+.jaqa-workspace .rq-mon-fx { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+.jaqa-workspace .rq-mon-fx .rq-fx-val { font-size: 20px; }
+.jaqa-workspace .rq-mon-fx .rq-fineprint { grid-column: 1 / -1; }
+.jaqa-workspace .rq-link-inline { display: inline-flex; align-items: center; gap: 4px; }
+@media (max-width: 1100px) {
+  .jaqa-workspace .rq-mon-grid > .rq-panel, .jaqa-workspace .rq-mon-grid > .rq-mon-map { grid-column: 1 / -1; grid-row: auto; }
+}
+
+/* CesiumJS 3D evidence globe */
+.jaqa-workspace .rq-cesium { position: relative; height: clamp(320px, 58vh, 640px); border: 1px solid var(--rq-border-strong); border-radius: 4px; overflow: hidden; background: #000; margin-bottom: 10px; }
+.jaqa-workspace .rq-cesium-canvas { position: absolute; inset: 0; }
+.jaqa-workspace .rq-cesium-canvas canvas { display: block; }
+.jaqa-workspace .rq-cesium-credits { position: absolute; left: 6px; bottom: 4px; font-size: 10px; opacity: 0.8; max-width: 70%; }
+.jaqa-workspace .rq-cesium-status { padding: 16px; }
+@media (max-width: 600px) { .jaqa-workspace .rq-cesium { height: 360px; } }

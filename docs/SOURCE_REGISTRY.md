@@ -46,6 +46,7 @@ A source is **live** only when every required endpoint check passed (HTTP 2xx, `
 | GDELT DOC 2.0 API (`gdelt`) | B | Global | live | live | yes | gdelt-doc |  |  |  | Noisy media signals, not truth, and not adverse-media screening. Rate-limit responses omit CORS headers, so a throttled request appears as unavailable for the session. |
 | OpenCorporates (`opencorporates`) | B | Global | linkout | linkout |  |  |  |  |  | API requires a token; link-out only. |
 | UK Companies House (`companiesHouse`) | B | United Kingdom | linkout | linkout |  | ch-preflight | yes |  |  | API requires a key; link-out only in this release (extension point: in-memory browser key). |
+| JAQA Global Monitor — official public feeds (via the JAQA server) (`jaqaMonitor`) | B | Global | live | live |  |  | yes |  |  | A selected set of official feeds. Headlines are not the full story and are not verified, ranked or summarized by JAQA. |
 | Insurance regulators (IAIS, EIOPA, NAIC, FCA/PRA, BaFin, APRA, OSFI, NFRA, IRDAI…) (`insuranceRegulators`) | C | Global | linkout | linkout |  |  | yes |  | yes |  |
 | Rating agencies (AM Best, S&P, Moody’s, Fitch, KBRA) (`ratingAgencies`) | C | Global | linkout | linkout |  |  |  |  |  | Ratings are never scraped, reproduced or derived. |
 | Insurance / reinsurance market reports (`marketReports`) | C | Global | linkout | linkout |  |  |  |  |  | Reports are never scraped or reproduced. |

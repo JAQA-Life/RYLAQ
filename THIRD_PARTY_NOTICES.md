@@ -1,6 +1,6 @@
 # Third-party notices
 
-JAQA ships no third-party runtime code. The only bundled third-party material is map data.
+The JAQA workspace (`src/`, `dist/`) contains no third-party runtime code; its only bundled third-party material is the map data below. The full site also ships **God's Eye View** (`apps/globe/`), which is third-party code with its own dependencies and data, listed further down.
 
 ## Natural Earth land outlines (via world-atlas)
 
@@ -24,11 +24,50 @@ THIS SOFTWARE.
 
 The same notice is embedded in the generated file header.
 
-## Design inspiration (no code or assets)
+## God's Eye View — the 3D globe (`apps/globe/`)
 
-The Situation Room layout and HUD styling are inspired by these public projects:
+- **Code:** MIT licence, Copyright (c) 2026 Bilawal Sidhu. The full text, including its data carve-out, is in [`apps/globe/LICENSE`](apps/globe/LICENSE) and must stay with the code.
+- **Source:** https://github.com/JAQA-Life/gods-eye-view (fork of https://github.com/bilawalsidhu/gods-eye-view), commit `082074a`.
+- **JAQA's changes** are listed in [`apps/globe/JAQA-INTEGRATION.md`](apps/globe/JAQA-INTEGRATION.md): self-hosted fonts, page metadata, and Vite plus vite-plugin-cesium moved to runtime dependencies.
 
-- **WorldMonitor** — https://github.com/koala73/worldmonitor (AGPL-3.0-only)
-- **God's Eye View** — https://github.com/bilawalsidhu/gods-eye-view (licence not verified)
+**The MIT grant covers the code only.** In upstream's own words, bundled datasets, 3D models and live data "remain subject to their own licenses and terms". Per `apps/globe/LICENSE` and `apps/globe/DATA_SOURCES.md`:
 
-The implementation is clean-room. No source code, stylesheets, images, fonts, data or configuration from either project was copied, adapted or bundled, and neither project is embedded, iframed or called at runtime. JAQA is not affiliated with or endorsed by either project. See `docs/THIRD_PARTY_SOURCE_POLICY.md`.
+| Material | Licence | Commercial use |
+|---|---|---|
+| TeleGeography Submarine Cable Map (`apps/globe/src/data/local_data/telegeography_submarine_cables/`) | CC BY-NC-SA 3.0 | **Not permitted.** Delete the folder or license it from TeleGeography. |
+| Bhote Koshi flood event pack (`apps/globe/public/events/bhote-koshi-2026/`, plus the coordinates in `apps/globe/src/data/bhoteKoshiFloodPath.js`) | CC BY-NC 4.0 (Vantor / GeoPera) | **Not without separate permission.** Removing it also requires removing the Nepal scene's registrations and imports. |
+| Datacenters and dams (OpenStreetMap / Open Infrastructure Map extracts) | ODbL 1.0 | Permitted, with attribution and share-alike on the data |
+| 3D aircraft models (`apps/globe/public/models/`) | Individual licences (see upstream) | Check each model |
+| Live providers (OpenSky, Google Maps, Google News RSS, AISStream, …) | Each provider's terms | OpenSky's licence is non-commercial, and operational use can require a written agreement. Google News RSS is limited to personal, non-commercial use. Google Maps requires your own key and billing. |
+
+**If jaqa.life is operated commercially, act on the "Not permitted" and "Not without separate permission" rows before launch.** Everything is included by default because the product owner chose to include every God's Eye View layer.
+
+### Runtime packages installed by `npm run setup` (licences from each package)
+
+| Package | Licence |
+|---|---|
+| cesium 1.138 | Apache-2.0 |
+| vite 6.4, vite-plugin-cesium 1.2 | MIT |
+| hls.js 1.7 | Apache-2.0 |
+| satellite.js 6.0, mgrs 2.1, egm96-universal 1.1 | MIT |
+| @mapbox/vector-tile 3.0, pbf 5.1 | BSD-3-Clause |
+| @meri-imperiumi/eccodes-wasm 2.48 | Apache-2.0 |
+| @fontsource/inter, @fontsource/jetbrains-mono 5.3 (Inter, JetBrains Mono fonts) | SIL OFL 1.1 |
+| material-symbols 0.47 (Material Symbols Outlined; JAQA ships a 5 KB subset) | Apache-2.0 |
+
+## CesiumJS — 3D globe engine
+
+[CesiumJS](https://github.com/CesiumGS/cesium) (`cesium` 1.138.0, Apache-2.0, Copyright 2011-2022 Cesium Contributors / Cesium GS, Inc.) is the 3D engine used in two places:
+- **God's Eye View**, at `/globe/`.
+- **JAQA's own CesiumJS 3D evidence globe**, on the workspace's 3D Globe screen (`src/modules/cesiumView.js`).
+
+Both load the same self-hosted build from `/globe/cesium/`. Each file keeps its Apache-2.0 header, and the Cesium credit is displayed on the globe. The JAQA view uses the **Natural Earth II** imagery bundled with CesiumJS (public domain), so it makes no requests to Cesium ion or any tile server.
+
+## WorldMonitor — inspiration only (no code)
+
+**WorldMonitor** (https://github.com/koala73/worldmonitor) is licensed **AGPL-3.0-only**. JAQA's Global Monitor and Situation Room are JAQA's own clean-room code, inspired by its situational-awareness dashboard concept:
+- No WorldMonitor source code, stylesheets, images, data or configuration is copied, adapted or bundled.
+- JAQA does not embed or call WorldMonitor.
+- JAQA is not affiliated with or endorsed by WorldMonitor or God's Eye View.
+
+See `docs/THIRD_PARTY_SOURCE_POLICY.md`.

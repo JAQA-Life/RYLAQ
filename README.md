@@ -6,14 +6,40 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 
 > Educational and enterprise information-discovery use only. Not legal, compliance, credit, investment, treasury, insurance, reinsurance, underwriting, claims, sanctions, AML, procurement, bid, award, tax, or supply-chain assurance advice. © JAQA™. All rights reserved.
 
+## JAQA Ultimate: workspace + 3D globe + Global Monitor
+
+This branch (`jaqa-ultimate`) combines three things in one site served by one Node.js process (`server/jaqa-server.mjs`):
+
+| Path | What | Code |
+|---|---|---|
+| `/` | **JAQA workspace:** Situation Room, search, 30+ modules, exports | JAQA (proprietary) |
+| `/global-monitor/` | **Global Monitor:** headlines from 18 verified official feeds, event map, countries in the headlines, ECB FX board | JAQA, clean-room and WorldMonitor-inspired (no WorldMonitor code: it is AGPL) |
+| `/` → *3D Globe* screen | **CesiumJS 3D evidence globe:** your session's evidence on a [CesiumJS](https://github.com/CesiumGS/cesium) Earth with bundled Natural Earth II imagery, making no third-party requests | JAQA, using CesiumJS (Apache-2.0) |
+| `/globe/` | **3D globe:** God's Eye View (live aircraft, ships, satellites, hazards, cameras, CRT/NVG/FLIR styles, voice) | God's Eye View, MIT, © Bilawal Sidhu (`apps/globe/`) |
+| `/about/`, `/faq/`, `/sources/`, `/privacy/`, `/3d-globe/` | Crawlable static pages, plus `sitemap.xml`, `robots.txt`, `llms.txt` and JSON-LD structured data | JAQA |
+
+```bash
+# Node >= 24.14 (God's Eye View's requirement)
+npm run install:globe      # God's Eye View's dependencies (apps/globe)
+npm run build:all          # JAQA dist/ + SEO pages, then the globe for /globe/
+npm start                  # http://localhost:3000/  (PORT, HOST env vars)
+node scripts/package-hostinger.mjs   # → release/jaqa-hostinger.zip (deploy bundle)
+```
+
+- **Deploy from GitHub (recommended):** see [`docs/DEPLOY-HOSTINGER-GITHUB.md`](docs/DEPLOY-HOSTINGER-GITHUB.md). In Hostinger, create a Node.js web app (Business or Cloud plan) from this repository's `hostinger-node` branch, with Node 24, build command `npm run build` and entry file `server/jaqa-server.mjs`. The *Publish full site to hostinger-node branch* workflow builds and tests every merge to `main` and publishes it there, and Hostinger redeploys on push.
+- **Deploy by upload / VPS:** see [`docs/DEPLOY-NODE.md`](docs/DEPLOY-NODE.md). It covers a Hostinger VPS or a Node.js hosting plan with Node 24. Shared hosting with `public_html` only can't run the server; use the static-only `release/jaqa-web.zip` there (workspace and SEO pages, without the monitor and globe).
+- **Before commercial use:** God's Eye View bundles non-commercial datasets (TeleGeography cables, the Bhote Koshi pack) and uses OpenSky, whose licence is non-commercial. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+- **Monitor feeds** are re-verified with the *Verify monitor feeds* workflow; results go into `config/monitor-verification.json`.
+
 ## What's in the box
 
 | Path | Purpose |
 |---|---|
-| `dist/index.html` | **Production artifact**: one self-contained HTML file (CSS and JS inlined, inline SVG icons, system fonts). Upload to Hostinger or open locally. |
+| `dist/index.html` + `dist/assets/` | **Production artifact**: small HTML pages plus the app script, stylesheet and startup-diagnostics script as content-hashed files in `assets/` (inline SVG icons, system fonts, no external requests). Upload to Hostinger or open locally. |
 | `.htaccess` (root) | Used only if Hostinger deploys the repository root (`main`). It routes every request into `dist/` and returns 404 for source files. |
-| `dist/.htaccess` | Security headers, HTTPS redirect, no directory listing, gzip, and a strict CSP. `script-src` is pinned to the script's SHA-256 hash and `connect-src` allows only verified API origins. |
+| `dist/.htaccess` | Security headers, HTTPS redirect, no directory listing, gzip, and a strict CSP. `script-src 'self'` (the app runs only from its own files, so hosting-side HTML rewriting cannot break it) and `connect-src` allows only verified API origins. |
 | `dist/{global-risk,finance-risk,insurance-reinsurance,procurement-bids}/` | Optional standalone routes: the same app with route-specific title, meta and canonical, opening on the matching module. |
+| `release/jaqa-web.zip` | **Download-and-upload package**: the `dist/` files, including `.htaccess`, in one ZIP for Hostinger File Manager. Upload it to `public_html/` and extract it there. See [`release/README.md`](release/README.md). |
 | `embed/jaqa-workspace-embed.html` | Fragment for CMS/intranet custom-HTML blocks. It contains no html/head/body, and its styles are scoped to `.jaqa-workspace`. |
 | `src/` | Readable source: `src/index.html` loads the unbundled modules, so the app also runs from `src/` without a build. |
 | `config/cors-verification.json` | Evidence for live mode: the result of real requests sent with `Origin: https://jaqa.life`. |
@@ -25,7 +51,7 @@ JAQA is a **static, privacy-first web app**. It runs entirely in the browser. It
 
 ```bash
 # No install needed for production. For development:
-npm run build          # regenerate dist/, embed/, docs/SOURCE_REGISTRY.md, corsConfig.js
+npm run build          # regenerate dist/, embed/, release/jaqa-web.zip, docs/SOURCE_REGISTRY.md, corsConfig.js
 npm run check          # static safety + link sanity checks
 npm run preview        # http://127.0.0.1:8080 (serves dist/, no logging)
 npm run test:smoke     # Playwright end-to-end test with mocked providers (needs `playwright`)
@@ -73,6 +99,8 @@ The workspace opens on the **Situation Room**: a command-center grid with an int
 - **Evidence:** Relationship Explorer · Scenario Stress Lab · Watchlist / Evidence Board · Advanced Query · Coverage Console · Session & Privacy
 
 ## Deployment
+
+**Simplest:** download [`release/jaqa-web.zip`](release/jaqa-web.zip), upload it in Hostinger File Manager to `public_html/`, and extract it there (steps in [`release/README.md`](release/README.md)).
 
 See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). The site is built for the domain root, `https://jaqa.life/`. On every push to `main`, `.github/workflows/publish-hostinger-branch.yml` publishes **only the contents of `dist/`** to the `hostinger` branch. Point **hPanel → Advanced → Git** at branch `hostinger` with an empty directory (that is, `public_html/`). If Hostinger stays pointed at `main`, the repository-root `.htaccess` serves `dist/` at `/` and hides everything else, so that works too once the app is merged. Manual upload of the `dist/` contents (including `.htaccess`) and the optional FTPS workflow (`deploy-hostinger.yml`, skipped until secrets are set) also work. Hostinger needs no Node.js, PHP, database or build step.
 

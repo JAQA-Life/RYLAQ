@@ -7,6 +7,7 @@
  */
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
+import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -15,6 +16,11 @@ const args = process.argv.slice(2);
 const arg = (n, d) => (args.includes(n) ? args[args.indexOf(n) + 1] : d);
 const dir = path.join(root, arg('--dir', 'dist'));
 const port = Number(arg('--port', 8080));
+// Send the production Content-Security-Policy from dist/.htaccess on HTML responses,
+// so previews and the smoke test run under the same CSP as Hostinger.
+const htaccess = path.join(dir, '.htaccess');
+const cspMatch = existsSync(htaccess) && readFileSync(htaccess, 'utf8').match(/Content-Security-Policy "([^"]+)"/);
+const CSP = cspMatch ? cspMatch[1] : null;
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png' };
 
 http
@@ -25,11 +31,13 @@ http
       if (!p.startsWith(dir) || path.basename(p).startsWith('.')) throw new Error('forbidden');
       if ((await stat(p)).isDirectory()) p = path.join(p, 'index.html');
       const body = await readFile(p);
-      res.writeHead(200, { 'Content-Type': TYPES[path.extname(p)] || 'application/octet-stream', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff' });
+      const headers = { 'Content-Type': TYPES[path.extname(p)] || 'application/octet-stream', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff' };
+      if (CSP && path.extname(p) === '.html') headers['Content-Security-Policy'] = CSP;
+      res.writeHead(200, headers);
       res.end(body);
     } catch {
       res.writeHead(404, { 'Content-Type': 'text/plain' });
       res.end('Not found');
     }
   })
-  .listen(port, '127.0.0.1', () => process.stdout.write(`JAQA preview: http://127.0.0.1:${port}/ (serving ${path.relative(root, dir)})\n`));
+  .listen(port, '127.0.0.1', () => process.stdout.write(`JAQA preview: http://127.0.0.1:${port}/ (serving ${path.relative(root, dir)}${CSP ? ', production CSP' : ''})\n`));

@@ -2,7 +2,7 @@
   "name": "jaqa-workspace",
   "version": "1.0.0",
   "private": true,
-  "description": "JAQA \u2014 global risk, finance, insurance & procurement intelligence workspace with the integrated God's Eye View 3D globe (MIT) and Global Monitor. Static workspace in dist/; full site served by server/jaqa-server.mjs.",
+  "description": "JAQA \u2014 global risk, finance, insurance & procurement intelligence workspace with the JAQA Eye View 3D globe and Global Monitor. Static workspace in dist/; full site served by server/jaqa-server.mjs.",
   "type": "module",
   "engines": {
     "node": ">=24.14"

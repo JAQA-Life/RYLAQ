@@ -48,6 +48,7 @@ copy('scripts/build-globe.mjs');
 copy('scripts/hostinger-build.mjs');
 copy('LICENSE');
 copy('THIRD_PARTY_NOTICES.md');
+copy('licenses');
 copy('docs/DEPLOY-NODE.md', 'DEPLOY-HOSTINGER.md');
 copy('docs/DEPLOY-HOSTINGER-GITHUB.md', 'README.md');
 // God's Eye View: everything its server and a rebuild need; not node_modules, tests or docs.
@@ -68,7 +69,7 @@ writeFileSync(
       name: 'jaqa-site',
       version: '1.0.0',
       private: true,
-      description: 'JAQA site: workspace (/), God\u2019s Eye View 3D globe (/globe/) and data APIs (/api/) in one Node.js server.',
+      description: 'JAQA site: workspace (/), JAQA Eye View 3D globe (/globe/) and data APIs (/api/) in one Node.js server.',
       type: 'module',
       main: 'server/jaqa-server.mjs',
       engines: { node: '>=24.14' },

@@ -19,7 +19,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const globe = path.join(root, 'apps', 'globe');
 const [major, minor] = process.versions.node.split('.').map(Number);
 if (major < 24 || (major === 24 && minor < 14)) {
-  console.error(`God's Eye View requires Node >= 24.14 (running ${process.versions.node}).`);
+  console.error(`JAQA Eye View requires Node >= 24.14 (running ${process.versions.node}).`);
   process.exit(1);
 }
 // Vite: apps/globe/node_modules (development) or the root node_modules (deploy branch).
@@ -64,4 +64,4 @@ if (!existsSync(path.join(next, 'cesium', 'Cesium.js')) || !existsSync(path.join
 }
 rmSync(dist, { recursive: true, force: true });
 renameSync(next, dist);
-console.log('God\'s Eye View built to apps/globe/dist (served at /globe/).');
+console.log('JAQA Eye View built to apps/globe/dist (served at /globe/).');

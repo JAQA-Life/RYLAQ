@@ -2,17 +2,18 @@
 
 > Public-source triage for global risk, finance, insurance/reinsurance counterparties, procurement, bids, awards, regulations, events, and supply-chain exposure.
 
-JAQA is a privacy-first web workspace for investigating public evidence about organizations, countries, ports, vulnerabilities, tenders, regulations and global risk events. It queries 19 verified public data sources directly from your browser, includes a photorealistic 3D globe (God’s Eye View) and a Global Monitor of 18 official public feeds, and links out to official sources for everything else. It does not store searches, and it does not give credit, sanctions, insurance, legal or investment determinations.
+JAQA is a privacy-first web workspace for investigating public evidence about organizations, countries, ports, vulnerabilities, tenders, regulations and global risk events. It queries 19 verified public data sources directly from your browser, includes a photorealistic 3D globe (JAQA Eye View) and a Global Monitor of 18 official public feeds, and links out to official sources for everything else. It does not store searches, and it does not give credit, sanctions, insurance, legal or investment determinations.
 
 ## Pages
 
 - [JAQA workspace](https://jaqa.life/): the interactive workspace (Situation Room, search, all modules)
 - [Global Monitor](https://jaqa.life/global-monitor/): headlines from 18 verified official feeds, event map, countries in the headlines, FX board
-- [3D Globe](https://jaqa.life/3d-globe/): God’s Eye View photorealistic globe with live aircraft, ships, satellites and hazards
+- [JAQA Eye View (3D globe)](https://jaqa.life/3d-globe/): photorealistic 3D globe with live aircraft, ships, satellites and hazards
 - [About](https://jaqa.life/about/): what JAQA is, how it works, what it is not
 - [FAQ](https://jaqa.life/faq/): direct answers about sources, privacy, verification and coverage
 - [Data sources](https://jaqa.life/sources/): every live API, official feed and link-out
 - [Privacy](https://jaqa.life/privacy/): no accounts, cookies, storage or stored searches
+- [Licences](https://jaqa.life/licenses/): open-source licences and credits
 
 ## Optional
 

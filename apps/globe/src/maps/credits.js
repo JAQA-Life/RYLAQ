@@ -11,7 +11,10 @@ export function createMapCredits(viewer) {
       if (!display) return;
       try {
         if (active) display.removeStaticCredit(active);
-        active = html ? new Cesium.Credit(html, true) : null;
+        // JAQA: basemap credits go in the "Data attribution" panel (opened from
+        // the button on the globe), not on the globe itself. Esri's attribution
+        // guidance accepts a window opened from a button.
+        active = html ? new Cesium.Credit(html, false) : null;
         markup = html;
         if (active) display.addStaticCredit(active);
       } catch {

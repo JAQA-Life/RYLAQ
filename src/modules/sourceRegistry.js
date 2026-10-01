@@ -627,8 +627,6 @@
       ['Dow Jones Risk & Compliance', 'https://www.dowjones.com/professional/risk/'], ['Accuity (LexisNexis Risk)', 'https://risk.lexisnexis.com/'], ['MarineTraffic', 'https://www.marinetraffic.com/'], ['Spire Maritime', 'https://spire.com/maritime/']
     ].map(([n, u]) => L(n, u, { kind: 'paid', note: 'Paid/commercial. Link-out only; never scraped or reproduced. No affiliation.' })),
     thirdPartyRepos: [
-      L('WorldMonitor', 'https://github.com/koala73/worldmonitor', { kind: 'third-party-repo', license: 'AGPL-3.0-only', mode: 'reference / link-out only', note: 'Not integrated: AGPL licence requires legal review; heavy backend/relay/service-worker stack conflicts with JAQA’s static, no-storage model. Outputs are not JAQA evidence.' }),
-      L('God’s Eye View', 'https://github.com/bilawalsidhu/gods-eye-view', { kind: 'third-party-repo', license: 'Unverified — audit required', mode: 'reference / link-out only', note: 'Not integrated pending a strict audit (licence, no backend, no storage, no tiles/CDNs, no personal-data OSINT, no active scanning).' }),
       L('OWASP Dependency-Track', 'https://github.com/DependencyTrack/dependency-track', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Software supply-chain platform reference; not a backend fork.' }),
       L('Trivy', 'https://github.com/aquasecurity/trivy', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Scanner/SBOM reference; not integrated.' }),
       L('Grype', 'https://github.com/anchore/grype', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Scanner reference; not integrated.' }),

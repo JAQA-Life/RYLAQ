@@ -897,8 +897,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
    * DOM helpers. All text goes through textContent / createTextNode, so API
    * strings can never inject markup. innerHTML is never used with data.
    * ------------------------------------------------------------------ */
-  // https, mailto, in-page anchors, and the integrated 3D globe on this site (/globe/…).
-  const SAFE_URL = /^(https:\/\/|mailto:|#|\/globe\/)/i;
+  // https, mailto, in-page anchors, the 3D globe (/globe/…) and the licences page on this site.
+  const SAFE_URL = /^(https:\/\/|mailto:|#|\/globe\/|\/licenses\/$)/i;
   function safeUrl(u) {
     if (typeof u !== 'string') return null;
     const t = u.trim();
@@ -2633,8 +2633,6 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       ['Dow Jones Risk & Compliance', 'https://www.dowjones.com/professional/risk/'], ['Accuity (LexisNexis Risk)', 'https://risk.lexisnexis.com/'], ['MarineTraffic', 'https://www.marinetraffic.com/'], ['Spire Maritime', 'https://spire.com/maritime/']
     ].map(([n, u]) => L(n, u, { kind: 'paid', note: 'Paid/commercial. Link-out only; never scraped or reproduced. No affiliation.' })),
     thirdPartyRepos: [
-      L('WorldMonitor', 'https://github.com/koala73/worldmonitor', { kind: 'third-party-repo', license: 'AGPL-3.0-only', mode: 'reference / link-out only', note: 'Not integrated: AGPL licence requires legal review; heavy backend/relay/service-worker stack conflicts with JAQA’s static, no-storage model. Outputs are not JAQA evidence.' }),
-      L('God’s Eye View', 'https://github.com/bilawalsidhu/gods-eye-view', { kind: 'third-party-repo', license: 'Unverified — audit required', mode: 'reference / link-out only', note: 'Not integrated pending a strict audit (licence, no backend, no storage, no tiles/CDNs, no personal-data OSINT, no active scanning).' }),
       L('OWASP Dependency-Track', 'https://github.com/DependencyTrack/dependency-track', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Software supply-chain platform reference; not a backend fork.' }),
       L('Trivy', 'https://github.com/aquasecurity/trivy', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Scanner/SBOM reference; not integrated.' }),
       L('Grype', 'https://github.com/anchore/grype', { kind: 'third-party-repo', license: 'Apache-2.0', mode: 'reference', note: 'Scanner reference; not integrated.' }),
@@ -6923,9 +6921,9 @@ No sanctions clearance. No AML determination. No procurement bid advice.
  * grid, live wire/ticker, status strip) and the HUD language (reticle,
  * corner brackets, telemetry readouts, optic modes) are INSPIRED BY the
  * public WorldMonitor and God's Eye View projects. No code, assets, styles
- * or data were copied from either project; this is a clean-room
- * implementation built on JAQA's own verified sources. Neither project is
- * integrated, embedded or called (see docs/THIRD_PARTY_SOURCE_POLICY.md).
+ * or data were copied into this module; it is a clean-room implementation
+ * built on JAQA's own verified sources. (God's Eye View's MIT code ships
+ * separately as JAQA Eye View at /globe/; see THIRD_PARTY_NOTICES.md.)
  *
  * PRIVACY: feeds use fixed, non-personal queries (no search terms), stay on
  * STANDBY until the user activates them, and are wiped by Clear Session.
@@ -7115,7 +7113,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       h('div', { class: 'rq-hud-top rq-mono', 'aria-hidden': 'true' }, h('span', null, 'OPTIC ' + (MODES.find((m) => m[0] === st.mode) || MODES[0])[1]), h('span', { class: 'rq-utc' }, R.shell.utcNow())),
       h('div', { class: 'rq-hud-bottom', 'aria-live': 'off' }, readout, vis)
     );
-    // Link into the integrated God's Eye View globe, kept in step with this view.
+    // Link into JAQA Eye View (/globe/), kept in step with this view.
     const alt3d = (z) => Math.round(Math.max(150000, 14000000 / Math.max(1, z)));
     const link3d = R.globe3d ? R.globe3d.link('Open in 3D globe', { lat: view.lat, lon: ((view.lon + 540) % 360) - 180, alt: alt3d(view.zoom), style: st.mode }) : null;
     if (globe) globe.destroy();
@@ -7160,7 +7158,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         s && s.resolved && s.resolved.lat !== undefined && s.resolved.lat !== null ? ui.button('Recenter on subject', () => globe.focus(s.resolved.lat, s.resolved.lon), { cls: 'rq-btn-xs', icon: 'globe' }) : null
       )
     );
-    const open3d = h('div', { class: 'rq-row rq-row-tight' }, link3d, link3d ? h('span', { class: 'rq-fineprint' }, 'Photorealistic God’s Eye View globe at this view (coordinates only).') : null);
+    const open3d = h('div', { class: 'rq-row rq-row-tight' }, link3d, link3d ? h('span', { class: 'rq-fineprint' }, 'Photorealistic JAQA Eye View globe at this view (coordinates only).') : null);
     return panel('Evidence globe', { cls: 'rq-panel-globe', live: feedsActive(), meta: 'Natural Earth outlines · no tiles' }, hud, controls, open3d, h('p', { class: 'rq-fineprint' }, 'Drag or use arrow keys to rotate · wheel or +/− to zoom · Enter opens the marker nearest the reticle. Markers come only from records loaded in this session. Event positions are not facility, loss or exposure data.'));
   }
 
@@ -7236,7 +7234,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         panel('Markers (text alternative)', { cls: 'rq-panel-wide', meta: 'from loaded records' }, markerList),
         statusPanel
       );
-      const out = h('div', { class: 'rq-situation' }, strip, ticker(), grid, h('p', { class: 'rq-fineprint' }, 'Design language inspired by public situational-awareness projects (clean-room implementation; no code, assets or data reused; no affiliation). ', extLink('https://github.com/koala73/worldmonitor', 'WorldMonitor'), ' · ', extLink('https://github.com/bilawalsidhu/gods-eye-view', 'God’s Eye View'), ' — reference links only.'));
+      const out = h('div', { class: 'rq-situation' }, strip, ticker(), grid, h('p', { class: 'rq-fineprint' }, 'Signals come from the public records loaded in this session. Open-source licences: ', h('a', { href: '/licenses/' }, 'Licences'), '.'));
       setTimeout(renderMarkerList, 0);
       return out;
     }
@@ -7245,11 +7243,11 @@ No sanctions clearance. No AML determination. No procurement bid advice.
 
 /* ---- modules/cesiumView.js ---- */
 /*
- * cesiumView.js — a CesiumJS 3D evidence globe inside the JAQA workspace.
+ * cesiumView.js — the 3D evidence globe inside the JAQA workspace.
  *
- * CesiumJS (https://github.com/CesiumGS/cesium, Apache-2.0, © Cesium GS) is
- * served by the JAQA server from /globe/cesium/ (the same self-hosted build the
- * God's Eye View globe uses). It is loaded only when this view is opened.
+ * Built on CesiumJS (Apache-2.0; notice on /licenses/), served by the JAQA
+ * server from /globe/cesium/ (the same self-hosted build JAQA Eye View uses).
+ * It is loaded only when this view is opened.
  *
  * Privacy: imagery is the Natural Earth II set bundled with CesiumJS, so the
  * view makes no request to any third party (no Cesium ion, no tile servers).
@@ -7314,8 +7312,11 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     const Cesium = await load();
     if (!host.isConnected) return null;
     if (current) current.destroy();
-    const canvasBox = h('div', { class: 'rq-cesium-canvas', role: 'img', 'aria-label': 'CesiumJS 3D globe with evidence markers' });
+    const canvasBox = h('div', { class: 'rq-cesium-canvas', role: 'img', 'aria-label': '3D globe with evidence markers' });
     const credits = h('div', { class: 'rq-cesium-credits' });
+    // No Cesium logo: this view uses no Cesium ion content (bundled imagery
+    // only); the CesiumJS licence notice is on /licenses/.
+    Cesium.CreditDisplay.cesiumCredit = undefined;
     host.replaceChildren(canvasBox, credits);
     const widget = new Cesium.CesiumWidget(canvasBox, {
       baseLayer: Cesium.ImageryLayer.fromProviderAsync(Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'))),
@@ -7400,20 +7401,20 @@ No sanctions clearance. No AML determination. No procurement bid advice.
 
 /* ---- modules/globe3d.js ---- */
 /*
- * globe3d.js — 3D Globe: launcher for the integrated God's Eye View app
- * (apps/globe, MIT, © Bilawal Sidhu), served by the JAQA server at /globe/.
+ * globe3d.js — 3D Globe: launcher for JAQA Eye View (apps/globe), served by
+ * the JAQA server at /globe/. Open-source licences: /licenses/.
  *
- * JAQA only builds a link: God's Eye View reads its camera from the URL hash
+ * JAQA only builds a link: JAQA Eye View reads its camera from the URL hash
  * (#lat=…&lon=…&alt=…&style=…; see apps/globe/src/sharelink.js). Only
  * coordinates and a style are placed in it — never a search term.
  * JAQA™ is a trademark of JAQA. © JAQA™. All rights reserved.
  */
 (function (R) {
   'use strict';
-  const { h, extLink } = R.util;
+  const { h } = R.util;
   const ui = R.ui;
 
-  // JAQA optic modes → God's Eye View style names (sharelink.js URL values).
+  // JAQA optic modes → JAQA Eye View style names (sharelink.js URL values).
   const STYLE = { std: 'normal', nvg: 'nvg', flir: 'flir', crt: 'crt' };
   const num = (v, d) => (Number.isFinite(v) ? Number(v.toFixed(d)) : null);
 
@@ -7435,7 +7436,7 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     }
   };
 
-  // Facts from God's Eye View's README (apps/globe/README.md), not JAQA claims.
+  // Facts from apps/globe/README.md, not marketing claims.
   const FEATURES = [
     ['Photorealistic 3D globe', 'CesiumJS with Esri satellite imagery and OpenStreetMap keyless; Google Photorealistic 3D Tiles with a Google Maps key or Cesium ion token.'],
     ['Live contacts', 'Aircraft, ships and satellites near a target, with click-to-track, trails and a 250 km contacts roster.'],
@@ -7447,9 +7448,9 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     ['Voice agent', 'Hands-free control through the OpenAI Realtime API (needs a server-side OpenAI key).']
   ];
 
-  /** CesiumJS 3D evidence globe (src/modules/cesiumView.js), mounted on render. */
+  /** 3D evidence globe (src/modules/cesiumView.js), mounted on render. */
   function cesiumSection(here) {
-    const host = h('div', { class: 'rq-cesium' }, h('p', { class: 'rq-muted rq-cesium-status' }, 'Loading CesiumJS…'));
+    const host = h('div', { class: 'rq-cesium' }, h('p', { class: 'rq-muted rq-cesium-status' }, 'Loading the 3D globe…'));
     const count = h('span', { class: 'rq-mono rq-muted' }, '');
     let ctl = null;
     const btn = (label, icon, fn) => ui.button(label, () => ctl && fn(ctl), { icon, cls: 'rq-btn-sm' });
@@ -7469,16 +7470,16 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         .mount(host, pts, { center: here ? { lat: here.lat, lon: here.lon, height: 3000000 } : null, onCount: (n) => (count.textContent = n + ' marker(s)') })
         .then((c) => (ctl = c))
         .catch(() => {
-          host.replaceChildren(ui.warning('The CesiumJS 3D view needs the JAQA server, which serves CesiumJS at /globe/cesium/. It is not available on this static-only deployment; the Situation Room globe still works.', 'info'));
+          host.replaceChildren(ui.warning('The 3D evidence globe needs the JAQA server. It is not available on this static-only deployment; the Situation Room globe still works.', 'info'));
           controls.remove();
         });
     }, 0);
     return ui.section(
-      'CesiumJS 3D evidence globe',
-      { icon: 'globe', desc: 'Your session’s evidence on a real 3D Earth: seismic events, places, the current subject and Global Monitor events. Imagery is the Natural Earth II set bundled with CesiumJS, so this view makes no third-party requests. Drag to rotate, scroll to zoom, click a marker for details.' },
+      '3D evidence globe',
+      { icon: 'globe', desc: 'Your session’s evidence on a real 3D Earth: seismic events, places, the current subject and Global Monitor events. Imagery is the Natural Earth II set served by the JAQA server, so this view makes no third-party requests. Drag to rotate, scroll to zoom, click a marker for details.' },
       host,
       controls,
-      h('p', { class: 'rq-fineprint' }, 'Powered by CesiumJS (github.com/CesiumGS/cesium, Apache-2.0, © Cesium GS). Marker positions come from the loaded public records; they are not facility, loss or exposure data.')
+      h('p', { class: 'rq-fineprint' }, 'Marker positions come from the loaded public records; they are not facility, loss or exposure data.')
     );
   }
 
@@ -7487,11 +7488,11 @@ No sanctions clearance. No AML determination. No procurement bid advice.
     group: 'risk',
     order: 1,
     icon: 'globe',
-    title: '3D Globe (God’s Eye View)',
+    title: '3D Globe (JAQA Eye View)',
     short: '3D Globe',
-    description: 'Open the photorealistic 3D globe with live aircraft, ships, satellites, hazards and cameras: God’s Eye View, integrated into JAQA.',
+    description: 'Open JAQA Eye View, the photorealistic 3D globe with live aircraft, ships, satellites, hazards and cameras.',
     warnings: [
-      'Opens God’s Eye View at /globe/. It is a separate app with its own layers and requests: its data comes from public providers through the JAQA server, and its voice agent sends audio to OpenAI only if the server has an OpenAI key.',
+      'Opens JAQA Eye View at /globe/. It is a separate app with its own layers and requests: its data comes from public providers through the JAQA server, and its voice agent sends audio to OpenAI only if the server has an OpenAI key.',
       'Live positions, camera feeds and public registries can be delayed, incomplete or wrong. Nothing on the globe is a determination of risk, ownership, intent or exposure.'
     ],
     liveRefresh: false,
@@ -7507,14 +7508,14 @@ No sanctions clearance. No AML determination. No procurement bid advice.
         h(
           'div',
           { class: 'rq-hero' },
-          h('h3', { class: 'rq-hero-title' }, 'Launch the full 3D globe (God’s Eye View)'),
-          h('p', null, 'The full God’s Eye View app opens in this tab. Use your browser’s Back button to return to the JAQA workspace.'),
+          h('h3', { class: 'rq-hero-title' }, 'Launch JAQA Eye View'),
+          h('p', null, 'JAQA Eye View opens in this tab. Use your browser’s Back button to return to the JAQA workspace.'),
           h('div', { class: 'rq-row' }, R.globe3d.link('Open 3D globe', { lat: 20, lon: 10, alt: 18000000 }, 'rq-btn rq-btn-primary'), here ? R.globe3d.link('Fly to ' + here.label, { lat: here.lat, lon: here.lon, alt: 60000 }) : null),
           h('p', { class: 'rq-fineprint' }, 'Only coordinates and a visual style go into the link, never your search terms.')
         ),
         ui.section('Open in a sensor style', { icon: 'layers', desc: here ? 'At ' + here.label + '.' : 'Whole-Earth view. Run a search first to open at a place.' }, h('div', { class: 'rq-row' }, ...styles.map(([k, l]) => R.globe3d.link(l, here ? { lat: here.lat, lon: here.lon, alt: 60000, style: k } : { lat: 20, lon: 10, alt: 18000000, style: k })))),
-        ui.section('What the 3D globe includes', { icon: 'list', desc: 'As described by God’s Eye View’s own README.' }, h('ul', { class: 'rq-list' }, ...FEATURES.map(([t, d]) => h('li', null, h('strong', null, t + ': '), d)))),
-        ui.section('Credits & licence', { icon: 'doc' }, h('p', null, 'God’s Eye View © 2026 Bilawal Sidhu, MIT licence. Integrated into JAQA with self-hosted fonts; otherwise unmodified. '), h('p', null, extLink('https://github.com/bilawalsidhu/gods-eye-view', 'God’s Eye View on GitHub'), ' · ', extLink('https://github.com/JAQA-Life/gods-eye-view', 'JAQA-Life fork')))
+        ui.section('What JAQA Eye View includes', { icon: 'list' }, h('ul', { class: 'rq-list' }, ...FEATURES.map(([t, d]) => h('li', null, h('strong', null, t + ': '), d)))),
+        h('p', { class: 'rq-fineprint' }, 'Map data and imagery credits are under “Data attribution” on the globe. Open-source licences: ', h('a', { href: '/licenses/' }, 'Licences'), '.')
       );
     }
   });

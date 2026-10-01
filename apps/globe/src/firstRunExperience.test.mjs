@@ -662,10 +662,11 @@ test('the voice TOOL SCHEMA matches the pinned release — the mission mapping i
   // ordering while allowing source formatting. Derived from the unchanged
   // release schema before formatting (the previous source-byte pin passed).
   const block = JSON.stringify(GEV_REALTIME_TOOLS);
-  assert.equal(block.length, 27271, 'serialized tool schema length drifted');
+  // JAQA rebrand: the app name in the fly_to_location, set_layer_visibility and set_visual_style descriptions changed from "God's Eye View" to "JAQA Eye View"; nothing else changed. (14 → 13 characters, three times: 27271 → 27268)
+  assert.equal(block.length, 27268, 'serialized tool schema length drifted');
   assert.equal(
     crypto.createHash('sha256').update(block).digest('hex'),
-    'da5f1bb334d1e882d63098cb35b29afde273947c0807ef6af2ef3d25a0df4918',
+    '455422ee4b7ff7b13447d64f20f96c5333c94c55cdf3f5753bac41c7a3cf95f8',
     'the first-run missions must ride EXISTING tools: no schema edit, no cache bust',
   );
   const instructions = fs.readFileSync(new URL('../server/providers/openai/instructions.js', import.meta.url), 'utf8');

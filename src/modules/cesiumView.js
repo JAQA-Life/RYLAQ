@@ -1,9 +1,9 @@
 /*
- * cesiumView.js — a CesiumJS 3D evidence globe inside the JAQA workspace.
+ * cesiumView.js — the 3D evidence globe inside the JAQA workspace.
  *
- * CesiumJS (https://github.com/CesiumGS/cesium, Apache-2.0, © Cesium GS) is
- * served by the JAQA server from /globe/cesium/ (the same self-hosted build the
- * God's Eye View globe uses). It is loaded only when this view is opened.
+ * Built on CesiumJS (Apache-2.0; notice on /licenses/), served by the JAQA
+ * server from /globe/cesium/ (the same self-hosted build JAQA Eye View uses).
+ * It is loaded only when this view is opened.
  *
  * Privacy: imagery is the Natural Earth II set bundled with CesiumJS, so the
  * view makes no request to any third party (no Cesium ion, no tile servers).
@@ -68,8 +68,11 @@
     const Cesium = await load();
     if (!host.isConnected) return null;
     if (current) current.destroy();
-    const canvasBox = h('div', { class: 'rq-cesium-canvas', role: 'img', 'aria-label': 'CesiumJS 3D globe with evidence markers' });
+    const canvasBox = h('div', { class: 'rq-cesium-canvas', role: 'img', 'aria-label': '3D globe with evidence markers' });
     const credits = h('div', { class: 'rq-cesium-credits' });
+    // No Cesium logo: this view uses no Cesium ion content (bundled imagery
+    // only); the CesiumJS licence notice is on /licenses/.
+    Cesium.CreditDisplay.cesiumCredit = undefined;
     host.replaceChildren(canvasBox, credits);
     const widget = new Cesium.CesiumWidget(canvasBox, {
       baseLayer: Cesium.ImageryLayer.fromProviderAsync(Cesium.TileMapServiceImageryProvider.fromUrl(Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII'))),

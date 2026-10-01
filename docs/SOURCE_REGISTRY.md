@@ -477,8 +477,6 @@ A source is **live** only when every required endpoint check passed (HTTP 2xx, `
 
 | Name | URL | Region / publisher | Notes |
 |---|---|---|---|
-| WorldMonitor | https://github.com/koala73/worldmonitor |  | Not integrated: AGPL licence requires legal review; heavy backend/relay/service-worker stack conflicts with JAQA’s static, no-storage model. Outputs are not JAQA evidence. |
-| God’s Eye View | https://github.com/bilawalsidhu/gods-eye-view |  | Not integrated pending a strict audit (licence, no backend, no storage, no tiles/CDNs, no personal-data OSINT, no active scanning). |
 | OWASP Dependency-Track | https://github.com/DependencyTrack/dependency-track |  | Software supply-chain platform reference; not a backend fork. |
 | Trivy | https://github.com/aquasecurity/trivy |  | Scanner/SBOM reference; not integrated. |
 | Grype | https://github.com/anchore/grype |  | Scanner reference; not integrated. |

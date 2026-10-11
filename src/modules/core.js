@@ -471,7 +471,8 @@ No sanctions clearance. No AML determination. No procurement bid advice.
       { id: 'finance', label: 'Finance' },
       { id: 'insurance', label: 'Insurance & Reinsurance' },
       { id: 'procurement', label: 'Procurement & Bids' },
-      { id: 'evidence', label: 'Evidence' }
+      { id: 'evidence', label: 'Evidence' },
+      { id: 'arsenal', label: 'Arsenal' }
     ]
   };
 })(window);

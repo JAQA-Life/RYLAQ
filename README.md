@@ -12,7 +12,7 @@ This branch (`jaqa-ultimate`) combines three things in one site served by one No
 
 | Path | What | Code |
 |---|---|---|
-| `/` | **JAQA workspace:** Situation Room, search, 30+ modules, exports | JAQA (proprietary) |
+| `/` | **JAQA workspace:** Situation Room, search, 30+ modules, exports | JAQA, AGPL-3.0-or-later |
 | `/global-monitor/` | **Global Monitor:** headlines from 18 verified official feeds, event map, countries in the headlines, ECB FX board | JAQA, clean-room and WorldMonitor-inspired (no WorldMonitor code: it is AGPL) |
 | `/` → *3D Globe* screen | **CesiumJS 3D evidence globe:** your session's evidence on a [CesiumJS](https://github.com/CesiumGS/cesium) Earth with bundled Natural Earth II imagery, making no third-party requests | JAQA, using CesiumJS (Apache-2.0) |
 | `/globe/` | **3D globe:** JAQA Eye View (live aircraft, ships, satellites, hazards, cameras, CRT/NVG/FLIR styles, voice) | Built on God's Eye View, MIT, © Bilawal Sidhu (`apps/globe/`); licences on `/licenses/` |
@@ -106,7 +106,7 @@ See [`docs/HOSTINGER_DEPLOYMENT.md`](docs/HOSTINGER_DEPLOYMENT.md). The site is 
 
 ## Licence
 
-**Proprietary — © JAQA. All rights reserved.** See [`LICENSE`](LICENSE). No licence is granted to use, copy, modify, deploy or distribute this software without JAQA's written permission. Third-party material (Natural Earth outlines via world-atlas, ISC) keeps its own licence; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The earlier GPL-3.0 placeholder licence was replaced so that the licence matches the product's "All rights reserved" notice. Have counsel review `LICENSE` before external distribution.
+**GNU AGPL-3.0-or-later.** © 2026 JAQA. JAQA™ is a trademark of JAQA. See [`LICENSE`](LICENSE). You may use, study, modify and redistribute this software under the AGPL. **AGPL section 13 (network use):** if you run a modified version and let users interact with it over a network, you must offer those users the Corresponding Source of your version. The JAQA Eye View 3D globe under [`apps/globe/`](apps/globe/) keeps its own **MIT** licence; other third-party components keep their licences — see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and the in-app `/licenses/` page. Trademark: the AGPL grants no rights in the JAQA name or logo. Have counsel review before external distribution.
 
 ---
 JAQA™ is a trademark of JAQA. JAQA™ is an independent interface and is not affiliated with or endorsed by data providers unless expressly stated.

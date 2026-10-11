@@ -1,6 +1,8 @@
 # Third-party notices
 
-The JAQA workspace (`src/`, `dist/`) contains no third-party runtime code; its only bundled third-party material is the map data below. The full site also ships **God's Eye View** (`apps/globe/`), which is third-party code with its own dependencies and data, listed further down.
+> **JAQA is licensed under AGPL-3.0-or-later** (see [`LICENSE`](LICENSE)). This affects how third-party code may be combined with it: AGPL-compatible code can be integrated directly; code under incompatible terms stays link-out only. The **JAQA Eye View 3D globe** (`apps/globe/`) keeps its own **MIT** licence.
+
+The JAQA workspace (`src/`, `dist/`) contains no third-party runtime code; its only bundled third-party material is the map data below, plus the **JAQA Arsenal** registry (a link-out catalogue of open-source projects — data only, no third-party code; see `config/arsenal-catalog.mjs`). The full site also ships **God's Eye View** (`apps/globe/`), which is third-party code with its own dependencies and data, listed further down.
 
 ## Natural Earth land outlines (via world-atlas)
 
@@ -64,11 +66,16 @@ The same notice is embedded in the generated file header.
 
 Both load the same self-hosted build from `/globe/cesium/`. Each file keeps its Apache-2.0 header. The full CesiumJS licence (Apache-2.0, plus the third-party code bundled inside CesiumJS) is reproduced on `/licenses/`. The Cesium logo is not shown because neither globe uses Cesium ion content by default; JAQA Eye View shows it automatically when a `CESIUM_ION_TOKEN` is configured. The JAQA view uses the **Natural Earth II** imagery bundled with CesiumJS (public domain), so it makes no requests to Cesium ion or any tile server.
 
-## WorldMonitor — inspiration only (no code)
+## WorldMonitor (AGPL-3.0)
 
-**WorldMonitor** (https://github.com/koala73/worldmonitor) is licensed **AGPL-3.0-only**. JAQA's Global Monitor and Situation Room are JAQA's own clean-room code, inspired by its situational-awareness dashboard concept:
-- No WorldMonitor source code, stylesheets, images, data or configuration is copied, adapted or bundled.
-- JAQA does not embed or call WorldMonitor.
-- JAQA is not affiliated with or endorsed by WorldMonitor or God's Eye View.
+**WorldMonitor** (https://github.com/koala73/worldmonitor) is licensed **AGPL-3.0-only**. JAQA's current Global Monitor and Situation Room are JAQA's own clean-room code, inspired by its situational-awareness dashboard concept; no WorldMonitor source is yet copied into JAQA. Now that JAQA is itself licensed AGPL-3.0-or-later, WorldMonitor's code may be incorporated directly in future work, subject to AGPL section 13 (network-use source offer) and attribution. WorldMonitor is a large hosted stack (Vercel serverless, Convex, Clerk, Upstash, S3, a Tauri desktop app); it cannot be deployed wholesale inside JAQA's single Node app, so any reuse is of self-contained, compatible parts. JAQA is not affiliated with or endorsed by WorldMonitor.
+
+## flowsint (Apache-2.0)
+
+**flowsint** (https://github.com/JAQA-Life/flowsint) is an OSINT graph/investigation platform under **Apache-2.0**. It is listed in the JAQA Arsenal (link-out) and is Apache-2.0, which is compatible with AGPL for future integration. No flowsint code is currently bundled.
+
+## JAQA Arsenal (link-out catalogue)
+
+The **JAQA Arsenal** (`config/arsenal-catalog.mjs` → `config/arsenal.json`) is a curated registry of open-source security, supply-chain and medical/health projects. It is **data only**: JAQA does not copy, bundle, run or call any listed project — every entry links to its GitHub page. Each listed project remains under its own licence and terms; listing is not endorsement, certification or a security guarantee.
 
 See `docs/THIRD_PARTY_SOURCE_POLICY.md`.

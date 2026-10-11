@@ -44,6 +44,7 @@ const copy = (from, to = from, filter) => cpSync(path.join(root, from), path.joi
 copy('dist');
 copy('server');
 copy('config/monitor-verification.json');
+copy('config/intel-verification.json');
 copy('scripts/build-globe.mjs');
 copy('scripts/hostinger-build.mjs');
 copy('LICENSE');
@@ -82,7 +83,7 @@ writeFileSync(
       // God's Eye View's runtime dependencies (installed at the root so every
       // module under apps/globe resolves them by walking up the tree).
       dependencies: globePkg.dependencies,
-      license: 'UNLICENSED'
+      license: 'AGPL-3.0-or-later'
     },
     null,
     2

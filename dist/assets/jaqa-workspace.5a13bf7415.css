@@ -695,3 +695,14 @@
 .jaqa-workspace .rq-cesium-credits { position: absolute; left: 6px; bottom: 4px; font-size: 10px; opacity: 0.8; max-width: 70%; }
 .jaqa-workspace .rq-cesium-status { padding: 16px; }
 @media (max-width: 600px) { .jaqa-workspace .rq-cesium { height: 360px; } }
+
+/* ── JAQA Arsenal (security/supply-chain/medical registry) ───────────────── */
+.jaqa-workspace .rq-arsenal { display: flex; flex-direction: column; gap: 18px; }
+.jaqa-workspace .rq-arsenal-cat-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 4px 0 8px; border-bottom: 1px solid var(--rq-line, rgba(255,255,255,.1)); padding-bottom: 4px; }
+.jaqa-workspace .rq-arsenal-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.jaqa-workspace .rq-arsenal-item { border: 1px solid var(--rq-line, rgba(255,255,255,.12)); border-radius: 8px; padding: 10px 12px; background: var(--rq-panel, rgba(255,255,255,.03)); }
+.jaqa-workspace .rq-arsenal-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.jaqa-workspace .rq-arsenal-repo { font-weight: 600; word-break: break-word; }
+.jaqa-workspace .rq-arsenal-desc { margin: 6px 0 0; font-size: 13px; line-height: 1.4; color: var(--rq-muted, #9fb0c3); }
+@media (max-width: 560px) { .jaqa-workspace .rq-arsenal-grid { grid-template-columns: 1fr; } }
+.jaqa-workspace .rq-arsenal-live { cursor: pointer; border: none; font: inherit; }

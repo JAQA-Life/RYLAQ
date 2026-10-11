@@ -47,7 +47,7 @@ jobs:
       - name: Build — JAQA (must match the committed dist/) and the 3D globe
         run: |
           node scripts/build.mjs
-          git diff --exit-code -- dist embed release src/modules/corsConfig.js || (echo "::error::dist/ is stale; refusing to publish." && exit 1)
+          git diff --exit-code -- dist embed release src/modules/corsConfig.js config/arsenal.json || (echo "::error::dist/ is stale; refusing to publish." && exit 1)
           node scripts/check-static-safety.mjs
           node scripts/build-globe.mjs
 
@@ -102,7 +102,7 @@ jobs:
           SERVER=$!
           for i in $(seq 1 40); do curl -sf http://127.0.0.1:3000/ >/dev/null && break; sleep 1; done
           fail=0
-          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /globe/cesium/Workers/createVerticesFromHeightmap.js /globe/cesium/Assets/Textures/NaturalEarthII/tilemapresource.xml /about/ /faq/ /sources/ /privacy/ /3d-globe/ /sitemap.xml /robots.txt /llms.txt /api/jaqa/monitor/feeds; do
+          for p in / /global-monitor/ /globe/ /globe/cesium/Cesium.js /globe/cesium/Workers/createVerticesFromHeightmap.js /globe/cesium/Assets/Textures/NaturalEarthII/tilemapresource.xml /about/ /faq/ /sources/ /privacy/ /3d-globe/ /arsenal/ /arsenal-tools/ /licenses/ /sitemap.xml /robots.txt /llms.txt /api/jaqa/monitor/feeds; do
             code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p"); echo "$p -> $code"; [ "$code" = 200 ] || fail=1
           done
           # The globe page must reference assets that exist (catches a missing build).

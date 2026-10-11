@@ -82,7 +82,7 @@ writeFileSync(
       // God's Eye View's runtime dependencies (installed at the root so every
       // module under apps/globe resolves them by walking up the tree).
       dependencies: globePkg.dependencies,
-      license: 'UNLICENSED'
+      license: 'AGPL-3.0-or-later'
     },
     null,
     2

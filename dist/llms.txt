@@ -13,6 +13,7 @@ JAQA is a privacy-first web workspace for investigating public evidence about or
 - [FAQ](https://jaqa.life/faq/): direct answers about sources, privacy, verification and coverage
 - [Data sources](https://jaqa.life/sources/): every live API, official feed and link-out
 - [Privacy](https://jaqa.life/privacy/): no accounts, cookies, storage or stored searches
+- [Arsenal](https://jaqa.life/arsenal/): curated registry of open-source security, supply-chain and medical tooling
 - [Licences](https://jaqa.life/licenses/): open-source licences and credits
 
 ## Optional

@@ -23,7 +23,7 @@ const readRepo = (p) => readFileSync(path.join(ROOT, p), 'utf8');
 export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ld = (obj) => `<script type="application/ld+json">\n${JSON.stringify(obj).replace(/</g, '\\u003c')}\n</script>`;
 
-export function createSeo({ SITE, R, monitorConfig, lastmod }) {
+export function createSeo({ SITE, R, monitorConfig, lastmod, arsenalConfig }) {
   const live = R.sources.list.filter((s) => s.corsVerified);
   const n = { live: live.length, feeds: monitorConfig.feeds.length };
   const faq = FAQ(n);
@@ -83,7 +83,7 @@ ${faq.slice(0, 6).map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc
   }
 
   /* -------------------------- static pages -------------------------- */
-  const NAV = [['', 'Workspace'], ['3d-globe/', '3D Globe'], ['global-monitor/', 'Global Monitor'], ['about/', 'About'], ['faq/', 'FAQ'], ['sources/', 'Sources'], ['privacy/', 'Privacy']];
+  const NAV = [['', 'Workspace'], ['3d-globe/', '3D Globe'], ['global-monitor/', 'Global Monitor'], ['arsenal/', 'Arsenal'], ['about/', 'About'], ['faq/', 'FAQ'], ['sources/', 'Sources'], ['privacy/', 'Privacy']];
   function shell({ path, title, description, h1, lead, body, graph, siteCss, noindex }) {
     const up = path ? '../'.repeat(path.split('/').filter(Boolean).length) : '';
     const canonical = SITE + '/' + path;
@@ -215,6 +215,20 @@ ${monitorConfig.feeds.map((f) => `<tr><td>${esc(f.name)}</td><td><a href="${esc(
 <p>Each map layer’s source is credited under “Data attribution” on the globe. Open-source licences are on the <a href="../licenses/">Licences</a> page. Positions, feeds and camera images can be delayed, incomplete or wrong; nothing on the globe is a determination of risk, ownership, intent or exposure.</p>`
     }));
 
+    // /arsenal/ — crawlable catalogue overview (the interactive, filterable
+    // registry lives in the workspace; this page is for SEO/AEO + deep links).
+    const A = arsenalConfig || { totals: {}, domains: [] };
+    write('dist/arsenal/index.html', page({
+      path: 'arsenal/', title: `JAQA Arsenal | ${A.totals.uniqueRepos || 0} Open-Source Security, Supply-Chain & Medical Tools`, description: `A curated, searchable registry of ${A.totals.uniqueRepos || 0} open-source projects across security, software supply chain and medical/health IT, organised into ${A.totals.categories || 0} categories. Reference and link-out only.`,
+      h1: 'JAQA Arsenal', lead: `A curated registry of ${A.totals.uniqueRepos || 0} open-source projects across security, supply chain and medical/health — browse and filter them inside the workspace.`,
+      graph: (c) => [{ '@type': 'CollectionPage', name: 'JAQA Arsenal', url: c }, ...bc('Arsenal')(c)],
+      body: `<p><a class="site-cta" href="../arsenal-tools/">Open the Arsenal in the workspace</a></p>
+<p>The Arsenal is reference and link-out only: each entry opens its GitHub page in a new tab. JAQA does not run, bundle or call these tools, and listing is not endorsement, certification or a security guarantee. Dual-use security tooling is for authorised testing, defence, research and education under each project's licence. Licences for what JAQA itself ships are on the <a href="../licenses/">Licences</a> page.</p>
+${A.domains.map((d) => `<h2>${esc(d.label)} — ${d.count} projects</h2>
+<p>${esc(d.blurb)}</p>
+<ul class="site-list site-cols">${d.categories.map((c) => `<li><strong>${esc(c.label)}</strong> (${c.count})</li>`).join('')}</ul>`).join('\n')}`
+    }));
+
     // /licenses/ — text only: open-source licences (copied verbatim by
     // scripts/gen-licenses.mjs) and the credits that licences require.
     const licIndex = JSON.parse(readRepo('licenses/index.json'));
@@ -245,7 +259,7 @@ ${modelRows.map(([f, w, src, , mod]) => `<tr><td>${mdLinks(f)}</td><td>${mdLinks
 
     // robots.txt, sitemap.xml
     write('dist/robots.txt', `# JAQA — ${SITE}/\nUser-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${SITE}/sitemap.xml\n`);
-    const urls = ['', 'global-monitor/', 'global-risk/', 'finance-risk/', 'insurance-reinsurance/', 'procurement-bids/', '3d-globe/', 'globe/', 'about/', 'faq/', 'sources/', 'privacy/', 'licenses/'];
+    const urls = ['', 'global-monitor/', 'global-risk/', 'finance-risk/', 'insurance-reinsurance/', 'procurement-bids/', '3d-globe/', 'globe/', 'arsenal/', 'arsenal-tools/', 'about/', 'faq/', 'sources/', 'privacy/', 'licenses/'];
     write('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${SITE}/${u}</loc><lastmod>${lastmod}</lastmod></url>`).join('\n')}\n</urlset>\n`);
 
     // llms.txt (https://llmstxt.org) + full text
@@ -257,6 +271,7 @@ ${modelRows.map(([f, w, src, , mod]) => `<tr><td>${mdLinks(f)}</td><td>${mdLinks
       ['FAQ', 'faq/', 'direct answers about sources, privacy, verification and coverage'],
       ['Data sources', 'sources/', 'every live API, official feed and link-out'],
       ['Privacy', 'privacy/', 'no accounts, cookies, storage or stored searches'],
+      ['Arsenal', 'arsenal/', 'curated registry of open-source security, supply-chain and medical tooling'],
       ['Licences', 'licenses/', 'open-source licences and credits']
     ];
     write('dist/llms.txt', `# JAQA\n\n> ${TAGLINE}\n\n${DEFINITION(n)}\n\n## Pages\n\n${pages.map(([t, u, d]) => `- [${t}](${SITE}/${u}): ${d}`).join('\n')}\n\n## Optional\n\n- [Full text for language models](${SITE}/llms-full.txt): about, features, FAQ, privacy and source lists in one file\n`);

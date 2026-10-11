@@ -24,6 +24,7 @@ import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { monitorPlugin } from './monitor.mjs';
+import { intelPlugin } from './intel.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const jaqaDist = path.join(root, 'dist');
@@ -157,7 +158,7 @@ const server = await preview({
   configFile: path.join(globeRoot, 'vite.config.js'),
   base: '/globe/',
   logLevel: 'warn',
-  plugins: [jaqaRoutes(), monitorPlugin()],
+  plugins: [jaqaRoutes(), monitorPlugin(), intelPlugin()],
   preview: { port, host, strictPort: true, open: false, allowedHosts: true }
 });
 console.log(`JAQA server listening on http://${host}:${port}/ (workspace /, globe /globe/, APIs /api/)`);

@@ -1,0 +1,6 @@
+{
+  "verifiedAt": null,
+  "runner": "not-verified-yet",
+  "method": "Run scripts/verify-intel.mjs on an open-network runner (.github/workflows/verify-intel.yml) and commit the result. Until then no intel source is served.",
+  "sources": {}
+}

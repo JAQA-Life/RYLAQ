@@ -1,0 +1,28 @@
+# Verifies the Arsenal live-intel sources from a GitHub-hosted runner (open
+# network). Copy the printed config into config/intel-verification.json and
+# commit it; only verified sources are ever served by the Node app.
+name: Verify Arsenal intel sources
+
+on:
+  push:
+    branches: [jaqa-ultimate]
+    paths:
+      - server/intel*.mjs
+      - scripts/verify-intel.mjs
+      - .github/workflows/verify-intel.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Probe and parse every candidate intel source
+        run: node scripts/verify-intel.mjs --print

@@ -705,3 +705,4 @@
 .jaqa-workspace .rq-arsenal-repo { font-weight: 600; word-break: break-word; }
 .jaqa-workspace .rq-arsenal-desc { margin: 6px 0 0; font-size: 13px; line-height: 1.4; color: var(--rq-muted, #9fb0c3); }
 @media (max-width: 560px) { .jaqa-workspace .rq-arsenal-grid { grid-template-columns: 1fr; } }
+.jaqa-workspace .rq-arsenal-live { cursor: pointer; border: none; font: inherit; }

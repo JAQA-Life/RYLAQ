@@ -827,7 +827,8 @@
       "domains": 3,
       "categories": 32,
       "entries": 485,
-      "uniqueRepos": 481
+      "uniqueRepos": 481,
+      "liveSources": 4
     },
     "domains": [
       {
@@ -2631,7 +2632,8 @@
               {
                 "repo": "ossf/scorecard",
                 "url": "https://github.com/ossf/scorecard",
-                "desc": "OpenSSF Scorecard for repo security health."
+                "desc": "OpenSSF Scorecard for repo security health.",
+                "liveIntel": "scorecard"
               },
               {
                 "repo": "ossf/criticality_score",
@@ -2728,7 +2730,8 @@
               {
                 "repo": "google/osv-scanner",
                 "url": "https://github.com/google/osv-scanner",
-                "desc": "Scan using the OSV database."
+                "desc": "Scan using the OSV database.",
+                "liveIntel": "osv"
               },
               {
                 "repo": "ossf/osv-schema",
@@ -2748,12 +2751,14 @@
               {
                 "repo": "FIRSTdotorg/epss-data-api",
                 "url": "https://github.com/FIRSTdotorg/epss-data-api",
-                "desc": "Exploit Prediction Scoring System data."
+                "desc": "Exploit Prediction Scoring System data.",
+                "liveIntel": "epss-top"
               },
               {
                 "repo": "cisagov/kev-data",
                 "url": "https://github.com/cisagov/kev-data",
-                "desc": "CISA Known Exploited Vulnerabilities catalog."
+                "desc": "CISA Known Exploited Vulnerabilities catalog.",
+                "liveIntel": "kev"
               },
               {
                 "repo": "openvex/spec",

@@ -44,6 +44,7 @@ const copy = (from, to = from, filter) => cpSync(path.join(root, from), path.joi
 copy('dist');
 copy('server');
 copy('config/monitor-verification.json');
+copy('config/intel-verification.json');
 copy('scripts/build-globe.mjs');
 copy('scripts/hostinger-build.mjs');
 copy('LICENSE');

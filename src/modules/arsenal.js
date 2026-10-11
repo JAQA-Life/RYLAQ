@@ -30,10 +30,13 @@
 
   function repoCard(e) {
     const owner = e.repo.split('/')[0];
+    const liveChip = e.liveIntel
+      ? h('button', { type: 'button', class: 'rq-badge rq-tone-ok rq-arsenal-live', title: 'Served live inside the JAQA app', onclick: () => R.shell.go('intel', { focus: true }) }, 'Live in app')
+      : null;
     return h(
       'li',
       { class: 'rq-arsenal-item' },
-      h('div', { class: 'rq-arsenal-head' }, extLink(e.url, e.repo, { cls: 'rq-arsenal-repo' }), ui.badge(owner, 'neutral', 'GitHub owner')),
+      h('div', { class: 'rq-arsenal-head' }, extLink(e.url, e.repo, { cls: 'rq-arsenal-repo' }), ui.badge(owner, 'neutral', 'GitHub owner'), liveChip),
       h('p', { class: 'rq-arsenal-desc' }, e.desc)
     );
   }
